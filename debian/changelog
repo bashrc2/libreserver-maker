@@ -1,3 +1,13 @@
+freedom-maker (0.10) unstable; urgency=medium
+
+  [ Sunil Mohan Adapa ]
+  * Add option to build the image in RAM.
+  * Remove eatmydata speedup.
+  * Cleanup loop devices that vmdebootstrap does not.
+  * Perform more operations with sudo.
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 15 Jan 2018 10:50:54 -0500
+
 freedom-maker (0.9) unstable; urgency=medium
 
   [ Sunil Mohan Adapa ]
