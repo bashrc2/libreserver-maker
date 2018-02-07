@@ -170,6 +170,12 @@ EOF
 }
 
 stable_mac_address_workaround() {
+    # Apply the fix only for stable kernel. Latest kernel in testing and
+    # unstable already sets up a stable MAC address based on CPU id of the Pi.
+    if [ "$SUITE" != "stable" -a "$SUITE" != "stretch" ]; then
+        return
+    fi
+
     # XXX: With Debian Stretch on Raspberry Pi 2, the kernel is not
     # reading the hardware MAC address, so it uses a random one. This
     # causes the IP address to change on every boot.
