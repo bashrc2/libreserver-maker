@@ -1,3 +1,10 @@
+freedom-maker (0.11) unstable; urgency=medium
+
+  [ Sunil Mohan Adapa ]
+  * raspberry2/3: Use stable cloned MAC address on stable release
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Tue, 13 Feb 2018 06:27:30 -0500
+
 freedom-maker (0.10) unstable; urgency=medium
 
   [ Sunil Mohan Adapa ]
