@@ -139,6 +139,13 @@ export LC_ALL=C LANGUAGE=C LANG=C
 # are not created yet.
 export TMP=/tmp/ TMPDIR=/tmp/
 
+# vmdebootstrap sets up systemd-networkd such that it performs DHCP on all
+# Ethernet interfaces. This is a problem for Network Manager later taking over.
+# Remove the configuration file created by vmdebootstrap so that Network Manager
+# that is present in FreedomBox can work without problems. See:
+# https://bugzilla.gnome.org/show_bug.cgi?id=793231
+rm -f $rootdir/etc/systemd/network/99-dhcp.network
+
 username=fbx
 echo "info: creating initial user $username with disabled password!"
 chroot $rootdir adduser --gecos $username --disabled-password $username
