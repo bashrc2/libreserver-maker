@@ -1,3 +1,10 @@
+freedom-maker (0.12) unstable; urgency=medium
+
+  [ Sunil Mohan Adapa ]
+  * Remove systemd-networkd DHCP configuration from vmdebootstrap
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 26 Feb 2018 17:23:15 +0100
+
 freedom-maker (0.11) unstable; urgency=medium
 
   [ Sunil Mohan Adapa ]
