@@ -1,3 +1,9 @@
+freedom-maker (0.13) unstable; urgency=medium
+
+  * vagrant: Add test dependencies
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 12 Mar 2018 17:09:57 -0400
+
 freedom-maker (0.12) unstable; urgency=medium
 
   [ Sunil Mohan Adapa ]
