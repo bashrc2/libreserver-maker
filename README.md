@@ -156,11 +156,11 @@ You'll need to copy the image to the memory card or USB stick:
 2. Decompress the built image using tar:
     ```
     $ cd freedom-maker/build
-    $ tar -xvf freedombox-unstable_2015-08-06_beaglebone-armhf-card.tar.xz
+    $ unxz freedombox-unstable_2015-08-06_beaglebone-armhf-card.img.xz
     ```
 
    The above command is an example for the beaglebone image built on
-   2015-08-06.  Your tar file name will be different.
+   2015-08-06.  Your compressed file name will be different.
 
 3. Copy the image to your card.  Double check and make sure you don't
    write to your computer's main storage (such as /dev/sda).  Also
