@@ -153,16 +153,7 @@ You'll need to copy the image to the memory card or USB stick:
        as */dev/sdg*.  Very carefully note this and use it in the
        copying step below.
 
-2. Decompress the built image using tar:
-    ```
-    $ cd freedom-maker/build
-    $ unxz freedombox-unstable_2015-08-06_beaglebone-armhf-card.img.xz
-    ```
-
-   The above command is an example for the beaglebone image built on
-   2015-08-06.  Your compressed file name will be different.
-
-3. Copy the image to your card.  Double check and make sure you don't
+2. Copy the image to your card.  Double check and make sure you don't
    write to your computer's main storage (such as /dev/sda).  Also
    make sure that you don't run this step as root to avoid potentially
    overriding data on your hard drive due to a mistake in identifying
@@ -178,7 +169,7 @@ You'll need to copy the image to the memory card or USB stick:
    above, then to copy the image, run:
     ```
     $ cd build
-    $ dd bs=1M if=freedombox-unstable_2015-08-06_beaglebone-armhf-card.img of=/dev/sdf conv=fdatasync
+    $ xzcat freedombox-unstable_2015-08-06_beaglebone-armhf-card.img.xz | dd bs=1M of=/dev/sdf conv=fdatasync
     ```
 
    The above command is an example for the beaglebone image built on
@@ -193,7 +184,7 @@ You'll need to copy the image to the memory card or USB stick:
    have to format your SD card or create partitions. All the data on
    the SD card will be wiped off during the write process.
 
-4. Use the image by inserting the SD card or USB disk into the target
+3. Use the image by inserting the SD card or USB disk into the target
    device and booting from it.  Also see hardware specific
    instructions on how to prepare your device at
    https://wiki.debian.org/FreedomBox/Hardware
