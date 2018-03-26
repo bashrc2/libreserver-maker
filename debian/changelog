@@ -1,3 +1,11 @@
+freedom-maker (0.14) unstable; urgency=medium
+
+  [ Sébastien Barthélémy ]
+  * readme: Fix following switch from tar to img
+  * readme: Decompress the image on the fly
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 26 Mar 2018 19:28:52 -0400
+
 freedom-maker (0.13) unstable; urgency=medium
 
   * vagrant: Add test dependencies
