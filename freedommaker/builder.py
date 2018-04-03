@@ -24,7 +24,7 @@ import shutil
 import subprocess
 import tempfile
 
-from . import vmdb2
+from . import internal
 from . import vmdebootstrap
 
 BASE_PACKAGES = [
@@ -49,6 +49,8 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     boot_filesystem_type = None
     boot_size = None
     boot_offset = None
+    firmware_filesystem_type = None
+    firmware_size = None
     kernel_flavor = 'default'
     debootstrap_variant = None
 
@@ -84,7 +86,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         self.builder_backends = {}
         self.builder_backends['vmdebootstrap'] = \
             vmdebootstrap.VmdebootstrapBuilderBackend(self)
-        self.builder_backends['vmdb2'] = vmdb2.Vmdb2BuilderBackend(self)
+        self.builder_backends['internal'] = internal.InternalBuilderBackend(self)
 
         self.image_file = os.path.join(self.arguments.build_dir,
                                        self._get_image_base_name() + '.img')
@@ -436,6 +438,23 @@ class BeagleBoneImageBuilder(ARMImageBuilder):
     machine = 'beaglebone'
     kernel_flavor = 'armmp'
     boot_offset = '2mib'
+    flash_kernel_name = 'TI AM335x BeagleBone Black'
+    flash_kernel_options = 'console=ttyO0'
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        library.install_boot_loader_part(
+            state,
+            '/usr/lib/u-boot/am335x_boneblack/MLO',
+            seek=1,
+            size='128k',
+            count=1)
+        library.install_boot_loader_part(
+            state,
+            '/usr/lib/u-boot/am335x_boneblack/u-boot.img',
+            seek=1,
+            size='384k',
+            count=2)
 
 
 class A20ImageBuilder(ARMImageBuilder):
@@ -448,36 +467,99 @@ class A20ImageBuilder(ARMImageBuilder):
 class A20OLinuXinoLimeImageBuilder(A20ImageBuilder):
     """Image builder for A20 OLinuXino Lime targets."""
     machine = 'a20-olinuxino-lime'
+    flash_kernel_name = 'Olimex A20-OLinuXino-LIME'
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        library.install_boot_loader_part(
+            state,
+            '/usr/lib/u-boot/A20-OLinuXino-Lime/u-boot-sunxi-with-spl.bin',
+            seek=8,
+            size='1k')
 
 
 class A20OLinuXinoLime2ImageBuilder(A20ImageBuilder):
     """Image builder for A20 OLinuXino Lime2 targets."""
     machine = 'a20-olinuxino-lime2'
+    flash_kernel_name = 'Olimex A20-OLinuXino-LIME2'
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        library.install_boot_loader_part(
+            state,
+            '/usr/lib/u-boot/A20-OLinuXino-Lime2/u-boot-sunxi-with-spl.bin',
+            seek=8,
+            size='1k')
 
 
 class A20OLinuXinoMicroImageBuilder(A20ImageBuilder):
     """Image builder for A20 OLinuXino Micro targets."""
     machine = 'a20-olinuxino-micro'
+    flash_kernel_name = 'Olimex A20-Olinuxino Micro'
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        library.install_boot_loader_part(
+            state,
+            '/usr/lib/u-boot/A20-OLinuXino_MICRO/u-boot-sunxi-with-spl.bin',
+            seek=8,
+            size='1k')
 
 
 class BananaProImageBuilder(A20ImageBuilder):
     """Image builder for Banana Pro target."""
     machine = 'banana-pro'
+    flash_kernel_name = 'LeMaker Banana Pro'
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        library.install_boot_loader_part(
+            state,
+            '/usr/lib/u-boot/Bananapro/u-boot-sunxi-with-spl.bin',
+            seek=8,
+            size='1k')
 
 
 class Cubieboard2ImageBuilder(A20ImageBuilder):
     """Image builder for Cubieboard 2 target."""
     machine = 'cubieboard2'
+    flash_kernel_name = 'Cubietech Cubieboard2'
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        library.install_boot_loader_part(
+            state,
+            '/usr/lib/u-boot/Cubieboard2/u-boot-sunxi-with-spl.bin',
+            seek=8,
+            size='1k')
 
 
 class CubietruckImageBuilder(A20ImageBuilder):
     """Image builder for Cubietruck (Cubieboard 3) target."""
     machine = 'cubietruck'
+    flash_kernel_name = 'Cubietech Cubietruck'
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        library.install_boot_loader_part(
+            state,
+            '/usr/lib/u-boot/Cubietruck/u-boot-sunxi-with-spl.bin',
+            seek=8,
+            size='1k')
 
 
 class PCDuino3ImageBuilder(A20ImageBuilder):
     """Image builder for PCDuino3 target."""
     machine = 'pcduino3'
+    flash_kernel_name = 'LinkSprite pcDuino3'
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        library.install_boot_loader_part(
+            state,
+            '/usr/lib/u-boot/Linksprite_pcDuino3/u-boot-sunxi-with-spl.bin',
+            seek=8,
+            size='1k')
 
 
 class DreamPlugImageBuilder(ARMImageBuilder):
@@ -486,6 +568,10 @@ class DreamPlugImageBuilder(ARMImageBuilder):
     machine = 'dreamplug'
     kernel_flavor = 'marvell'
     boot_filesystem_type = 'vfat'
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        raise NotImplementedError
 
 
 class RaspberryPiImageBuilder(ARMImageBuilder):
@@ -498,20 +584,58 @@ class RaspberryPiImageBuilder(ARMImageBuilder):
     boot_filesystem_type = 'vfat'
     kernel_flavor = None
 
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        raise NotImplementedError
 
-class RaspberryPi2ImageBuilder(ARMImageBuilder):
+
+class RaspberryPiWithUBoot(ARMImageBuilder):
+    """Base image builder for Raspberry Pi 2 and 3 targets."""
+    free = False
+    uboot_variant = None
+    firmware_filesystem_type = 'vfat'
+    firmware_size = '60mib'
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        if not self.uboot_variant:
+            raise NotImplementedError
+
+        script = '''
+apt-get install --no-install-recommends -y dpkg-dev
+cd /tmp
+apt-get source raspi3-firmware
+cp raspi3-firmware*/boot/* /boot/firmware
+rm -rf raspi3-firmware*
+cd /
+
+# remove unneeded firmware files
+rm -f /boot/firmware/fixup_*
+rm -f /boot/firmware/start_*
+
+# u-boot setup
+apt-get install -y u-boot-rpi
+cp /usr/lib/u-boot/{uboot_variant}/u-boot.bin /boot/firmware/kernel.img
+'''.format(uboot_variant=self.uboot_variant)
+        library.run_in_chroot(script)
+
+
+class RaspberryPi2ImageBuilder(RaspberryPiWithUBoot):
     """Image builder for Raspberry Pi 2 target."""
     architecture = 'armhf'
     machine = 'raspberry2'
-    free = False
     boot_offset = '64mib'
     kernel_flavor = 'armmp'
+    flash_kernel_name = 'Raspberry Pi 2 Model B'
+    uboot_variant = 'rpi_2'
 
 
-class RaspberryPi3ImageBuilder(ARMImageBuilder):
+class RaspberryPi3ImageBuilder(RaspberryPiWithUBoot):
     """Image builder for Raspberry Pi 3 target."""
     architecture = 'armhf'
     machine = 'raspberry3'
     free = False
     boot_offset = '64mib'
     kernel_flavor = 'armmp'
+    flash_kernel_name = 'Raspberry Pi 3 Model B'
+    uboot_variant = 'rpi_3_32b'

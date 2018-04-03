@@ -15,21 +15,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Basic image builder using vmdb2.
+Miscellaneous utilities that don't fit anywhere else.
 """
 
-import logging
+def add_disk_offsets(offset1, offset2):
+    """Add two disk offsets as understood by parted utility.
 
-logger = logging.getLogger(__name__)
+    Currently only adding offsets in mib is supported.
+    """
+    if not offset1.endswith('mib') or not offset2.endswith('mib'):
+        raise NotImplementedError('Adding anything but offsets in mib')
 
-
-class Vmdb2BuilderBackend():
-    """Build an image using vmdb2 tool."""
-
-    def __init__(self, builder):
-        """Initialize the builder."""
-        self.builder = builder
-
-    def make_image(self):
-        """Create a disk image."""
-        raise Exception('Not implemented yet.')
+    result = int(offset1.rstrip('mib')) + int(offset2.rstrip('mib'))
+    return '{}mib'.format(result)
