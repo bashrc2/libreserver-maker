@@ -240,6 +240,12 @@ class VMImageBuilder(AMDIntelImageBuilder):
     """Base image builder for all virtual machine targets."""
     vm_image_extension = None
 
+    def __init__(self, arguments):
+        """Override log file extension to contain vm image extention."""
+        super().__init__(arguments)
+        self.log_file = self._replace_extension(
+            self.log_file, self.vm_image_extension) + '.log'
+
     def build(self):
         """Run the image building process."""
         archive_file = self.image_file + '.xz'
