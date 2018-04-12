@@ -233,6 +233,7 @@ class AMDIntelImageBuilder(ImageBuilder):
 class AMD64ImageBuilder(AMDIntelImageBuilder):
     """Image builder for all amd64 targets."""
     architecture = 'amd64'
+    kernel_flavor = 'amd64'
 
 
 class I386ImageBuilder(AMDIntelImageBuilder):
@@ -309,6 +310,7 @@ class VirtualBoxImageBuilder(VMImageBuilder):
 class VirtualBoxAmd64ImageBuilder(VirtualBoxImageBuilder):
     """Image builder for all VirutalBox amd64 targets."""
     architecture = 'amd64'
+    kernel_flavor = 'amd64'
 
 
 class VirtualBoxI386ImageBuilder(VirtualBoxImageBuilder):
@@ -403,6 +405,7 @@ class QemuImageBuilder(VMImageBuilder):
 class QemuAmd64ImageBuilder(QemuImageBuilder):
     """Image builder for all Qemu amd64 targets."""
     architecture = 'amd64'
+    kernel_flavor = 'amd64'
 
 
 class QemuI386ImageBuilder(QemuImageBuilder):
