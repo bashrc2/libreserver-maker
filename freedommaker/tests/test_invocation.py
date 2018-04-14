@@ -356,10 +356,17 @@ class TestInvocation(unittest.TestCase):
         self.assert_arguments_passed(['--log-level', 'info'])
 
     def test_base_packages(self):
-        """Test that base packages are availble."""
+        """Test that base packages are available."""
         self.invoke()
         for package in ['initramfs-tools']:
             self.assert_arguments_passed(['--package', package])
+
+    def test_next_release_packages(self):
+        """Test that packages for next release are available."""
+        self.invoke(distribution='testing')
+        for package in ['firmware-ath9k-htc']:
+            self.assert_arguments_passed(
+                ['--package', package], distribution='testing')
 
     def test_foreign_architecture(self):
         """Test that foreign arch parameter is passed."""

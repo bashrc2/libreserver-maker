@@ -43,6 +43,11 @@ EOF
 }
 
 atheros_wifi() {
+    # Debian package is available in testing/unstable
+    if [ "$SUITE" != "stable" ] && [ "$SUITE" != "stretch" ]; then
+	return
+    fi
+
     # Fetch and install free software firmware for a couple USB Atheros
     # Wi-Fi devices from Trisqel repository.
     firmware_filename="open-ath9k-htc-firmware_1.3-1_all.deb"
