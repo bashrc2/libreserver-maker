@@ -20,7 +20,6 @@ Basic image builder using vmdebootstrap.
 
 import json
 import logging
-import shutil
 import subprocess
 
 logger = logging.getLogger(__name__)

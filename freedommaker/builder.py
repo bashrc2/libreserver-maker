@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 #
 # This file is part of Freedom Maker.
 #
@@ -15,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
 """
 Worker class to run various command build the image.
 """
@@ -88,10 +86,10 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
             vmdebootstrap.VmdebootstrapBuilderBackend(self)
         self.builder_backends['vmdb2'] = vmdb2.Vmdb2BuilderBackend(self)
 
-        self.image_file = os.path.join(
-            self.arguments.build_dir, self._get_image_base_name() + '.img')
-        self.log_file = os.path.join(
-            self.arguments.build_dir, self._get_image_base_name() + '.log')
+        self.image_file = os.path.join(self.arguments.build_dir,
+                                       self._get_image_base_name() + '.img')
+        self.log_file = os.path.join(self.arguments.build_dir,
+                                     self._get_image_base_name() + '.log')
 
         # Setup logging
         formatter = logging.root.handlers[0].formatter
@@ -218,8 +216,8 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         """Execute a program and log output to log file."""
         logger.info('Executing command - %s', args)
         with open(self.log_file, 'a') as file_handle:
-            subprocess.check_call(*args, stdout=file_handle,
-                                  stderr=file_handle, **kwargs)
+            subprocess.check_call(
+                *args, stdout=file_handle, stderr=file_handle, **kwargs)
 
 
 class AMDIntelImageBuilder(ImageBuilder):
@@ -256,8 +254,8 @@ class VMImageBuilder(AMDIntelImageBuilder):
     def build(self):
         """Run the image building process."""
         archive_file = self.image_file + '.xz'
-        vm_file = self._replace_extension(
-            self.image_file, self.vm_image_extension)
+        vm_file = self._replace_extension(self.image_file,
+                                          self.vm_image_extension)
         vm_archive_file = vm_file + '.xz'
 
         # Create empty log file owned by process runner
@@ -331,18 +329,17 @@ class VagrantImageBuilder(VirtualBoxAmd64ImageBuilder):
     def build(self):
         """Run the image building process."""
         archive_file = self.image_file + '.xz'
-        vm_file = self._replace_extension(
-            self.image_file, self.vm_image_extension)
+        vm_file = self._replace_extension(self.image_file,
+                                          self.vm_image_extension)
         vm_archive_file = vm_file + '.xz'
-        vagrant_file = self._replace_extension(
-            self.image_file, self.vagrant_extension)
+        vagrant_file = self._replace_extension(self.image_file,
+                                               self.vagrant_extension)
 
         # Create empty log file owned by process runner
         open(self.log_file, 'w').close()
 
         if self.should_skip_step(vagrant_file):
-            logger.info('Vagrant package exists, skipping - %s',
-                        vagrant_file)
+            logger.info('Vagrant package exists, skipping - %s', vagrant_file)
             return
 
         if self.should_skip_step(vm_file):
@@ -358,15 +355,15 @@ class VagrantImageBuilder(VirtualBoxAmd64ImageBuilder):
             return
 
         if self.should_skip_step(self.image_file):
-            logger.info(
-                'Pre-built image exists, skipping build - %s', self.image_file)
+            logger.info('Pre-built image exists, skipping build - %s',
+                        self.image_file)
             self.create_vm_file(self.image_file, vm_file)
             self.vagrant_package(vm_file, vagrant_file)
             return
 
         if self.should_skip_step(archive_file):
-            logger.info(
-                'Compressed image exists, uncompressing - %s', archive_file)
+            logger.info('Compressed image exists, uncompressing - %s',
+                        archive_file)
             self._run(['unxz', '--keep', archive_file])
             self.create_vm_file(self.image_file, vm_file)
             os.remove(self.image_file)
@@ -380,8 +377,8 @@ class VagrantImageBuilder(VirtualBoxAmd64ImageBuilder):
 
     def vagrant_package(self, vm_file, vagrant_file):
         """Create a vagrant package from VM file."""
-        self._run(['sudo', 'bin/vagrant-package', '--output', vagrant_file,
-                   vm_file])
+        self._run(
+            ['sudo', 'bin/vagrant-package', '--output', vagrant_file, vm_file])
 
 
 class QemuImageBuilder(VMImageBuilder):
