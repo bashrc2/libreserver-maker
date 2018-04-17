@@ -138,6 +138,11 @@ class Application(object):
             help='Build the image in RAM so that it is faster, requires '
             'free RAM about the size of disk image')
         parser.add_argument(
+            '--builder', default=None,
+            help='Builder backend to use when creating the image. Currently '
+            'valid values are vmdebootstrap and internal. If not specified '
+            'an optimal backend is automatically chosen based on target')
+        parser.add_argument(
             'targets', nargs='+', help='Image targets to build')
 
         self.arguments = parser.parse_args()

@@ -127,7 +127,11 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
 
     def make_image(self):
         """Call a builder backend to create basic image."""
-        self.builder_backends[self.builder_backend].make_image()
+        builder = self.builder_backend
+        if self.arguments.builder:
+            builder = self.arguments.builder
+
+        self.builder_backends[builder].make_image()
 
     def _get_image_base_name(self):
         """Return the base file name of the final image."""
