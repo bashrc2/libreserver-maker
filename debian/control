@@ -14,8 +14,8 @@ Build-Depends:
  python3-setuptools,
 Standards-Version: 4.1.3
 Homepage: https://freedombox.org
-Vcs-Browser: https://anonscm.debian.org/git/freedombox/freedom-maker.git
-Vcs-Git: https://anonscm.debian.org/git/freedombox/freedom-maker.git
+Vcs-Browser: https://salsa.debian.org/freedombox-team/freedom-maker
+Vcs-Git: https://salsa.debian.org/freedombox-team/freedom-maker.git
 
 Package: freedom-maker
 Architecture: all
