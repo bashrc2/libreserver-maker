@@ -229,6 +229,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
 class AMDIntelImageBuilder(ImageBuilder):
     """Base image build for all Intel/AMD targets."""
     boot_loader = 'grub'
+    builder_backend = 'internal'
 
     @classmethod
     def get_target_name(cls):
