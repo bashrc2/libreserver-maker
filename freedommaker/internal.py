@@ -50,6 +50,7 @@ class InternalBuilderBackend():
             self._set_freedombox_disk_image_flag()
             self._create_fstab()
             self._mount_additional_filesystems()
+            self._setup_build_apt()
             self._install_freedombox_packages()
             self._remove_ssh_keys()
             self._install_boot_loader()
@@ -271,12 +272,18 @@ class InternalBuilderBackend():
 
         if hasattr(self.builder, 'flash_kernel_name') and \
                    self.builder.flash_kernel_name:
-            options = getattr(self.builder, 'flash_kernel_options')
+            options = getattr(self.builder, 'flash_kernel_options', None)
             library.setup_flash_kernel(self.state,
                                        self.builder.flash_kernel_name, options)
 
         if hasattr(self.builder, 'install_boot_loader'):
-            self.builder.install_boot_loader()
+            self.builder.install_boot_loader(self.state)
+
+    def _setup_build_apt(self):
+        """Setup apt to use as the build mirror."""
+        library.setup_apt(self.state, self.builder.arguments.build_mirror,
+                          self.builder.arguments.distribution,
+                          self._get_components())
 
     def _setup_final_apt(self):
         """Setup apt to use the image mirror."""

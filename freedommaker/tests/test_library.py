@@ -103,6 +103,9 @@ class TestLibrary(unittest.TestCase):
         output = library.path_in_mount(self.state, 'boot')
         self.assertEqual(output, self.state['mount_point'] + '/boot')
 
+        output = library.path_in_mount(self.state, '/boot')
+        self.assertEqual(output, '/boot')
+
     def test_schedule_clean(self):
         """Test scheduling cleanup jobs."""
         cleanup = Mock()
@@ -450,16 +453,17 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
     @patch('freedommaker.library.run')
     def test_install_boot_loader_path(self, run):
         """Test installing boot loader components using dd."""
-        path = self.state['mount_point'] + '/u-boot/path'
-        library.install_boot_loader_part(self.state, path, self.image, '533',
-                                         '515')
-        run.assert_called_with(
-            ['dd', 'if=' + path, 'of=' + self.image, 'seek=533', 'size=515'])
-
-        library.install_boot_loader_part(self.state, path, self.image, '533',
-                                         '515', '90')
+        self.state['image_file'] = self.image
+        path = 'u-boot/path'
+        full_path = self.state['mount_point'] + '/' + path
+        library.install_boot_loader_part(self.state, path, '533', '515')
         run.assert_called_with([
-            'dd', 'if=' + path, 'of=' + self.image, 'seek=533', 'size=515',
+            'dd', 'if=' + full_path, 'of=' + self.image, 'seek=533', 'bs=515'
+        ])
+
+        library.install_boot_loader_part(self.state, path, '533', '515', '90')
+        run.assert_called_with([
+            'dd', 'if=' + full_path, 'of=' + self.image, 'seek=533', 'bs=515',
             'count=90'
         ])
 

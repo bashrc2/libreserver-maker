@@ -25,6 +25,7 @@ import subprocess
 import tempfile
 
 from . import internal
+from . import library
 from . import vmdebootstrap
 
 BASE_PACKAGES = [
@@ -446,16 +447,16 @@ class BeagleBoneImageBuilder(ARMImageBuilder):
         """Install the boot loader onto the image."""
         library.install_boot_loader_part(
             state,
-            '/usr/lib/u-boot/am335x_boneblack/MLO',
-            seek=1,
+            'usr/lib/u-boot/am335x_boneblack/MLO',
+            seek='1',
             size='128k',
-            count=1)
+            count='1')
         library.install_boot_loader_part(
             state,
-            '/usr/lib/u-boot/am335x_boneblack/u-boot.img',
-            seek=1,
+            'usr/lib/u-boot/am335x_boneblack/u-boot.img',
+            seek='1',
             size='384k',
-            count=2)
+            count='2')
 
 
 class A20ImageBuilder(ARMImageBuilder):
@@ -470,12 +471,13 @@ class A20OLinuXinoLimeImageBuilder(A20ImageBuilder):
     machine = 'a20-olinuxino-lime'
     flash_kernel_name = 'Olimex A20-OLinuXino-LIME'
 
-    def install_boot_loader(self, state):
+    @staticmethod
+    def install_boot_loader(state):
         """Install the boot loader onto the image."""
         library.install_boot_loader_part(
             state,
-            '/usr/lib/u-boot/A20-OLinuXino-Lime/u-boot-sunxi-with-spl.bin',
-            seek=8,
+            'usr/lib/u-boot/A20-OLinuXino-Lime/u-boot-sunxi-with-spl.bin',
+            seek='8',
             size='1k')
 
 
@@ -484,12 +486,13 @@ class A20OLinuXinoLime2ImageBuilder(A20ImageBuilder):
     machine = 'a20-olinuxino-lime2'
     flash_kernel_name = 'Olimex A20-OLinuXino-LIME2'
 
-    def install_boot_loader(self, state):
+    @staticmethod
+    def install_boot_loader(state):
         """Install the boot loader onto the image."""
         library.install_boot_loader_part(
             state,
-            '/usr/lib/u-boot/A20-OLinuXino-Lime2/u-boot-sunxi-with-spl.bin',
-            seek=8,
+            'usr/lib/u-boot/A20-OLinuXino-Lime2/u-boot-sunxi-with-spl.bin',
+            seek='8',
             size='1k')
 
 
@@ -498,12 +501,13 @@ class A20OLinuXinoMicroImageBuilder(A20ImageBuilder):
     machine = 'a20-olinuxino-micro'
     flash_kernel_name = 'Olimex A20-Olinuxino Micro'
 
-    def install_boot_loader(self, state):
+    @staticmethod
+    def install_boot_loader(state):
         """Install the boot loader onto the image."""
         library.install_boot_loader_part(
             state,
-            '/usr/lib/u-boot/A20-OLinuXino_MICRO/u-boot-sunxi-with-spl.bin',
-            seek=8,
+            'usr/lib/u-boot/A20-OLinuXino_MICRO/u-boot-sunxi-with-spl.bin',
+            seek='8',
             size='1k')
 
 
@@ -512,12 +516,13 @@ class BananaProImageBuilder(A20ImageBuilder):
     machine = 'banana-pro'
     flash_kernel_name = 'LeMaker Banana Pro'
 
-    def install_boot_loader(self, state):
+    @staticmethod
+    def install_boot_loader(state):
         """Install the boot loader onto the image."""
         library.install_boot_loader_part(
             state,
-            '/usr/lib/u-boot/Bananapro/u-boot-sunxi-with-spl.bin',
-            seek=8,
+            'usr/lib/u-boot/Bananapro/u-boot-sunxi-with-spl.bin',
+            seek='8',
             size='1k')
 
 
@@ -526,12 +531,13 @@ class Cubieboard2ImageBuilder(A20ImageBuilder):
     machine = 'cubieboard2'
     flash_kernel_name = 'Cubietech Cubieboard2'
 
-    def install_boot_loader(self, state):
+    @staticmethod
+    def install_boot_loader(state):
         """Install the boot loader onto the image."""
         library.install_boot_loader_part(
             state,
-            '/usr/lib/u-boot/Cubieboard2/u-boot-sunxi-with-spl.bin',
-            seek=8,
+            'usr/lib/u-boot/Cubieboard2/u-boot-sunxi-with-spl.bin',
+            seek='8',
             size='1k')
 
 
@@ -540,12 +546,13 @@ class CubietruckImageBuilder(A20ImageBuilder):
     machine = 'cubietruck'
     flash_kernel_name = 'Cubietech Cubietruck'
 
-    def install_boot_loader(self, state):
+    @staticmethod
+    def install_boot_loader(state):
         """Install the boot loader onto the image."""
         library.install_boot_loader_part(
             state,
-            '/usr/lib/u-boot/Cubietruck/u-boot-sunxi-with-spl.bin',
-            seek=8,
+            'usr/lib/u-boot/Cubietruck/u-boot-sunxi-with-spl.bin',
+            seek='8',
             size='1k')
 
 
@@ -554,12 +561,13 @@ class PCDuino3ImageBuilder(A20ImageBuilder):
     machine = 'pcduino3'
     flash_kernel_name = 'LinkSprite pcDuino3'
 
-    def install_boot_loader(self, state):
+    @staticmethod
+    def install_boot_loader(state):
         """Install the boot loader onto the image."""
         library.install_boot_loader_part(
             state,
-            '/usr/lib/u-boot/Linksprite_pcDuino3/u-boot-sunxi-with-spl.bin',
-            seek=8,
+            'usr/lib/u-boot/Linksprite_pcDuino3/u-boot-sunxi-with-spl.bin',
+            seek='8',
             size='1k')
 
 
@@ -618,7 +626,7 @@ rm -f /boot/firmware/start_*
 apt-get install -y u-boot-rpi
 cp /usr/lib/u-boot/{uboot_variant}/u-boot.bin /boot/firmware/kernel.img
 '''.format(uboot_variant=self.uboot_variant)
-        library.run_in_chroot(script)
+        library.run_in_chroot(state, script)
 
 
 class RaspberryPi2ImageBuilder(RaspberryPiWithUBoot):

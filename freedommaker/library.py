@@ -64,7 +64,11 @@ def run_in_chroot(state, *args, **kwargs):
 
 
 def path_in_mount(state, path):
-    """Return the path inside the mount point of image."""
+    """Return the path inside the mount point of image.
+
+    If as absolute path is provided as path, it will returned as it is.
+
+    """
     return os.path.join(state['mount_point'], path)
 
 
@@ -219,11 +223,17 @@ def qemu_debootstrap(state, architecture, distribution, variant, components,
                 'distribution %s, variant %s, components %s, build mirror %s',
                 target, architecture, distribution, variant, components,
                 mirror)
-    run([
-        'qemu-debootstrap', '--arch=' + architecture, '--variant=' + variant,
-        '--components=' + ','.join(components),
-        '--include=' + ','.join(packages), distribution, target, mirror
-    ])
+    try:
+        run([
+            'qemu-debootstrap', '--arch=' + architecture,
+            '--variant=' + variant, '--components=' + ','.join(components),
+            '--include=' + ','.join(packages), distribution, target, mirror
+        ])
+    except (Exception, KeyboardInterrupt):
+        logger.info('Unmounting filesystems that may have been left by debootstrap')
+        run(['umount', os.path.join(target, 'proc')], ignore_fail=True)
+        run(['umount', os.path.join(target, 'sys')], ignore_fail=True)
+        raise
 
     schedule_cleanup(state, qemu_remove_binary, state)
 
@@ -384,15 +394,19 @@ def setup_flash_kernel(state, machine_name, kernel_options):
     run_in_chroot(state, ['apt-get', 'install', '-y', 'flash-kernel'])
 
 
-def install_boot_loader_part(state, path, image_file, seek, size, count=None):
+def install_boot_loader_part(state, path, seek, size, count=None):
     """Do a dd copy for a file onto the disk image."""
+    image_file = state['image_file']
     full_path = path_in_mount(state, path)
+    logger.info('Installing boot loader part %s at seek=%s, size=%s, count=%s',
+                full_path, seek, size, count)
     command = [
         'dd', 'if=' + full_path, 'of=' + image_file, 'seek=' + seek,
-        'size=' + size
+        'bs=' + size
     ]
     if count:
         command.append('count=' + count)
+
     run(command)
 
 
