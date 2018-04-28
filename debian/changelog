@@ -1,3 +1,31 @@
+freedom-maker (0.15) unstable; urgency=medium
+
+  [ Joseph Nuthalapati ]
+  * Fix naming convention for virtualbox log file
+
+  [ James Valleroy ]
+  * wifi: Use packaged ath9k firmware in testing/unstable
+  * debian: Add python3-cliapp as build-depend
+  * autopkgtest: Add depend on python3-pkg-resources
+  * debian: Bump standards version to 4.1.4
+
+  [ Sunil Mohan Adapa ]
+  * Indentation and other minor fixes
+  * Add kernel flavor explicitly for all targets
+  * Add argument to choose backends
+  * Change boot size for ARM images to 128MiB from 128MB
+  * Implement an internal backend instead of vmdb2
+  * Default to internal backend for amd64/i386 images
+  * debian: Add additional dependencies of internal backend
+  * debian: Update VCS URLs
+  * debian: Update maintainer field
+  * Update debhelper compatibility level to 11
+  * Use secure URL for copyright format URI
+  * debian: Add autopkgtest tests
+  * Various fixes for internal builder
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Sat, 28 Apr 2018 13:43:34 -0400
+
 freedom-maker (0.14) unstable; urgency=medium
 
   [ Sébastien Barthélémy ]

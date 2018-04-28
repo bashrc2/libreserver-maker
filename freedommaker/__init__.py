@@ -22,7 +22,7 @@ Tool to build FreedomBox images for various targets.
 
 from .application import Application
 
-__version__ = '0.14'
+__version__ = '0.15'
 
 __all__ = [
     'Application',
