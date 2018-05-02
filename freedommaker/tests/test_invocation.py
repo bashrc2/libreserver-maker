@@ -82,6 +82,7 @@ class TestInvocation(unittest.TestCase):
             targets = [self.current_target]
 
         parameters = [
+            '--builder', 'vmdebootstrap',
             '--vmdebootstrap', os.path.join(self.path, 'vmdebootstrap-stub'),
             '--build-dir', self.output_dir
         ]
@@ -423,22 +424,22 @@ class TestInvocation(unittest.TestCase):
                 self.assert_arguments_passed(['--roottype', 'ext4'])
                 self.assert_arguments_passed(['--boottype', 'vfat'])
                 self.assert_arguments_not_passed(['--package', 'btrfs-progs'])
-                self.assert_arguments_passed(['--bootsize', '128M'])
+                self.assert_arguments_passed(['--bootsize', '128mib'])
             elif target in ('raspberry2', 'raspberry3'):
                 self.assert_arguments_passed(['--roottype', 'btrfs'])
                 self.assert_arguments_passed(['--boottype', 'ext2'])
                 self.assert_arguments_passed(['--package', 'btrfs-progs'])
-                self.assert_arguments_passed(['--bootsize', '128M'])
+                self.assert_arguments_passed(['--bootsize', '128mib'])
             elif target in ('dreamplug'):
                 self.assert_arguments_passed(['--roottype', 'btrfs'])
                 self.assert_arguments_passed(['--boottype', 'vfat'])
                 self.assert_arguments_passed(['--package', 'btrfs-progs'])
-                self.assert_arguments_passed(['--bootsize', '128M'])
+                self.assert_arguments_passed(['--bootsize', '128mib'])
             else:
                 self.assert_arguments_passed(['--roottype', 'btrfs'])
                 self.assert_arguments_passed(['--boottype', 'ext2'])
                 self.assert_arguments_passed(['--package', 'btrfs-progs'])
-                self.assert_arguments_passed(['--bootsize', '128M'])
+                self.assert_arguments_passed(['--bootsize', '128mib'])
 
     def test_boot_offset(self):
         """Test proper boot offset arguments."""
@@ -462,7 +463,8 @@ class TestInvocation(unittest.TestCase):
             self.invoke([target])
             if architecture in ('amd64'):
                 self.assert_arguments_not_passed(['--no-kernel'])
-                self.assert_arguments_not_passed(['--kernel-package'])
+                self.assert_arguments_passed(
+                    ['--kernel-package', 'linux-image-amd64'])
             elif architecture in ('i386'):
                 self.assert_arguments_not_passed(['--no-kernel'])
                 self.assert_arguments_passed(
