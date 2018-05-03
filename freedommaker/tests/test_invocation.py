@@ -27,6 +27,7 @@ import json
 import logging
 import os
 import random
+import shutil
 import string
 import subprocess
 import time
@@ -38,8 +39,6 @@ logger = logging.getLogger(__name__)
 ARCHITECTURES = {
     'amd64': 'amd64',
     'i386': 'i386',
-    'virtualbox-amd64': 'amd64',
-    'virtualbox-i386': 'i386',
     'qemu-amd64': 'amd64',
     'qemu-i386': 'i386',
     'beaglebone': 'armhf',
@@ -53,6 +52,11 @@ ARCHITECTURES = {
     'raspberry': 'armel',
     'raspberry2': 'armhf',
     'raspberry3': 'armhf',
+}
+
+VIRTUALBOX_ARCHITECTURES = {
+    'virtualbox-amd64': 'amd64',
+    'virtualbox-i386': 'i386',
 }
 
 
@@ -323,6 +327,18 @@ class TestInvocation(unittest.TestCase):
           - machine names are correct
         """
         for target in ARCHITECTURES:
+            self.build_stamp = self.random_string()
+            self.invoke([target])
+            self.assert_file_exists(self.get_built_file(target=target))
+
+    @unittest.skipUnless(shutil.which('VBoxManage'), 'requires VirtualBox')
+    def test_virtualbox_targets(self):
+        """Test that each virtualbox target works.
+
+        Also tests:
+          - machine names are correct
+        """
+        for target in VIRTUALBOX_ARCHITECTURES:
             self.build_stamp = self.random_string()
             self.invoke([target])
             self.assert_file_exists(self.get_built_file(target=target))
