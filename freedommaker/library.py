@@ -161,7 +161,7 @@ def force_release_partition_loop(loop_device):
 def force_release_loop_device(loop_device):
     """Force release of a loop setup for entire device"""
     logger.info('Force releasing loop setup for device %s', loop_device)
-    run(['losetup', '-d', loop_device])
+    run(['losetup', '-d', loop_device], ignore_fail=True)
 
 
 def loopback_teardown(image_file):
