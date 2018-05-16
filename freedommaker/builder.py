@@ -161,8 +161,10 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
             return self.image_file + '.temp'
 
         self.ram_directory = tempfile.TemporaryDirectory()
-        self._run(
-            ['sudo', 'mount', '-t', 'tmpfs', 'tmpfs', self.ram_directory.name])
+        self._run([
+            'sudo', 'mount', '-o', 'size=' + self.arguments.image_size, '-t',
+            'tmpfs', 'tmpfs', self.ram_directory.name
+        ])
         return os.path.join(self.ram_directory.name,
                             os.path.basename(self.image_file))
 
