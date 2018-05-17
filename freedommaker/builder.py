@@ -79,7 +79,8 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         self.arguments = arguments
         self.packages = BASE_PACKAGES
         if self.arguments.distribution in [
-                'unstable', 'testing', 'sid', 'buster']:
+                'unstable', 'testing', 'sid', 'buster'
+        ]:
             self.packages += NEXT_RELEASE_PACKAGES
 
         self.ram_directory = None
@@ -87,7 +88,8 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         self.builder_backends = {}
         self.builder_backends['vmdebootstrap'] = \
             vmdebootstrap.VmdebootstrapBuilderBackend(self)
-        self.builder_backends['internal'] = internal.InternalBuilderBackend(self)
+        self.builder_backends['internal'] = internal.InternalBuilderBackend(
+            self)
 
         self.image_file = os.path.join(self.arguments.build_dir,
                                        self._get_image_base_name() + '.img')

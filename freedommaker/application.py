@@ -26,8 +26,9 @@ import logging
 import logging.config
 import os
 
-from .builder import ImageBuilder
 import freedommaker
+
+from .builder import ImageBuilder
 
 IMAGE_SIZE = '3800M'
 BUILD_MIRROR = 'http://deb.debian.org/debian'

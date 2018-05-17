@@ -230,7 +230,8 @@ def qemu_debootstrap(state, architecture, distribution, variant, components,
             '--include=' + ','.join(packages), distribution, target, mirror
         ])
     except (Exception, KeyboardInterrupt):
-        logger.info('Unmounting filesystems that may have been left by debootstrap')
+        logger.info(
+            'Unmounting filesystems that may have been left by debootstrap')
         run(['umount', os.path.join(target, 'proc')], ignore_fail=True)
         run(['umount', os.path.join(target, 'sys')], ignore_fail=True)
         raise
