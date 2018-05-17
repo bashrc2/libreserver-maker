@@ -155,7 +155,7 @@ def loopback_setup(state, image_file):
 def force_release_partition_loop(loop_device):
     """Force release a partition mapping on a loop device."""
     logger.info('Force releasing partition on loop device %s', loop_device)
-    run(['dmsetup', 'remove', '-f', loop_device], ignore_fail=True)
+    run(['dmsetup', 'remove', loop_device], ignore_fail=True)
 
 
 def force_release_loop_device(loop_device):

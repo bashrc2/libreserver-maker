@@ -208,7 +208,7 @@ modify x x
         """Test loop device is forcefully released."""
         library.force_release_partition_loop('/dev/test/loop99')
         run.assert_called_with(
-            ['dmsetup', 'remove', '-f', '/dev/test/loop99'], ignore_fail=True)
+            ['dmsetup', 'remove', '/dev/test/loop99'], ignore_fail=True)
 
     @staticmethod
     @patch('freedommaker.library.run')
@@ -216,7 +216,7 @@ modify x x
         """Test loop device is forcefully released."""
         library.force_release_partition_loop('/dev/test/loop99')
         run.assert_called_with(
-            ['dmsetup', 'remove', '-f', '/dev/test/loop99'], ignore_fail=True)
+            ['dmsetup', 'remove', '/dev/test/loop99'], ignore_fail=True)
 
     @staticmethod
     @patch('freedommaker.library.run')
