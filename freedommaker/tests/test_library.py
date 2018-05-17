@@ -458,13 +458,14 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
         full_path = self.state['mount_point'] + '/' + path
         library.install_boot_loader_part(self.state, path, '533', '515')
         run.assert_called_with([
-            'dd', 'if=' + full_path, 'of=' + self.image, 'seek=533', 'bs=515'
+            'dd', 'if=' + full_path, 'of=' + self.image, 'seek=533', 'bs=515',
+            'conv=notrunc'
         ])
 
         library.install_boot_loader_part(self.state, path, '533', '515', '90')
         run.assert_called_with([
             'dd', 'if=' + full_path, 'of=' + self.image, 'seek=533', 'bs=515',
-            'count=90'
+            'conv=notrunc', 'count=90'
         ])
 
     @patch('freedommaker.library.run')

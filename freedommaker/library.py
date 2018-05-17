@@ -402,7 +402,7 @@ def install_boot_loader_part(state, path, seek, size, count=None):
                 full_path, seek, size, count)
     command = [
         'dd', 'if=' + full_path, 'of=' + image_file, 'seek=' + seek,
-        'bs=' + size
+        'bs=' + size, 'conv=notrunc'
     ]
     if count:
         command.append('count=' + count)
