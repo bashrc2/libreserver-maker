@@ -67,7 +67,7 @@ class Application(object):
 
             cls = ImageBuilder.get_builder_class(target)
             if not cls:
-                logger.warn('Unknown target - %s', target)
+                logger.warning('Unknown target - %s', target)
                 continue
 
             builder = cls(self.arguments)
