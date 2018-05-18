@@ -379,10 +379,10 @@ def setup_flash_kernel(state, machine_name, kernel_options):
     """Setup and install flash-kernel package."""
     logger.info('Setting up flash kernel for machine %s with options %s',
                 machine_name, kernel_options)
-    directory_path = path_in_mount(state, 'etc/flash_kernel')
+    directory_path = path_in_mount(state, 'etc/flash-kernel')
     os.makedirs(directory_path, exist_ok=True)
 
-    file_path = path_in_mount(state, 'etc/flash_kernel/machine')
+    file_path = path_in_mount(state, 'etc/flash-kernel/machine')
     with open(file_path, 'w') as file_handle:
         file_handle.write(machine_name)
 

@@ -431,7 +431,7 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
     @patch('freedommaker.library.run_in_chroot')
     def test_setup_flash_kernel(self, run):
         """Test setting up flash kernel."""
-        machine_path = self.state['mount_point'] + '/etc/flash_kernel/machine'
+        machine_path = self.state['mount_point'] + '/etc/flash-kernel/machine'
         expected_content = 'test-machine'
         with self.assert_file_change(machine_path, None, expected_content):
             library.setup_flash_kernel(self.state, 'test-machine', None)
