@@ -468,6 +468,7 @@ class A20ImageBuilder(ARMImageBuilder):
     architecture = 'armhf'
     kernel_flavor = 'armmp-lpae'
     boot_offset = '1mib'
+    builder_backend = 'internal'
 
 
 class A20OLinuXinoLimeImageBuilder(A20ImageBuilder):
