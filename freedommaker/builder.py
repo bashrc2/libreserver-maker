@@ -631,7 +631,7 @@ rm -f /boot/firmware/start_*
 apt-get install -y u-boot-rpi
 cp /usr/lib/u-boot/{uboot_variant}/u-boot.bin /boot/firmware/kernel.img
 '''.format(uboot_variant=self.uboot_variant)
-        library.run_in_chroot(state, script)
+        library.run_in_chroot(state, ['bash', '-c', script])
 
 
 class RaspberryPi2ImageBuilder(RaspberryPiWithUBoot):
