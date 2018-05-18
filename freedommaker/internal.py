@@ -259,7 +259,7 @@ class InternalBuilderBackend():
             append=False)
         if self.builder.boot_filesystem_type:
             library.add_fstab_entry(self.state, 'boot',
-                                    self.builder.root_filesystem_type, 2)
+                                    self.builder.boot_filesystem_type, 2)
 
         if self.builder.firmware_filesystem_type:
             library.add_fstab_entry(self.state, 'firmware',
