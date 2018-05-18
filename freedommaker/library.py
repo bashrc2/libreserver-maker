@@ -396,6 +396,12 @@ def setup_flash_kernel(state, machine_name, kernel_options):
     run_in_chroot(state, ['flash-kernel'])
 
 
+def update_initramfs(state):
+    """Update the initramfs in the disk image to make it use fstab etc."""
+    logger.info('Updating initramfs')
+    run_in_chroot(state, ['update-initramfs', '-u'])
+
+
 def install_boot_loader_part(state, path, seek, size, count=None):
     """Do a dd copy for a file onto the disk image."""
     image_file = state['image_file']

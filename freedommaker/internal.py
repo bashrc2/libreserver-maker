@@ -279,6 +279,8 @@ class InternalBuilderBackend():
         if hasattr(self.builder, 'install_boot_loader'):
             self.builder.install_boot_loader(self.state)
 
+        library.update_initramfs(self.state)
+
     def _setup_build_apt(self):
         """Setup apt to use as the build mirror."""
         library.setup_apt(self.state, self.builder.arguments.build_mirror,

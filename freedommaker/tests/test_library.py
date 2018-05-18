@@ -436,10 +436,10 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
         with self.assert_file_change(machine_path, None, expected_content):
             library.setup_flash_kernel(self.state, 'test-machine', None)
 
-        self.assertEqual(
-            run.call_args_list,
-            [call(self.state, ['apt-get', 'install', '-y', 'flash-kernel']),
-             call(self.state, ['flash-kernel'])])
+        self.assertEqual(run.call_args_list, [
+            call(self.state, ['apt-get', 'install', '-y', 'flash-kernel']),
+            call(self.state, ['flash-kernel'])
+        ])
 
         run.reset_mock()
         with self.assert_file_change(machine_path, None, expected_content):
@@ -451,6 +451,14 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
             call(self.state, ['apt-get', 'install', '-y', 'flash-kernel']),
             call(self.state, ['flash-kernel'])
         ])
+
+    @patch('freedommaker.library.run_in_chroot')
+    def test_update_initramfs(self, run):
+        """Test updating initramfs."""
+        library.update_initramfs(self.state)
+
+        self.assertEqual(run.call_args_list,
+                         [call(self.state, ['update-initramfs', '-u'])])
 
     @patch('freedommaker.library.run')
     def test_install_boot_loader_path(self, run):
