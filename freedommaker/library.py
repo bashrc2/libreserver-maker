@@ -393,6 +393,7 @@ def setup_flash_kernel(state, machine_name, kernel_options):
             state, ['debconf-set-selections'], feed_stdin=stdin.encode())
 
     run_in_chroot(state, ['apt-get', 'install', '-y', 'flash-kernel'])
+    run_in_chroot(state, ['flash-kernel'])
 
 
 def install_boot_loader_part(state, path, seek, size, count=None):

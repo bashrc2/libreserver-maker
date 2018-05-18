@@ -438,7 +438,8 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
 
         self.assertEqual(
             run.call_args_list,
-            [call(self.state, ['apt-get', 'install', '-y', 'flash-kernel'])])
+            [call(self.state, ['apt-get', 'install', '-y', 'flash-kernel']),
+             call(self.state, ['flash-kernel'])])
 
         run.reset_mock()
         with self.assert_file_change(machine_path, None, expected_content):
@@ -447,7 +448,8 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
         selection = b'flash-kernel flash-kernel/linux_cmdline string "debug"'
         self.assertEqual(run.call_args_list, [
             call(self.state, ['debconf-set-selections'], feed_stdin=selection),
-            call(self.state, ['apt-get', 'install', '-y', 'flash-kernel'])
+            call(self.state, ['apt-get', 'install', '-y', 'flash-kernel']),
+            call(self.state, ['flash-kernel'])
         ])
 
     @patch('freedommaker.library.run')
