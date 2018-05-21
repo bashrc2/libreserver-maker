@@ -75,6 +75,7 @@ class InternalBuilderBackend():
         # Don't install MBR on the image file, it is not needed as we use
         # either grub or u-boot.
         library.create_partition_table(self._temp_image_file, 'msdos')
+        boot_partition_number = 1
 
         offset = '1mib'
         if self.builder.firmware_filesystem_type:
@@ -83,6 +84,7 @@ class InternalBuilderBackend():
                                      self._temp_image_file, offset, end,
                                      self.builder.firmware_filesystem_type)
             offset = utils.add_disk_offsets(end, '1mib')
+            boot_partition_number += 1
 
         if self.builder.boot_filesystem_type:
             end = utils.add_disk_offsets(offset, self.builder.boot_size)
@@ -95,7 +97,8 @@ class InternalBuilderBackend():
                                  offset, '100%',
                                  self.builder.root_filesystem_type)
 
-        library.set_boot_flag(self._temp_image_file, partition_number=1)
+        library.set_boot_flag(
+            self._temp_image_file, partition_number=boot_partition_number)
 
     def _loopback_setup(self):
         """Perform mapping to loopback devices from partitions in image file."""
