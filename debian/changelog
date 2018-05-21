@@ -1,3 +1,27 @@
+freedom-maker (0.16) unstable; urgency=medium
+
+  [ James Valleroy ]
+  * Fix tests for kernel flavor and filesystems
+  * tests: Skip virtualbox targets if VirtualBox is not available
+  * Add gitlab CI
+  * Add pipeline and package badges
+
+  [ Sunil Mohan Adapa ]
+  * Ignore errors when force releasing loop device
+  * Limit size of tmpfs mount to prevent issue during zerofill
+  * Don't force when removing device using dmsetup
+  * Fix image getting truncated during bootloader install
+  * yapf, isort changes
+  * Use logger.warning instead of logger.warn
+  * internal: Run flash-kernel explicitly
+  * internal: Fix flash-kernel machine name path
+  * internal: Fix making fstab entry for boot partition
+  * Switch to internal backend for all a20 boards
+  * internal: Run update-initramfs towards the end
+  * internal: Run rpi boot script properly
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 21 May 2018 18:26:16 -0400
+
 freedom-maker (0.15) unstable; urgency=medium
 
   [ Joseph Nuthalapati ]
