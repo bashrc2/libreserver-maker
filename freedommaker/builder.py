@@ -642,6 +642,7 @@ class RaspberryPi2ImageBuilder(RaspberryPiWithUBoot):
     kernel_flavor = 'armmp'
     flash_kernel_name = 'Raspberry Pi 2 Model B'
     uboot_variant = 'rpi_2'
+    builder_backend = 'internal'
 
 
 class RaspberryPi3ImageBuilder(RaspberryPiWithUBoot):
@@ -653,3 +654,4 @@ class RaspberryPi3ImageBuilder(RaspberryPiWithUBoot):
     kernel_flavor = 'armmp'
     flash_kernel_name = 'Raspberry Pi 3 Model B'
     uboot_variant = 'rpi_3_32b'
+    builder_backend = 'internal'
