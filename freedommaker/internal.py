@@ -150,7 +150,10 @@ class InternalBuilderBackend():
     @staticmethod
     def _get_basic_packages():
         """Return a list of basic packages for all king of images."""
-        return ['firmware-ath9k-htc']
+        # initramfs-tools is a dependency for the kernel-image package.
+        # However, when kernel is not installed as in case of Raspberry Pi
+        # image, explicit dependency is needed.
+        return ['initramfs-tools', 'firmware-ath9k-htc']
 
     def _get_kernel_packages(self):
         """Return package needed for kernel."""
