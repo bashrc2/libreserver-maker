@@ -445,7 +445,7 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
         with self.assert_file_change(machine_path, None, expected_content):
             library.setup_flash_kernel(self.state, 'test-machine', 'debug')
 
-        selection = b'flash-kernel flash-kernel/linux_cmdline string "debug"'
+        selection = b'flash-kernel flash-kernel/linux_cmdline string debug'
         self.assertEqual(run.call_args_list, [
             call(self.state, ['debconf-set-selections'], feed_stdin=selection),
             call(self.state, ['apt-get', 'install', '-y', 'flash-kernel']),

@@ -387,7 +387,7 @@ def setup_flash_kernel(state, machine_name, kernel_options):
         file_handle.write(machine_name)
 
     if kernel_options:
-        stdin = 'flash-kernel flash-kernel/linux_cmdline string "{}"'.format(
+        stdin = 'flash-kernel flash-kernel/linux_cmdline string {}'.format(
             kernel_options)
         run_in_chroot(
             state, ['debconf-set-selections'], feed_stdin=stdin.encode())

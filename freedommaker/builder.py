@@ -63,9 +63,11 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     @classmethod
     def get_builder_class(cls, target):
         """Return an builder class given target name."""
-        for cls in cls.get_subclasses():
-            if cls.get_target_name() == target:
-                return cls
+        for subclass in cls.get_subclasses():
+            if subclass.get_target_name() == target:
+                return subclass
+
+        raise ValueError('No such target')
 
     @classmethod
     def get_subclasses(cls):
@@ -447,7 +449,8 @@ class BeagleBoneImageBuilder(ARMImageBuilder):
     flash_kernel_name = 'TI AM335x BeagleBone Black'
     flash_kernel_options = 'console=ttyO0'
 
-    def install_boot_loader(self, state):
+    @staticmethod
+    def install_boot_loader(state):
         """Install the boot loader onto the image."""
         library.install_boot_loader_part(
             state,
