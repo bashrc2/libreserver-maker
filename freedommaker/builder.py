@@ -587,6 +587,7 @@ class DreamPlugImageBuilder(ARMImageBuilder):
     kernel_flavor = 'marvell'
     boot_filesystem_type = 'vfat'
     flash_kernel_name = 'Globalscale Technologies Dreamplug'
+    builder_backend = 'internal'
 
     @staticmethod
     def install_boot_loader(state):
