@@ -154,10 +154,16 @@ class InternalBuilderBackend():
 
     def _get_kernel_packages(self):
         """Return package needed for kernel."""
+        if not self.builder.kernel_flavor:
+            return []
+
         return ['linux-image-' + self.builder.kernel_flavor]
 
     def _get_boot_loader_packages(self):
         """Return packaged needed by boot loader."""
+        if not self.builder.boot_loader:
+            return []
+
         if self.builder.boot_loader == 'grub':
             return ['grub-pc']
 
