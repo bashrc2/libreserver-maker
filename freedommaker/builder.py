@@ -656,6 +656,10 @@ class RaspberryPiWithUBoot(ARMImageBuilder):
             raise NotImplementedError
 
         script = '''
+set -e
+set -x
+set -o pipefail
+
 apt-get install --no-install-recommends -y dpkg-dev
 cd /tmp
 apt-get source raspi3-firmware
