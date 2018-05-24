@@ -601,6 +601,7 @@ class RaspberryPiImageBuilder(ARMImageBuilder):
     root_filesystem_type = 'ext4'
     boot_filesystem_type = 'vfat'
     kernel_flavor = None
+    builder_backend = 'internal'
 
     @staticmethod
     def install_boot_loader(state):
