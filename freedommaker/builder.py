@@ -602,9 +602,45 @@ class RaspberryPiImageBuilder(ARMImageBuilder):
     boot_filesystem_type = 'vfat'
     kernel_flavor = None
 
-    def install_boot_loader(self, state):
+    @staticmethod
+    def install_boot_loader(state):
         """Install the boot loader onto the image."""
-        raise NotImplementedError
+        script = '''
+set -e
+set -x
+set -o pipefail
+
+apt-get install -y git-core binutils ca-certificates wget kmod
+
+# Raspberry Pi blob repo
+rpi_blob_repo='https://github.com/Hexxeh/rpi-update'
+rpi_blob_commit='31615deb9406ffc3ab823e76d12dedf373c8e087'
+
+# Expected sha256 hash for rpi-update
+rpi_blob_hash='9868671978541ae6efa692d087028ee5cc5019c340296fdd17793160b6cf403f'
+
+rpi_tempdir=/tmp/fbx-rpi-update
+if [ -d $rpi_tempdir ]; then
+    rm -rf $rpi_tempdir
+fi
+git clone $rpi_blob_repo $rpi_tempdir
+cd $rpi_tempdir
+git checkout $rpi_blob_commit -b $rpi_blob_commit
+
+downloaded_rpi_blob_hash=$(sha256sum $rpi_tempdir/rpi-update | awk -F ' ' '{print $1}')
+if [ "$downloaded_rpi_blob_hash" != "$rpi_blob_hash" ]; then
+    echo 'WARNING: Unable to verify Raspberry Pi boot blob'
+    return
+fi
+
+cp $rpi_tempdir/rpi-update /usr/bin/rpi-update
+
+chmod a+x /usr/bin/rpi-update
+mkdir -p /lib/modules
+touch /boot/start.elf
+SKIP_BACKUP=1 SKIP_WARNING=1 rpi-update | tee /root/rpi-update.log
+'''
+        library.run_in_chroot(state, ['bash', '-c', script])
 
 
 class RaspberryPiWithUBoot(ARMImageBuilder):
