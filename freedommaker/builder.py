@@ -448,6 +448,7 @@ class BeagleBoneImageBuilder(ARMImageBuilder):
     boot_offset = '2mib'
     flash_kernel_name = 'TI AM335x BeagleBone Black'
     flash_kernel_options = 'console=ttyO0'
+    builder_backend = 'internal'
 
     @staticmethod
     def install_boot_loader(state):
