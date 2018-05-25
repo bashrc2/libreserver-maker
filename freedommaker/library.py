@@ -205,14 +205,14 @@ def mount_filesystem(state,
                      is_bind_mount)
 
 
-def unmount_filesystem(device, mount_point, is_bind_mount):
+def unmount_filesystem(device, mount_point, is_bind_mount, ignore_fail=False):
     """Unmount a filesystem."""
     logger.info('Unmounting device %s from mount point %s', device,
                 mount_point)
     if not is_bind_mount:
         run(['fuser', '-mvk', mount_point], ignore_fail=True)
 
-    run(['umount', mount_point])
+    run(['umount', mount_point], ignore_fail=ignore_fail)
 
 
 def qemu_debootstrap(state, architecture, distribution, variant, components,
@@ -232,11 +232,23 @@ def qemu_debootstrap(state, architecture, distribution, variant, components,
     except (Exception, KeyboardInterrupt):
         logger.info(
             'Unmounting filesystems that may have been left by debootstrap')
-        run(['umount', os.path.join(target, 'proc')], ignore_fail=True)
-        run(['umount', os.path.join(target, 'sys')], ignore_fail=True)
+        for path in ('proc', 'sys', 'etc/machine-id'):
+            unmount_filesystem(
+                None,
+                os.path.join(target, path),
+                is_bind_mount=True,
+                ignore_fail=True)
         raise
 
     schedule_cleanup(state, qemu_remove_binary, state)
+
+    # During bootstrap, /etc/machine-id path might be bind mounted.
+    schedule_cleanup(
+        state,
+        unmount_filesystem,
+        None,
+        os.path.join(target, 'etc/machine-id'),
+        is_bind_mount=True, ignore_fail=True)
 
 
 def qemu_remove_binary(state):
@@ -375,7 +387,8 @@ deb-src http://security.debian.org/debian-security/ {distribution}/updates {comp
     run_in_chroot(state, ['apt-get', 'clean'])
 
 
-def setup_flash_kernel(state, machine_name, kernel_options, boot_filesystem_type):
+def setup_flash_kernel(state, machine_name, kernel_options,
+                       boot_filesystem_type):
     """Setup and install flash-kernel package."""
     logger.info('Setting up flash kernel for machine %s with options %s',
                 machine_name, kernel_options)

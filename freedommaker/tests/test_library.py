@@ -266,18 +266,21 @@ modify x x
     @patch('freedommaker.library.run')
     def test_unmount_filesystem(self, run):
         """Test unmounting a filesystem."""
-        library.unmount_filesystem('/dev/', self.state['mount_point'], False)
+        library.unmount_filesystem('/dev/', self.state['mount_point'], False,
+                                   False)
         self.assertEqual(run.call_args_list, [
             call(
                 ['fuser', '-mvk', self.state['mount_point']],
                 ignore_fail=True),
-            call(['umount', self.state['mount_point']])
+            call(['umount', self.state['mount_point']], ignore_fail=False)
         ])
 
         run.reset_mock()
-        library.unmount_filesystem('/dev/pts', self.state['mount_point'], True)
-        self.assertEqual(run.call_args_list,
-                         [call(['umount', self.state['mount_point']])])
+        library.unmount_filesystem('/dev/pts', self.state['mount_point'], True,
+                                   True)
+        self.assertEqual(
+            run.call_args_list,
+            [call(['umount', self.state['mount_point']], ignore_fail=True)])
 
     @patch('freedommaker.library.run')
     def test_qemu_debootstrap(self, run):
@@ -291,8 +294,15 @@ modify x x
             self.state['mount_point'], 'http://deb.debian.org/debian'
         ])
 
-        self.assertEqual(self.state['cleanup'],
-                         [[library.qemu_remove_binary, (self.state, ), {}]])
+        self.assertEqual(
+            self.state['cleanup'],
+            [[library.qemu_remove_binary, (self.state, ), {}], [
+                library.unmount_filesystem,
+                (None, self.state['mount_point'] + '/etc/machine-id'), {
+                    'is_bind_mount': True,
+                    'ignore_fail': True
+                }
+            ]])
 
     @patch('freedommaker.library.run')
     def test_qemu_remove_binary(self, run):
