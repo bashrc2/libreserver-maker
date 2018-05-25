@@ -36,7 +36,6 @@
   <refsynopsisdiv>
     <cmdsynopsis>
       <command>freedom-maker</command>
-        <arg> <option>--vmdebootstrap</option></arg>
         <arg> <option>--build-stamp</option></arg>
         <arg> <option>--image-size</option></arg>
         <arg> <option>--build-mirror</option></arg>
@@ -46,7 +45,7 @@
         <arg> <option>--package</option></arg>
         <arg> <option>--custom-package</option></arg>
         <arg> <option>--build-dir</option></arg>
-        <arg> <option>--log-level'</option></arg>
+        <arg> <option>--log-level</option></arg>
         <arg> <option>--hostname</option></arg>
         <arg> <option>--sign</option></arg>
         <arg> <option>--force</option></arg>
@@ -76,14 +75,6 @@
   <refsect1>
     <title>Options</title>
     <variablelist>
-      <varlistentry>
-        <term> <option>--vmdebootstrap</option></term>
-        <listitem>
-          <para>
-            Path to vmdebootstrap executable
-          </para>
-        </listitem>
-      </varlistentry>
       <varlistentry>
         <term> <option>--build-stamp</option></term>
          <listitem>

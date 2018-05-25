@@ -26,7 +26,6 @@ import tempfile
 
 from . import internal
 from . import library
-from . import vmdebootstrap
 
 BASE_PACKAGES = [
     'initramfs-tools',
@@ -88,8 +87,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         self.ram_directory = None
 
         self.builder_backends = {}
-        self.builder_backends['vmdebootstrap'] = \
-            vmdebootstrap.VmdebootstrapBuilderBackend(self)
         self.builder_backends['internal'] = internal.InternalBuilderBackend(
             self)
 
@@ -104,9 +101,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
             filename=self.log_file, mode='a')
         self.log_handler.setFormatter(formatter)
         logger.addHandler(self.log_handler)
-
-        self.customization_script = os.path.join(
-            os.path.dirname(__file__), 'freedombox-customize')
 
     def cleanup(self):
         """Finalize tasks."""
@@ -135,9 +129,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     def make_image(self):
         """Call a builder backend to create basic image."""
         builder = self.builder_backend
-        if self.arguments.builder:
-            builder = self.arguments.builder
-
         self.builder_backends[builder].make_image()
 
     def _get_image_base_name(self):

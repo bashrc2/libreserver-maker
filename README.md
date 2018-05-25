@@ -55,7 +55,6 @@ For all dependencies:
 ```shell
 $ sudo apt-get -y install git \
                           sudo \
-                          vmdebootstrap \
                           dosfstools \
                           btrfs-progs \
                           pxz \
