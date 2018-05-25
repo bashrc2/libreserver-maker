@@ -375,7 +375,7 @@ deb-src http://security.debian.org/debian-security/ {distribution}/updates {comp
     run_in_chroot(state, ['apt-get', 'clean'])
 
 
-def setup_flash_kernel(state, machine_name, kernel_options):
+def setup_flash_kernel(state, machine_name, kernel_options, boot_filesystem_type):
     """Setup and install flash-kernel package."""
     logger.info('Setting up flash kernel for machine %s with options %s',
                 machine_name, kernel_options)
@@ -393,7 +393,11 @@ def setup_flash_kernel(state, machine_name, kernel_options):
             state, ['debconf-set-selections'], feed_stdin=stdin.encode())
 
     run_in_chroot(state, ['apt-get', 'install', '-y', 'flash-kernel'])
-    run_in_chroot(state, ['flash-kernel'])
+
+    # flash-kernel creates links in /boot and does not work with the filesystem
+    # is vfat.
+    if boot_filesystem_type != 'vfat':
+        run_in_chroot(state, ['flash-kernel'])
 
 
 def update_initramfs(state):

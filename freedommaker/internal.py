@@ -286,7 +286,8 @@ class InternalBuilderBackend():
                    self.builder.flash_kernel_name:
             options = getattr(self.builder, 'flash_kernel_options', None)
             library.setup_flash_kernel(self.state,
-                                       self.builder.flash_kernel_name, options)
+                                       self.builder.flash_kernel_name, options,
+                                       self.builder.boot_filesystem_type)
 
         if hasattr(self.builder, 'install_boot_loader'):
             self.builder.install_boot_loader(self.state)

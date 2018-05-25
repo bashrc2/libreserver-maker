@@ -434,7 +434,8 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
         machine_path = self.state['mount_point'] + '/etc/flash-kernel/machine'
         expected_content = 'test-machine'
         with self.assert_file_change(machine_path, None, expected_content):
-            library.setup_flash_kernel(self.state, 'test-machine', None)
+            library.setup_flash_kernel(self.state, 'test-machine', None,
+                                       'ext2')
 
         self.assertEqual(run.call_args_list, [
             call(self.state, ['apt-get', 'install', '-y', 'flash-kernel']),
@@ -443,13 +444,13 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
 
         run.reset_mock()
         with self.assert_file_change(machine_path, None, expected_content):
-            library.setup_flash_kernel(self.state, 'test-machine', 'debug')
+            library.setup_flash_kernel(self.state, 'test-machine', 'debug',
+                                       'vfat')
 
         selection = b'flash-kernel flash-kernel/linux_cmdline string debug'
         self.assertEqual(run.call_args_list, [
             call(self.state, ['debconf-set-selections'], feed_stdin=selection),
             call(self.state, ['apt-get', 'install', '-y', 'flash-kernel']),
-            call(self.state, ['flash-kernel'])
         ])
 
     @patch('freedommaker.library.run_in_chroot')
