@@ -21,7 +21,6 @@ Worker class to run various command build the image.
 import logging
 import os
 import shutil
-import subprocess
 import tempfile
 
 from . import internal
@@ -104,11 +103,8 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     def build(self):
         """Run the image building process."""
         archive_file = self.image_file + '.xz'
-        if not self.should_skip_step(archive_file):
-            self.make_image()
-            self.compress(archive_file, self.image_file)
-        else:
-            logger.info('Compressed image exists, skipping')
+        self.make_image()
+        self.compress(archive_file, self.image_file)
 
         self.sign(archive_file)
 
@@ -149,13 +145,9 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         return os.path.join(self.ram_directory.name,
                             os.path.basename(self.image_file))
 
-    def compress(self, archive_file, image_file):
+    @staticmethod
+    def compress(archive_file, image_file):
         """Compress the generate image."""
-        if self.should_skip_step(archive_file, [image_file]):
-            logger.info('Compressed image exists, skipping compression - %s',
-                        archive_file)
-            return
-
         command = ['xz', '--no-warn', '--best', '--force']
         if shutil.which('pxz'):
             command = ['pxz', '-9', '--force']
@@ -168,34 +160,12 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
             return
 
         signature = archive + '.sig'
-
-        if self.should_skip_step(signature, [archive]):
-            logger.info('Signature file up-to-date, skipping - %s', signature)
-            return
-
         try:
             os.remove(signature)
         except FileNotFoundError:
             pass
 
         library.run(['gpg', '--output', signature, '--detach-sig', archive])
-
-    def should_skip_step(self, target, dependencies=None):
-        """Check whether a given build step may be skipped."""
-        # Check forced rebuild
-        if self.arguments.force:
-            return False
-
-        # Check if target exists
-        if not os.path.isfile(target):
-            return False
-
-        # Check if a dependency is newer than the target
-        for dependency in (dependencies or []):
-            if os.path.getmtime(dependency) > os.path.getmtime(target):
-                return False
-
-        return True
 
     @staticmethod
     def _replace_extension(file_name, new_extension):
@@ -231,29 +201,14 @@ class VMImageBuilder(AMDIntelImageBuilder):
 
     def build(self):
         """Run the image building process."""
-        archive_file = self.image_file + '.xz'
         vm_file = self._replace_extension(self.image_file,
                                           self.vm_image_extension)
         vm_archive_file = vm_file + '.xz'
 
-        if not self.should_skip_step(vm_archive_file):
-            if not self.should_skip_step(self.image_file):
-                if self.should_skip_step(archive_file):
-                    logger.info('Compressed image exists, uncompressing - %s',
-                                archive_file)
-                    library.run(['unxz', '--keep', archive_file])
-                else:
-                    self.make_image()
-            else:
-                logger.info('Pre-built image exists, skipping build - %s',
-                            self.image_file)
-
-            self.create_vm_file(self.image_file, vm_file)
-            os.remove(self.image_file)
-            self.compress(vm_archive_file, vm_file)
-        else:
-            logger.info('Compressed VM image exists, skipping - %s',
-                        vm_archive_file)
+        self.make_image()
+        self.create_vm_file(self.image_file, vm_file)
+        os.remove(self.image_file)
+        self.compress(vm_archive_file, vm_file)
 
         self.sign(vm_archive_file)
 
@@ -272,11 +227,14 @@ class VirtualBoxImageBuilder(VMImageBuilder):
         if getattr(cls, 'architecture', None):
             return 'virtualbox-' + cls.architecture
 
+        return None
+
     def create_vm_file(self, image_file, vm_file):
         """Create a VM file from image file."""
-        if self.should_skip_step(vm_file, [image_file]):
-            logger.info('VM file exists, skipping conversion - %s', vm_file)
-            return
+        try:
+            os.remove(vm_file)
+        except FileNotFoundError:
+            pass
 
         library.run(['VBoxManage', 'convertdd', image_file, vm_file])
 
@@ -304,51 +262,18 @@ class VagrantImageBuilder(VirtualBoxAmd64ImageBuilder):
 
     def build(self):
         """Run the image building process."""
-        archive_file = self.image_file + '.xz'
         vm_file = self._replace_extension(self.image_file,
                                           self.vm_image_extension)
-        vm_archive_file = vm_file + '.xz'
         vagrant_file = self._replace_extension(self.image_file,
                                                self.vagrant_extension)
-
-        if self.should_skip_step(vagrant_file):
-            logger.info('Vagrant package exists, skipping - %s', vagrant_file)
-            return
-
-        if self.should_skip_step(vm_file):
-            logger.info('VM image exists, skipping - %s', vm_archive_file)
-            self.vagrant_package(vm_file, vagrant_file)
-            return
-
-        if self.should_skip_step(vm_archive_file):
-            logger.info('Compressed VM image exists, skipping - %s',
-                        vm_archive_file)
-            library.run(['unxz', '--keep', vm_archive_file])
-            self.vagrant_package(vm_file, vagrant_file)
-            return
-
-        if self.should_skip_step(self.image_file):
-            logger.info('Pre-built image exists, skipping build - %s',
-                        self.image_file)
-            self.create_vm_file(self.image_file, vm_file)
-            self.vagrant_package(vm_file, vagrant_file)
-            return
-
-        if self.should_skip_step(archive_file):
-            logger.info('Compressed image exists, uncompressing - %s',
-                        archive_file)
-            library.run(['unxz', '--keep', archive_file])
-            self.create_vm_file(self.image_file, vm_file)
-            os.remove(self.image_file)
-            self.vagrant_package(vm_file, vagrant_file)
-            return
 
         self.make_image()
         self.create_vm_file(self.image_file, vm_file)
         os.remove(self.image_file)
         self.vagrant_package(vm_file, vagrant_file)
 
-    def vagrant_package(self, vm_file, vagrant_file):
+    @staticmethod
+    def vagrant_package(vm_file, vagrant_file):
         """Create a vagrant package from VM file."""
         library.run(
             ['sudo', 'bin/vagrant-package', '--output', vagrant_file, vm_file])
@@ -364,12 +289,10 @@ class QemuImageBuilder(VMImageBuilder):
         if getattr(cls, 'architecture', None):
             return 'qemu-' + cls.architecture
 
+        return None
+
     def create_vm_file(self, image_file, vm_file):
         """Create a VM image file from image file."""
-        if self.should_skip_step(vm_file, [image_file]):
-            logger.info('VM file exists, skipping conversion - %s', vm_file)
-            return
-
         library.run(['qemu-img', 'convert', '-O', 'qcow2', image_file, vm_file])
 
 
