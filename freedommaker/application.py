@@ -71,7 +71,6 @@ class Application(object):
                 continue
 
             builder = cls(self.arguments)
-            self.setup_logging(builder.log_file)
             try:
                 builder.build()
                 logger.info('Target complete - %s', target)
@@ -140,7 +139,7 @@ class Application(object):
 
         self.arguments = parser.parse_args()
 
-    def setup_logging(self, log_file=None):
+    def setup_logging(self):
         """Setup logging."""
         config = {
             'version': 1,
