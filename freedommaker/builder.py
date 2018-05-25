@@ -45,7 +45,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     machine = 'all'
     free = True
 
-    builder_backend = 'vmdebootstrap'
+    builder_backend = 'internal'
     root_filesystem_type = 'btrfs'
     boot_filesystem_type = None
     boot_size = None
@@ -236,7 +236,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
 class AMDIntelImageBuilder(ImageBuilder):
     """Base image build for all Intel/AMD targets."""
     boot_loader = 'grub'
-    builder_backend = 'internal'
 
     @classmethod
     def get_target_name(cls):
@@ -448,7 +447,6 @@ class BeagleBoneImageBuilder(ARMImageBuilder):
     boot_offset = '2mib'
     flash_kernel_name = 'TI AM335x BeagleBone Black'
     flash_kernel_options = 'console=ttyO0'
-    builder_backend = 'internal'
 
     @staticmethod
     def install_boot_loader(state):
@@ -472,7 +470,6 @@ class A20ImageBuilder(ARMImageBuilder):
     architecture = 'armhf'
     kernel_flavor = 'armmp-lpae'
     boot_offset = '1mib'
-    builder_backend = 'internal'
 
 
 class A20OLinuXinoLimeImageBuilder(A20ImageBuilder):
@@ -587,7 +584,6 @@ class DreamPlugImageBuilder(ARMImageBuilder):
     kernel_flavor = 'marvell'
     boot_filesystem_type = 'vfat'
     flash_kernel_name = 'Globalscale Technologies Dreamplug'
-    builder_backend = 'internal'
 
     @staticmethod
     def install_boot_loader(state):
@@ -645,7 +641,6 @@ class RaspberryPiImageBuilder(ARMImageBuilder):
     root_filesystem_type = 'ext4'
     boot_filesystem_type = 'vfat'
     kernel_flavor = None
-    builder_backend = 'internal'
 
     @staticmethod
     def install_boot_loader(state):
@@ -731,7 +726,6 @@ class RaspberryPi2ImageBuilder(RaspberryPiWithUBoot):
     kernel_flavor = 'armmp'
     flash_kernel_name = 'Raspberry Pi 2 Model B'
     uboot_variant = 'rpi_2'
-    builder_backend = 'internal'
 
 
 class RaspberryPi3ImageBuilder(RaspberryPiWithUBoot):
@@ -743,4 +737,3 @@ class RaspberryPi3ImageBuilder(RaspberryPiWithUBoot):
     kernel_flavor = 'armmp'
     flash_kernel_name = 'Raspberry Pi 3 Model B'
     uboot_variant = 'rpi_3_32b'
-    builder_backend = 'internal'
