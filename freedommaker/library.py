@@ -60,7 +60,7 @@ def run(*args, **kwargs):
 def run_in_chroot(state, *args, **kwargs):
     """Run a command inside chroot of mount point."""
     args = [['chroot', state['mount_point']] + arg for arg in args]
-    run(*args, **kwargs)
+    return run(*args, **kwargs)
 
 
 def path_in_mount(state, path):
@@ -255,7 +255,8 @@ def qemu_debootstrap(state, architecture, distribution, variant, components,
         unmount_filesystem,
         None,
         os.path.join(target, 'etc/machine-id'),
-        is_bind_mount=True, ignore_fail=True)
+        is_bind_mount=True,
+        ignore_fail=True)
 
 
 def qemu_remove_binary(state):
