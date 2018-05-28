@@ -20,7 +20,6 @@ Worker class to run various command build the image.
 
 import logging
 import os
-import shutil
 import tempfile
 
 from . import internal
@@ -148,24 +147,14 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def compress(archive_file, image_file):
         """Compress the generate image."""
-        command = ['xz', '--no-warn', '--best', '--force']
-        if shutil.which('pxz'):
-            command = ['pxz', '-9', '--force']
-
-        library.run(command + [image_file])
+        library.compress(archive_file, image_file)
 
     def sign(self, archive):
         """Signed the final output image."""
         if not self.arguments.sign:
             return
 
-        signature = archive + '.sig'
-        try:
-            os.remove(signature)
-        except FileNotFoundError:
-            pass
-
-        library.run(['gpg', '--output', signature, '--detach-sig', archive])
+        library.sign(archive)
 
     @staticmethod
     def _replace_extension(file_name, new_extension):

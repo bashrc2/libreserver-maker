@@ -453,3 +453,23 @@ def fill_free_space_with_zeros(state):
     logger.info('Fill space with zeros on %s', state['mount_point'])
     run(['dd', 'if=/dev/zero', 'of=' + zeros_path, 'bs=1M'], ignore_fail=True)
     run(['rm', '-f', zeros_path])
+
+
+def compress(archive_file, image_file):
+    """Compress an image using xz/pxz."""
+    command = ['xz', '--no-warn', '--best', '--force']
+    if shutil.which('pxz'):
+        command = ['pxz', '-9', '--force']
+
+    run(command + [image_file])
+
+
+def sign(archive):
+    """Sign an image using GPG."""
+    signature = archive + '.sig'
+    try:
+        os.remove(signature)
+    except FileNotFoundError:
+        pass
+
+    run(['gpg', '--output', signature, '--detach-sig', archive])

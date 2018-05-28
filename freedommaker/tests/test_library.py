@@ -502,3 +502,30 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
                 ignore_fail=True),
             call(['rm', '-f', zeros_path])
         ])
+
+    @patch('shutil.which')
+    @patch('freedommaker.library.run')
+    def test_compress(self, run, which):
+        """Test compressing an image."""
+        archive_file = self.random_string()
+        image_file = self.random_string()
+
+        which.return_value = False
+        library.compress(archive_file, image_file)
+        run.assert_called_with(
+            ['xz', '--no-warn', '--best', '--force', image_file])
+
+        which.return_value = True
+        library.compress(archive_file, image_file)
+        run.assert_called_with(['pxz', '-9', '--force', image_file])
+
+    @patch('os.remove')
+    @patch('freedommaker.library.run')
+    def test_sign(self, run, remove):
+        """Test running signing with GPG."""
+        archive = self.random_string()
+        signature = archive + '.sig'
+        remove.side_effect = FileNotFoundError
+        library.sign(archive)
+        run.assert_called_with(
+            ['gpg', '--output', signature, '--detach-sig', archive])
