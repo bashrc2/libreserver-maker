@@ -225,12 +225,14 @@ modify x x
         library.loopback_teardown('/dev/test/loop99')
         run.assert_called_with(['kpartx', '-dsv', '/dev/test/loop99'])
 
-    @staticmethod
     @patch('freedommaker.library.run')
-    def test_create_filesystem(run):
+    def test_create_filesystem(self, run):
         """Test creating filesystem."""
         library.create_filesystem('/dev/test/loop99p1', 'btrfs')
-        run.assert_called_with(['mkfs', '-t', 'btrfs', '/dev/test/loop99p1'])
+        self.assertEqual(run.call_args_list, [
+            call(['mkfs', '-t', 'btrfs', '/dev/test/loop99p1']),
+            call(['udevadm', 'trigger', '--settle', '/dev/test/loop99p1'])
+        ])
 
     @patch('freedommaker.library.run')
     def test_mount_filesystem(self, run):

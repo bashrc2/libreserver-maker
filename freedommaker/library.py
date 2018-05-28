@@ -176,6 +176,13 @@ def create_filesystem(device, filesystem_type):
                 filesystem_type)
     run(['mkfs', '-t', filesystem_type, device])
 
+    # Due to a bug, probably in udev, /dev/disk/by-uuid/<uuid> link is not
+    # reliably created after the creation of the filesystem. This leads to
+    # update-grub using root=/dev/mapper/loop0p1 instead of root=UUID=<uuid>
+    # when creating grub.cfg. This results in an unbootable image. Force udev
+    # events as a workaround.
+    run(['udevadm', 'trigger', '--settle', device])
+
 
 def mount_filesystem(state,
                      label_or_path,
