@@ -309,111 +309,64 @@ class A20ImageBuilder(ARMImageBuilder):
     architecture = 'armhf'
     kernel_flavor = 'armmp-lpae'
     boot_offset = '1mib'
+    u_boot_path = None
+
+    def install_boot_loader(self, state):
+        """Install the boot loader onto the image."""
+        if not self.u_boot_path:
+            raise NotImplementedError
+
+        library.install_boot_loader_part(
+            state, self.u_boot_path, seek='8', size='1k')
 
 
 class A20OLinuXinoLimeImageBuilder(A20ImageBuilder):
     """Image builder for A20 OLinuXino Lime targets."""
     machine = 'a20-olinuxino-lime'
     flash_kernel_name = 'Olimex A20-OLinuXino-LIME'
-
-    @staticmethod
-    def install_boot_loader(state):
-        """Install the boot loader onto the image."""
-        library.install_boot_loader_part(
-            state,
-            'usr/lib/u-boot/A20-OLinuXino-Lime/u-boot-sunxi-with-spl.bin',
-            seek='8',
-            size='1k')
+    u_boot_path = 'usr/lib/u-boot/A20-OLinuXino-Lime/u-boot-sunxi-with-spl.bin'
 
 
 class A20OLinuXinoLime2ImageBuilder(A20ImageBuilder):
     """Image builder for A20 OLinuXino Lime2 targets."""
     machine = 'a20-olinuxino-lime2'
     flash_kernel_name = 'Olimex A20-OLinuXino-LIME2'
-
-    @staticmethod
-    def install_boot_loader(state):
-        """Install the boot loader onto the image."""
-        library.install_boot_loader_part(
-            state,
-            'usr/lib/u-boot/A20-OLinuXino-Lime2/u-boot-sunxi-with-spl.bin',
-            seek='8',
-            size='1k')
+    u_boot_path = 'usr/lib/u-boot/A20-OLinuXino-Lime2/u-boot-sunxi-with-spl.bin'
 
 
 class A20OLinuXinoMicroImageBuilder(A20ImageBuilder):
     """Image builder for A20 OLinuXino Micro targets."""
     machine = 'a20-olinuxino-micro'
     flash_kernel_name = 'Olimex A20-Olinuxino Micro'
-
-    @staticmethod
-    def install_boot_loader(state):
-        """Install the boot loader onto the image."""
-        library.install_boot_loader_part(
-            state,
-            'usr/lib/u-boot/A20-OLinuXino_MICRO/u-boot-sunxi-with-spl.bin',
-            seek='8',
-            size='1k')
+    u_boot_path = 'usr/lib/u-boot/A20-OLinuXino_MICRO/u-boot-sunxi-with-spl.bin'
 
 
 class BananaProImageBuilder(A20ImageBuilder):
     """Image builder for Banana Pro target."""
     machine = 'banana-pro'
     flash_kernel_name = 'LeMaker Banana Pro'
-
-    @staticmethod
-    def install_boot_loader(state):
-        """Install the boot loader onto the image."""
-        library.install_boot_loader_part(
-            state,
-            'usr/lib/u-boot/Bananapro/u-boot-sunxi-with-spl.bin',
-            seek='8',
-            size='1k')
+    u_boot_path = 'usr/lib/u-boot/Bananapro/u-boot-sunxi-with-spl.bin'
 
 
 class Cubieboard2ImageBuilder(A20ImageBuilder):
     """Image builder for Cubieboard 2 target."""
     machine = 'cubieboard2'
     flash_kernel_name = 'Cubietech Cubieboard2'
-
-    @staticmethod
-    def install_boot_loader(state):
-        """Install the boot loader onto the image."""
-        library.install_boot_loader_part(
-            state,
-            'usr/lib/u-boot/Cubieboard2/u-boot-sunxi-with-spl.bin',
-            seek='8',
-            size='1k')
+    u_boot_path = 'usr/lib/u-boot/Cubieboard2/u-boot-sunxi-with-spl.bin'
 
 
 class CubietruckImageBuilder(A20ImageBuilder):
     """Image builder for Cubietruck (Cubieboard 3) target."""
     machine = 'cubietruck'
     flash_kernel_name = 'Cubietech Cubietruck'
-
-    @staticmethod
-    def install_boot_loader(state):
-        """Install the boot loader onto the image."""
-        library.install_boot_loader_part(
-            state,
-            'usr/lib/u-boot/Cubietruck/u-boot-sunxi-with-spl.bin',
-            seek='8',
-            size='1k')
+    u_boot_path = 'usr/lib/u-boot/Cubietruck/u-boot-sunxi-with-spl.bin'
 
 
 class PCDuino3ImageBuilder(A20ImageBuilder):
     """Image builder for PCDuino3 target."""
     machine = 'pcduino3'
     flash_kernel_name = 'LinkSprite pcDuino3'
-
-    @staticmethod
-    def install_boot_loader(state):
-        """Install the boot loader onto the image."""
-        library.install_boot_loader_part(
-            state,
-            'usr/lib/u-boot/Linksprite_pcDuino3/u-boot-sunxi-with-spl.bin',
-            seek='8',
-            size='1k')
+    u_boot_path = 'usr/lib/u-boot/Linksprite_pcDuino3/u-boot-sunxi-with-spl.bin'
 
 
 class DreamPlugImageBuilder(ARMImageBuilder):
