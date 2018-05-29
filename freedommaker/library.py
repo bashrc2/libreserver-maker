@@ -323,6 +323,7 @@ def qemu_remove_binary(state):
 @contextlib.contextmanager
 def no_run_daemon_policy(state):
     """Context manager to ensure daemons are not run during installs."""
+    logger.info('Enforcing policy not to run daemons')
     path = path_in_mount(state, 'usr/sbin/policy-rc.d')
     content = '''#!/bin/sh
 exit 101
@@ -332,6 +333,8 @@ exit 101
 
     os.chmod(path, 0o755)
     yield
+
+    logger.info('Relaxing policy not to run daemons')
     os.unlink(path)
 
 
@@ -511,6 +514,7 @@ def fill_free_space_with_zeros(state):
 
 def compress(archive_file, image_file):
     """Compress an image using xz/pxz."""
+    logger.info('Compressing file %s to %s', image_file, archive_file)
     command = ['xz', '--no-warn', '--best', '--force']
     if shutil.which('pxz'):
         command = ['pxz', '-9', '--force']
@@ -520,6 +524,7 @@ def compress(archive_file, image_file):
 
 def sign(archive):
     """Sign an image using GPG."""
+    logger.info('Signing file %s with GPG', archive)
     signature = archive + '.sig'
     try:
         os.remove(signature)
