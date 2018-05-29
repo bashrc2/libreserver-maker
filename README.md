@@ -48,47 +48,10 @@ Freedom-maker supports building for the following targets:
 
 ## Install dependencies
 
-To build an image, first install the required dependencies for the
-image as follows:
+To build an image, first install all the required dependencies:
 
-For all dependencies:
 ```shell
-$ sudo apt-get -y install git \
-                          sudo \
-                          dosfstools \
-                          btrfs-progs \
-                          pxz \
-                          virtualbox \
-                          qemu-utils \
-                          qemu-user-static \
-                          binfmt-support \
-                          u-boot-tools \
-                          sshpass
-```
-
-For VirtualBox:
-```
-$ sudo apt-get -y install virtualbox
-```
-
-For Qemu:
-```
-$ sudo apt-get -y install qemu-utils
-```
-
-For RaspberryPi:
-```
-$ sudo apt-get -y install qemu-user-static binfmt-support
-```
-
-For DreamPlug:
-```
-$ sudo apt-get -y install qemu-user-static binfmt-support u-boot-tools
-```
-
-For Testing:
-```
-$ sudo apt-get install virtualbox sshpass
+$ sudo apt build-dep .
 ```
 
 ## Running Build
