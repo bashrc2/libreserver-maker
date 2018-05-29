@@ -85,47 +85,101 @@ def cleanup(state):
         method(*args, **kwargs)
 
 
-def create_image(state, filename, size):
+def create_ram_directory_image(state, image_file, size):
+    """Create a temporary RAM directory."""
+    logger.info('Create RAM directory for image: %s (%s)', image_file, size)
+    directory = tempfile.TemporaryDirectory()
+    run([
+        'mount', '-o', 'size=' + size, '-t', 'tmpfs', 'tmpfs', directory.name
+    ])
+
+    state['ram_directory'] = directory
+    temp_image_file = os.path.join(directory.name,
+                                   os.path.basename(image_file))
+    state['image_file'] = temp_image_file
+
+    schedule_cleanup(state, remove_ram_directory, directory)
+    schedule_cleanup(state, copy_image, state, temp_image_file, image_file)
+
+
+def remove_ram_directory(directory):
+    """Remove RAM directory created for temporary image path."""
+    logger.info('Cleanup RAM directory %s', directory)
+    run(['umount', directory.name])
+    directory.cleanup()
+
+
+def copy_image(state, source_image, target_image):
+    """Copy from temp image to target path."""
+    if not state['success']:
+        target_image += '.failed'
+
+    logger.info('Copying file: %s -> %s', source_image, target_image)
+    run(['cp', '--sparse=always', source_image, target_image])
+
+
+def create_temp_image(state, image_file):
+    """Create a temp image for a target image file on disk."""
+    temp_image_file = image_file + '.temp'
+    logger.info('Creating temp image %s for image %s', temp_image_file,
+                image_file)
+    state['image_file'] = temp_image_file
+
+    schedule_cleanup(state, move_image, state, temp_image_file, image_file)
+
+
+def move_image(state, source_image, target_image):
+    """Remove from temp image name to final image name."""
+    if not state['success']:
+        target_image += '.failed'
+
+    logger.info('Moving image: %s -> %s', source_image, target_image)
+    run(['mv', source_image, target_image])
+
+
+def create_image(state, size):
     """Create an empty sparse file using qemu-image."""
-    logger.info('Creating image %s of size %s', filename, size)
-    run(['qemu-img', 'create', '-f', 'raw', filename, size])
-    state['image_file'] = filename
+    logger.info('Creating image %s of size %s', state['image_file'], size)
+    run(['qemu-img', 'create', '-f', 'raw', state['image_file'], size])
 
 
-def create_partition_table(device, partition_table_type):
+def create_partition_table(state, partition_table_type):
     """Create an empty partition table in given device."""
-    logger.info('Creating partition table on %s of type %s', device,
-                partition_table_type)
-    run(['parted', '-s', device, 'mklabel', partition_table_type])
+    logger.info('Creating partition table on %s of type %s',
+                state['image_file'], partition_table_type)
+    run(['parted', '-s', state['image_file'], 'mklabel', partition_table_type])
 
 
-def create_partition(state, label, device, start, end, filesystem_type):
+def create_partition(state, label, start, end, filesystem_type):
     """Create a primary partition in a given device."""
     filesystem_map = {'vfat': 'fat32'}
     filesystem_type = filesystem_map.get(filesystem_type, filesystem_type)
 
     partition_type = 'primary'
     logger.info('Creating partition %s in %s (range %s - %s) of type %s',
-                label, device, start, end, filesystem_type)
+                label, state['image_file'], start, end, filesystem_type)
     run([
-        'parted', '-s', device, 'mkpart', partition_type, filesystem_type,
-        start, end
+        'parted', '-s', state['image_file'], 'mkpart', partition_type,
+        filesystem_type, start, end
     ])
 
     state.setdefault('partitions', []).append(label)
 
 
-def set_boot_flag(device, partition_number):
+def set_boot_flag(state, partition_number):
     """Set boot flag on a partition of a device."""
     logger.info('Setting boot flag on %s partition for %s', partition_number,
-                device)
-    run(['parted', '-s', device, 'set', str(partition_number), 'boot', 'on'])
+                state['image_file'])
+    run([
+        'parted', '-s', state['image_file'], 'set',
+        str(partition_number), 'boot', 'on'
+    ])
 
 
-def loopback_setup(state, image_file):
+def loopback_setup(state):
     """Perform mapping to loopback devices from partitions in image file."""
-    logger.info('Setting up loopback mappings for %s', image_file)
-    output = run(['kpartx', '-asv', image_file]).decode()
+    logger.info('Setting up loopback mappings for %s', state['image_file'])
+    output = run(['kpartx', '-asv', state['image_file']]).decode()
     loop_device = None
     devices = []
     partition_number = 0
@@ -149,7 +203,7 @@ def loopback_setup(state, image_file):
     for device in devices:
         schedule_cleanup(state, force_release_partition_loop, device)
 
-    schedule_cleanup(state, loopback_teardown, image_file)
+    schedule_cleanup(state, loopback_teardown, state['image_file'])
 
 
 def force_release_partition_loop(loop_device):

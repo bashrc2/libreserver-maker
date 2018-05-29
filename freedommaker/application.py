@@ -77,8 +77,6 @@ class Application(object):
             except:
                 logger.error('Target failed - %s', target)
                 raise
-            finally:
-                builder.cleanup()
 
     def parse_arguments(self):
         """Parse command line arguments."""

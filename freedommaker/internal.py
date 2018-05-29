@@ -31,13 +31,13 @@ class InternalBuilderBackend():
     def __init__(self, builder):
         """Initialize the builder."""
         self.builder = builder
-        self._temp_image_file = None
-        self.state = {}
+        self.state = {'success': True}
 
     def make_image(self):
         """Create a disk image."""
         # enable systemd resolved?
         try:
+            self._get_temp_image_file()
             self._create_empty_image()
             self._create_partitions()
             self._loopback_setup()
@@ -58,51 +58,64 @@ class InternalBuilderBackend():
             self._fill_free_space_with_zeros()
         except (Exception, KeyboardInterrupt) as exception:
             logger.exception('Exception during build - %s', exception)
+            self.state['success'] = False
             raise
         finally:
             self._teardown()
 
-        self._copy_image()
+    def _get_temp_image_file(self):
+        """Get the temporary path to where the image should be built.
+
+        If building to RAM is enabled, create a temporary directory, mount
+        tmpfs in it and return a path in that directory. This is so that builds
+        that happen in RAM will be faster.
+
+        If building to RAM is disabled, append .temp to the final file name and
+        return it.
+
+        """
+        if not self.builder.arguments.build_in_ram:
+            return library.create_temp_image(self.state,
+                                             self.builder.image_file)
+
+        return library.create_ram_directory_image(
+            self.state, self.builder.image_file,
+            self.builder.arguments.image_size)
 
     def _create_empty_image(self):
         """Create an empty disk image to create parititions in."""
-        self._temp_image_file = self.builder.get_temp_image_file()
-        library.create_image(self.state, self._temp_image_file,
-                             self.builder.arguments.image_size)
+        library.create_image(self.state, self.builder.arguments.image_size)
 
     def _create_partitions(self):
         """Create partition table and partitions in the image."""
         # Don't install MBR on the image file, it is not needed as we use
         # either grub or u-boot.
-        library.create_partition_table(self._temp_image_file, 'msdos')
+        library.create_partition_table(self.state, 'msdos')
         boot_partition_number = 1
 
         offset = '1mib'
         if self.builder.firmware_filesystem_type:
             end = utils.add_disk_offsets(offset, self.builder.firmware_size)
-            library.create_partition(self.state, 'firmware',
-                                     self._temp_image_file, offset, end,
+            library.create_partition(self.state, 'firmware', offset, end,
                                      self.builder.firmware_filesystem_type)
             offset = utils.add_disk_offsets(end, '1mib')
             boot_partition_number += 1
 
         if self.builder.boot_filesystem_type:
             end = utils.add_disk_offsets(offset, self.builder.boot_size)
-            library.create_partition(self.state, 'boot', self._temp_image_file,
-                                     offset, end,
+            library.create_partition(self.state, 'boot', offset, end,
                                      self.builder.boot_filesystem_type)
             offset = utils.add_disk_offsets(end, '1mib')
 
-        library.create_partition(self.state, 'root', self._temp_image_file,
-                                 offset, '100%',
+        library.create_partition(self.state, 'root', offset, '100%',
                                  self.builder.root_filesystem_type)
 
         library.set_boot_flag(
-            self._temp_image_file, partition_number=boot_partition_number)
+            self.state, partition_number=boot_partition_number)
 
     def _loopback_setup(self):
         """Perform mapping to loopback devices from partitions in image file."""
-        library.loopback_setup(self.state, self._temp_image_file)
+        library.loopback_setup(self.state)
 
     def _create_filesystems(self):
         """Create file systems inside the partitions created."""
@@ -312,15 +325,6 @@ class InternalBuilderBackend():
         So that we can compress the image better.
         """
         library.fill_free_space_with_zeros(self.state)
-
-    def _copy_image(self):
-        """Copy from temp image to target path."""
-        logger.info('Moving file: %s -> %s', self._temp_image_file,
-                    self.builder.image_file)
-        library.run([
-            'sudo', 'cp', '--sparse=always', self._temp_image_file,
-            self.builder.image_file
-        ])
 
     def _teardown(self):
         """Run cleanup operations for each step that executed."""

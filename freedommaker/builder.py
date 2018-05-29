@@ -20,7 +20,6 @@ Worker class to run various command build the image.
 
 import logging
 import os
-import tempfile
 
 from . import internal
 from . import library
@@ -91,14 +90,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         self.image_file = os.path.join(self.arguments.build_dir,
                                        self._get_image_base_name() + '.img')
 
-    def cleanup(self):
-        """Finalize tasks."""
-        logger.info('Cleaning up')
-        if self.ram_directory:
-            library.run(['sudo', 'umount', self.ram_directory.name])
-            self.ram_directory.cleanup()
-            self.ram_directory = None
-
     def build(self):
         """Run the image building process."""
         archive_file = self.image_file + '.xz'
@@ -121,28 +112,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
                 distribution=self.arguments.distribution, free_tag=free_tag,
                 build_stamp=self.arguments.build_stamp, machine=self.machine,
                 architecture=self.architecture)
-
-    def get_temp_image_file(self):
-        """Get the temporary path to where the image should be built.
-
-        If building to RAM is enabled, create a temporary directory, mount
-        tmpfs in it and return a path in that directory. This is so that builds
-        that happen in RAM will be faster.
-
-        If building to RAM is disabled, append .temp to the final file name and
-        return it.
-
-        """
-        if not self.arguments.build_in_ram:
-            return self.image_file + '.temp'
-
-        self.ram_directory = tempfile.TemporaryDirectory()
-        library.run([
-            'sudo', 'mount', '-o', 'size=' + self.arguments.image_size, '-t',
-            'tmpfs', 'tmpfs', self.ram_directory.name
-        ])
-        return os.path.join(self.ram_directory.name,
-                            os.path.basename(self.image_file))
 
     @staticmethod
     def compress(archive_file, image_file):

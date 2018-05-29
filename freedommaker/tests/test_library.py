@@ -45,7 +45,9 @@ class TestLibrary(unittest.TestCase):
         os.makedirs(self.mount_point_directory.name + '/tmp/')
         os.makedirs(self.mount_point_directory.name + '/etc/apt')
         self.state = {
+            'image_file': self.image,
             'mount_point': self.mount_point_directory.name,
+            'success': True,
         }
 
     def tearDown(self):
@@ -128,46 +130,104 @@ class TestLibrary(unittest.TestCase):
         })])
 
     @patch('freedommaker.library.run')
+    def test_create_ram_directory_image(self, run):
+        """Test that RAM directory is properly created."""
+        library.create_ram_directory_image(self.state, self.image, '4G')
+        run.assert_called_once_with([
+            'mount', '-o', 'size=4G', '-t', 'tmpfs', 'tmpfs',
+            self.state['ram_directory'].name
+        ])
+        self.assertEqual(self.state['image_file'],
+                         self.state['ram_directory'].name + '/' + self.image)
+        self.assertEqual(self.state['cleanup'], [[
+            library.remove_ram_directory, (self.state['ram_directory'], ), {}
+        ], [
+            library.copy_image,
+            (self.state, self.state['image_file'], self.image), {}
+        ]])
+        self.state['ram_directory'].cleanup()
+
+    @patch('freedommaker.library.run')
+    def test_remove_ram_directory(self, run):
+        """Test removing a RAM directory."""
+        directory = Mock(name=self.random_string())
+        library.remove_ram_directory(directory)
+        run.assert_called_once_with(['umount', directory.name])
+        directory.cleanup.assert_called()
+
+    @patch('freedommaker.library.run')
+    def test_copy_image(self, run):
+        """Test copying temp image to final image."""
+        temp_image = self.random_string()
+        library.copy_image(self.state, temp_image, self.image)
+        run.assert_called_once_with(
+            ['cp', '--sparse=always', temp_image, self.image])
+
+        run.reset_mock()
+        self.state['success'] = False
+        library.copy_image(self.state, temp_image, self.image)
+        run.assert_called_once_with(
+            ['cp', '--sparse=always', temp_image, self.image + '.failed'])
+
+    def test_create_temp_image(self):
+        """Test creating a temporary image file on disk."""
+        library.create_temp_image(self.state, self.image)
+        self.assertEqual(self.state['image_file'], self.image + '.temp')
+        self.assertEqual(self.state['cleanup'], [[
+            library.move_image,
+            (self.state, self.image + '.temp', self.image), {}
+        ]])
+
+    @patch('freedommaker.library.run')
+    def test_move_image(self, run):
+        """Test moving temp image to final image."""
+        source_image = self.random_string()
+        library.move_image(self.state, source_image, self.image)
+        run.assert_called_once_with(['mv', source_image, self.image])
+
+        run.reset_mock()
+        self.state['success'] = False
+        library.move_image(self.state, source_image, self.image)
+        run.assert_called_once_with(
+            ['mv', source_image, self.image + '.failed'])
+
+    @patch('freedommaker.library.run')
     def test_create_image(self, run):
         """Test creating an image."""
-        library.create_image(self.state, self.image, '4G')
+        library.create_image(self.state, '4G')
         run.assert_called_once_with(
             ['qemu-img', 'create', '-f', 'raw', self.image, '4G'])
 
-    @staticmethod
     @patch('freedommaker.library.run')
-    def test_create_partition_table(run):
+    def test_create_partition_table(self, run):
         """Test creating a partition table."""
-        library.create_partition_table('/dev/test/loop0', 'msdos')
+        library.create_partition_table(self.state, 'msdos')
         run.assert_called_once_with(
-            ['parted', '-s', '/dev/test/loop0', 'mklabel', 'msdos'])
+            ['parted', '-s', self.image, 'mklabel', 'msdos'])
 
     @patch('freedommaker.library.run')
     def test_create_partition(self, run):
         """Test creating a partition table."""
-        library.create_partition(self.state, 'root', '/dev/test/loop0',
-                                 '10mib', '50%', 'f2fs')
+        library.create_partition(self.state, 'root', '10mib', '50%', 'f2fs')
         run.assert_called_once_with([
-            'parted', '-s', '/dev/test/loop0', 'mkpart', 'primary', 'f2fs',
-            '10mib', '50%'
+            'parted', '-s', self.image, 'mkpart', 'primary', 'f2fs', '10mib',
+            '50%'
         ])
 
         self.assertEqual(self.state['partitions'], ['root'])
 
-        library.create_partition(self.state, 'root', '/dev/test/loop0',
-                                 '10mib', '50%', 'vfat')
+        library.create_partition(self.state, 'root', '10mib', '50%', 'vfat')
         run.assert_called_with([
-            'parted', '-s', '/dev/test/loop0', 'mkpart', 'primary', 'fat32',
-            '10mib', '50%'
+            'parted', '-s', self.image, 'mkpart', 'primary', 'fat32', '10mib',
+            '50%'
         ])
 
-    @staticmethod
     @patch('freedommaker.library.run')
-    def test_set_boot_flag(run):
+    def test_set_boot_flag(self, run):
         """Test that boot flag is properly set."""
-        library.set_boot_flag('/dev/test/loop0', 3)
+        library.set_boot_flag(self.state, 3)
         run.assert_called_with(
-            ['parted', '-s', '/dev/test/loop0', 'set', '3', 'boot', 'on'])
+            ['parted', '-s', self.image, 'set', '3', 'boot', 'on'])
 
     @patch('freedommaker.library.run')
     def test_loopback_setup(self, run):
@@ -180,7 +240,7 @@ add x loop99p2
 add x loop99p3
 modify x x
 '''
-        library.loopback_setup(self.state, self.image)
+        library.loopback_setup(self.state)
         run.assert_called_with(['kpartx', '-asv', self.image])
         self.assertEqual(
             self.state['devices'], {
@@ -476,7 +536,6 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
     @patch('freedommaker.library.run')
     def test_install_boot_loader_path(self, run):
         """Test installing boot loader components using dd."""
-        self.state['image_file'] = self.image
         path = 'u-boot/path'
         full_path = self.state['mount_point'] + '/' + path
         library.install_boot_loader_part(self.state, path, '533', '515')
