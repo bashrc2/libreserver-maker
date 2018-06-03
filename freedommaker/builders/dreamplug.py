@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Worker class to build LinkSprite pcDuino3 image.
+Worker class to build GlobalScale Dreamplug image.
 """
 
 import logging

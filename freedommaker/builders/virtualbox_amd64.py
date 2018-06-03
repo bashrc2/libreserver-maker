@@ -15,13 +15,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Worker class to build VirtualBox i386 images.
+Worker class to build VirtualBox amd64 images.
 """
 
 from .virtualbox import VirtualBoxImageBuilder
 
 
 class VirtualBoxAmd64ImageBuilder(VirtualBoxImageBuilder):
-    """Image builder for all VirutalBox amd64 targets."""
+    """Image builder for all VirtualBox amd64 targets."""
     architecture = 'amd64'
     kernel_flavor = 'amd64'

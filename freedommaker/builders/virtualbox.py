@@ -25,7 +25,7 @@ from .vm import VMImageBuilder
 
 
 class VirtualBoxImageBuilder(VMImageBuilder):
-    """Base image builder for all VirutalBox targets."""
+    """Base image builder for all VirtualBox targets."""
     vm_image_extension = '.vdi'
 
     @classmethod

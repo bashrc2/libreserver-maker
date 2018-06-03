@@ -22,6 +22,6 @@ from .virtualbox import VirtualBoxImageBuilder
 
 
 class VirtualBoxI386ImageBuilder(VirtualBoxImageBuilder):
-    """Image builder for all VirutalBox i386 targets."""
+    """Image builder for all VirtualBox i386 targets."""
     architecture = 'i386'
     kernel_flavor = '686'
