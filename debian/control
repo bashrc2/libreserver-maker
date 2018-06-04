@@ -27,6 +27,7 @@ Depends:
  btrfs-progs,
  dmsetup,
  dosfstools,
+ fdisk | util-linux (<< 2.29.2-3~),
  git,
  kpartx,
  parted,
