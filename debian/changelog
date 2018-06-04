@@ -1,3 +1,40 @@
+freedom-maker (0.17) unstable; urgency=medium
+
+  [ Sunil Mohan Adapa ]
+  * internal: Set the boot flag only on boot partition
+  * Make internal backend default for Raspberry Pi 2/3
+  * internal: Properly set kernel options with flash-kernel
+  * Switch beaglebone to internal backend by default
+  * internal: Handle no kernel and no boot loader
+  * internal: Finish Raspberry Pi implementation
+  * internal: Fail build on firmware install fail for rpi2/3
+  * internal: Added initramfs-tools as explicit dependency
+  * Switch to internal backend for Raspberry Pi
+  * internal: Finish implementation for Dreamplug
+  * internal: Don't call flash-kernel on /boot with vfat filesystem
+  * Switch dreamplug to internal backend by default
+  * Make internal backend the default backend
+  * Unmount /etc/machine-id after vmdebootstrap
+  * Fix issue leading to unbootable grub configuration
+  * Minor fix to run_in_chroot to return stdout value
+  * pcduino3: Fix target name in documentation
+  * Remove vmdebootstrap backend
+  * Log only to console, simplify logging
+  * Remove skip step checking
+  * Implement compress and sign library methods
+  * Move temporary image creation to library
+  * Factor out boot loader installation for A20 boards
+  * Split builders into separate modules
+  * Simplify dependency documentation
+  * Remove a use of sudo
+  * Add missing logging during library actions
+
+  [ James Valleroy ]
+  * builders: Minor fixes for comments and spelling
+  * Add dependency on fdisk (Closes: #872130)
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 04 Jun 2018 16:52:43 -0400
+
 freedom-maker (0.16) unstable; urgency=medium
 
   [ James Valleroy ]
