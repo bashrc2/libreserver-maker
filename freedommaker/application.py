@@ -132,8 +132,10 @@ class Application(object):
             '--build-in-ram', action='store_true',
             help='Build the image in RAM so that it is faster, requires '
             'free RAM about the size of disk image')
-        parser.add_argument(
-            'targets', nargs='+', help='Image targets to build')
+        parser.add_argument('--skip-compression', action='store_true',
+                            help='Do not compress the generated image')
+        parser.add_argument('targets', nargs='+',
+                            help='Image targets to build')
 
         self.arguments = parser.parse_args()
 

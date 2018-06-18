@@ -115,10 +115,12 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
                 build_stamp=self.arguments.build_stamp, machine=self.machine,
                 architecture=self.architecture)
 
-    @staticmethod
-    def compress(archive_file, image_file):
+    def compress(self, archive_file, image_file):
         """Compress the generate image."""
-        library.compress(archive_file, image_file)
+        if not self.arguments.skip_compression:
+            library.compress(archive_file, image_file)
+        else:
+            logger.info('Skipping image compression')
 
     def sign(self, archive):
         """Signed the final output image."""
