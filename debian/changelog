@@ -1,3 +1,10 @@
+freedom-maker (0.19) unstable; urgency=medium
+
+  * Fix test dependency
+  * Bump standards version
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Tue, 17 Jul 2018 20:52:11 -0400
+
 freedom-maker (0.18) unstable; urgency=medium
 
   [ Joseph Nuthalapati ]
