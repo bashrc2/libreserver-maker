@@ -4,23 +4,23 @@
 
 # Freedom-Maker: The FreedomBox image builder
 
-These scripts build images for FreedomBox for various support hardware
+These scripts build FreedomBox-images for various supported hardware
 that can then be copied to SD card, USB stick or Hard Disk drive to
 boot into FreedomBox.
 
 These scripts are meant for developers of FreedomBox to build images
 during releases and for advanced users who intend to build their own
-images.  Regular users who wish to turn their devices into
+images. Regular users who wish to turn their devices into
 FreedomBoxes should instead download the pre-built images.
 
-Get a pre-built image via https://wiki.debian.org/FreedomBox .  There
+Get a pre-built image via https://freedombox.org/download/.  There
 are images available for all supported target devices.  You also find
-the setup instructions on the Wiki.
+the setup instructions on the [Wiki](https://wiki.debian.org/FreedomBox/).
 
 If you wish to create your own FreedomBox image, perhaps with some
 tweaks, see the *Build Images* section below.
 
-# Build Images
+# Create Images
 
 ## Supported Targets
 
@@ -58,88 +58,82 @@ $ sudo apt build-dep .
 
 1. Fetch the git source of freedom-maker:
     ```
-    $ git clone https://alioth.debian.org/anonscm/git/freedombox/freedom-maker.git freedom-maker
+    $ git clone https://salsa.debian.org/freedombox-team/freedom-maker.git
     ```
 
-2. Build all images:
-    ```
-    $ python3 -m freedommaker dreamplug raspberry raspberry2 raspberry3 \
-      beaglebone cubieboard2 cubietruck a20-olinuxino-lime a20-olinuxino-lime2 \
-      a20-olinuxino-micro i386 amd64 virtualbox-i386 virtualbox-amd64 \
-      qemu-i386 qemu-amd64 banana-pro
-    ```
-
-    or to build just a single image:
-    ```
-    $ python3 -m freedommaker beaglebone
+2. Install the required dependencies:
+    ```shell
+    $ sudo apt install parted btrfs-progs qemu-user-static
+    $ cd freedom-maker
+    $ sudo apt build-dep .
     ```
 
-    or to see the full list of options you can pass to the build proces:
+3. Build images:
+
+    This command has to be started with root (sudo) permission because it needs
+    to run "parted".
+
+    ```
+    $ sudo python3 -m freedommaker a20-olinuxino-lime2
+    ```
+    Take a break from your computer - this takes some time. :)
+    
+    To see the full list of options read the help-page:
     ```
     $ python3 -m freedommaker --help
     ```
 
-The images will show up in *freedom-maker/build/*. Copy the image to
-target disk following the instructions in *Use Images* section.
+The image will show up in *build/*. Copy the image to the
+target disk following the instructions in the *Use Images* section.
 
 # Use Images
 
-You'll need to copy the image to the memory card or USB stick:
+You'll need to copy the image to a memory card or USB stick. If you don't
+use GNU/Linux or prefer a GUI we recommend [etcher](https://etcher.io/)
+for this task. Otherwise follow the steps:
 
 1. Figure out which device your card actually is.
 
     A. Unplug your card.
 
-    B. Run "dmesg -w" to show and follow the kernel messages.
+    B. Run "lsblk -p" to show which storage devices are connected to your system.
 
-    C. Plug your card in.  You will see message such as following:
-
-        [33299.023096] usb 4-6: new high-speed USB device number 12 using ehci-pci
-        [33299.157160] usb 4-6: New USB device found, idVendor=058f, idProduct=6361
-        [33299.157162] usb 4-6: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-        [33299.157164] usb 4-6: Product: Mass Storage Device
-        [33299.157165] usb 4-6: Manufacturer: Generic
-        [33299.157167] usb 4-6: SerialNumber: XXXXXXXXXXXX
-        [33299.157452] usb-storage 4-6:1.0: USB Mass Storage device detected
-        [33299.157683] scsi host13: usb-storage 4-6:1.0
-        [33300.155626] scsi 13:0:0:0: Direct-Access     Generic- Compact Flash    1.01 PQ: 0 ANSI: 0
-        [33300.156223] scsi 13:0:0:1: Direct-Access     Multiple Flash Reader     1.05 PQ: 0 ANSI: 0
-        [33300.157059] sd 13:0:0:0: Attached scsi generic sg4 type 0
-        [33300.157462] sd 13:0:0:1: Attached scsi generic sg5 type 0
-        [33300.462115] sd 13:0:0:1: [sdg] 30367744 512-byte logical blocks: (15.5 GB/14.4 GiB)
-        [33300.464144] sd 13:0:0:1: [sdg] Write Protect is off
-        [33300.464159] sd 13:0:0:1: [sdg] Mode Sense: 03 00 00 00
-        [33300.465896] sd 13:0:0:1: [sdg] No Caching mode page found
-        [33300.465912] sd 13:0:0:1: [sdg] Assuming drive cache: write through
-        [33300.470489] sd 13:0:0:0: [sdf] Attached SCSI removable disk
-        [33300.479493]  sdg: sdg1
-        [33300.483566] sd 13:0:0:1: [sdg] Attached SCSI removable disk
+    C. Plug your card in and run "lsblk -p" again. Find the new device and note
+    the name.
+    
+        $ lsblk -p
+        NAME                                   MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
+        /dev/sdg                                 8:0    1  14.9G  0 disk  
+        /dev/nvme0n1                           259:0    0   477G  0 disk  
+        ├─/dev/nvme0n1p1                       259:1    0   512M  0 part  /boot/efi
+        ├─/dev/nvme0n1p2                       259:2    0   244M  0 part  /boot
+        └─/dev/nvme0n1p3                       259:3    0 476.2G  0 part  
+          └─/dev/mapper/nvme0n1p3_crypt        253:0    0 476.2G  0 crypt 
+            ├─/dev/mapper/mjw--t470--vg-root   253:1    0 468.4G  0 lvm   /
+            └─/dev/mapper/mjw--t470--vg-swap_1 253:2    0   7.8G  0 lvm   [SWAP]
 
     D. In the above case, the disk that is newly inserted is available
-       as */dev/sdg*.  Very carefully note this and use it in the
-       copying step below.
+       as */dev/sdg*. You can also verify the size (16 GB in this example).
+       Carefully note this and use it in the copying step below.
 
 2. Copy the image to your card.  Double check and make sure you don't
    write to your computer's main storage (such as /dev/sda).  Also
-   make sure that you don't run this step as root to avoid potentially
-   overriding data on your hard drive due to a mistake in identifying
-   the device or errors while typing the command.  USB disks and SD
+   make sure that you don't run this step as root (sudo) to avoid potentially
+   overriding data on your hard drive due to a mistake. USB disks and SD
    cards inserted into the system should typically be write accessible
    to normal users. If you don't have permission to write to your SD
-   card as a user, you may need to run this command as root.  In this
-   case triple check everything before you run the command.  Another
+   card as a user, you may need to run this command as root. In this
+   case triple check everything before you run the command. Another
    safety precaution is to unplug all external disks except the SD
    card before running the command.
 
-   For example, if your SD card is /dev/sdf as noted in the first step
-   above, then to copy the image, run:
+   For example, if your SD card is /dev/sdg use the following command:
     ```
-    $ cd build
-    $ xzcat freedombox-unstable_2015-08-06_beaglebone-armhf-card.img.xz | dd bs=1M of=/dev/sdf conv=fdatasync
+    $ xzcat build/freedombox-unstable_2018-08-06_beaglebone-armhf.img.xz | dd bs=4M of=/dev/sdg conv=fsync status=progress
     ```
 
    The above command is an example for the beaglebone image built on
-   2015-08-06.  Your image file name will be different.
+   2018-08-06. Your image file name will be different.
 
    When picking a device, use the drive-letter destination, like
    /dev/sdf, not a numbered destination, like /dev/sdf1.  The device
