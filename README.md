@@ -37,6 +37,7 @@ Freedom-maker supports building for the following targets:
 - *raspberry*: RasbperryPi's SD card.
 - *raspberry2*: RasbperryPi 2's SD card.
 - *raspberry3*: RasbperryPi 3's SD card.
+- *raspberry3-b-plus*: RasbperryPi 3 Model B+'s SD card.
 - *i386*: Disk image for any machine with i386 architecture
 - *amd64*: Disk image for any machine with amd64 architecture.
 - *virtualbox-i386*: 32-bit image for the VirtualBox virtualization tool
