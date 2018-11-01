@@ -115,7 +115,7 @@ class Application(object):
             help='Install package from DEB file into the image')
         parser.add_argument(
             '--build-dir', default=BUILD_DIR,
-            help='Diretory to build images and create log file')
+            help='Directory to build images and create log file')
         parser.add_argument(
             '--log-level', default=LOG_LEVEL, help='Log level',
             choices=('critical', 'error', 'warn', 'info', 'debug'))
