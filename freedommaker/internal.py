@@ -110,8 +110,8 @@ class InternalBuilderBackend():
         library.create_partition(self.state, 'root', offset, '100%',
                                  self.builder.root_filesystem_type)
 
-        library.set_boot_flag(
-            self.state, partition_number=boot_partition_number)
+        library.set_boot_flag(self.state,
+                              partition_number=boot_partition_number)
 
     def _loopback_setup(self):
         """Perform mapping to loopback devices from partitions in image file."""
@@ -143,10 +143,10 @@ class InternalBuilderBackend():
     def _mount_additional_filesystems(self):
         """Mount extra filesystems: dev, devpts, sys and proc."""
         library.mount_filesystem(self.state, '/dev', 'dev', is_bind_mount=True)
-        library.mount_filesystem(
-            self.state, '/dev/pts', 'dev/pts', is_bind_mount=True)
-        library.mount_filesystem(
-            self.state, '/proc', 'proc', is_bind_mount=True)
+        library.mount_filesystem(self.state, '/dev/pts', 'dev/pts',
+                                 is_bind_mount=True)
+        library.mount_filesystem(self.state, '/proc', 'proc',
+                                 is_bind_mount=True)
         library.mount_filesystem(self.state, '/sys', 'sys', is_bind_mount=True)
 
     def _get_packages(self):
@@ -160,10 +160,9 @@ class InternalBuilderBackend():
             self._get_filesystem_packages() + \
             self._get_extra_packages()
 
-    @staticmethod
-    def _get_basic_packages():
+    def _get_basic_packages(self):
         """Return a list of basic packages for all king of images."""
-        return ['firmware-ath9k-htc']
+        return self.builder.packages
 
     def _get_kernel_packages(self):
         """Return package needed for kernel."""
@@ -273,18 +272,15 @@ class InternalBuilderBackend():
 
     def _remove_ssh_keys(self):
         """Remove SSH keys so that images don't contain known keys."""
-        library.run_in_chroot(
-            self.state, ['sh', '-c', 'rm -f /etc/ssh/ssh_host_*'],
-            ignore_fail=True)
+        library.run_in_chroot(self.state,
+                              ['sh', '-c', 'rm -f /etc/ssh/ssh_host_*'],
+                              ignore_fail=True)
 
     def _create_fstab(self):
         """Create fstab with entries for each paritition."""
-        library.add_fstab_entry(
-            self.state,
-            'root',
-            self.builder.root_filesystem_type,
-            1,
-            append=False)
+        library.add_fstab_entry(self.state, 'root',
+                                self.builder.root_filesystem_type, 1,
+                                append=False)
         if self.builder.boot_filesystem_type:
             library.add_fstab_entry(self.state, 'boot',
                                     self.builder.boot_filesystem_type, 2)

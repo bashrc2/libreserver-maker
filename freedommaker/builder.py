@@ -24,6 +24,9 @@ import os
 from . import internal
 from . import library
 
+# initramfs-tools is a dependency for the kernel-image package. However, when
+# kernel is not installed, as in case of Raspberry Pi image, explicit dependency
+# is needed.
 BASE_PACKAGES = [
     'initramfs-tools',
 ]
