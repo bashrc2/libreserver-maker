@@ -180,6 +180,9 @@ class InternalBuilderBackend():
             return ['grub-pc']
 
         if self.builder.boot_loader == 'u-boot':
+            if self.builder.architecture == 'arm64':
+                return ['u-boot-sunxi', 'u-boot-tools']
+
             return ['u-boot', 'u-boot-tools']
 
         raise NotImplementedError

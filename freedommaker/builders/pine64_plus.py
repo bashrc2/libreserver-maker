@@ -15,28 +15,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Package containing all the builders.
+Worker class to build Pine64+ image.
 """
 
-# pylint: disable=unused-import
-from . import a20_olinuxino_lime2
-from . import a20_olinuxino_lime
-from . import a20_olinuxino_micro
-from . import amd64
-from . import arm
-from . import banana_pro
-from . import beaglebone
-from . import cubieboard2
-from . import cubietruck
-from . import i386
-from . import pcduino3
-from . import pine64_plus
-from . import qemu_amd64
-from . import qemu_i386
-from . import raspberry_pi_2
-from . import raspberry_pi_3
-from . import raspberry_pi_3_b_plus
-from . import raspberry_pi_with_uboot
-from . import vagrant
-from . import virtualbox_amd64
-from . import virtualbox_i386
+from .a64 import A64ImageBuilder
+
+
+class Pine64PlusImageBuilder(A64ImageBuilder):
+    """Image builder for Pine64+ target."""
+    machine = 'pine64-plus'
+    flash_kernel_name = 'Pine64+'
