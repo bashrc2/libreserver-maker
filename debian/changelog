@@ -1,3 +1,20 @@
+freedom-maker (0.20) unstable; urgency=medium
+
+  [ James Valleroy ]
+  * Remove Travis CI, replaced by Gitlab CI
+  * ci: Prevent installing fuse
+  * Add raspberry3-b-plus target
+  * Finish cleanup of vmdebootstrap
+  * Bump Standards-Version to 4.2.1
+
+  [ Matthias Weiler ]
+  * Fix outdated/incorrect README.md
+
+  [ Sébastien Barthélémy ]
+  * Fix typo in CLI --help
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 03 Dec 2018 21:12:29 -0500
+
 freedom-maker (0.19) unstable; urgency=medium
 
   * Fix test dependency
