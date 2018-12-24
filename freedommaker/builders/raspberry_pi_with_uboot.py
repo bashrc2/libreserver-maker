@@ -53,5 +53,6 @@ rm -f /boot/firmware/start_*
 # u-boot setup
 apt-get install -y u-boot-rpi
 cp /usr/lib/u-boot/{uboot_variant}/u-boot.bin /boot/firmware/kernel.img
+cp /usr/lib/u-boot/{uboot_variant}/u-boot.bin /boot/firmware/kernel7.img
 '''.format(uboot_variant=self.uboot_variant)
         library.run_in_chroot(state, ['bash', '-c', script])
