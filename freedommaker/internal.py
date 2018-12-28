@@ -233,6 +233,11 @@ class InternalBuilderBackend():
                 custom_plinth = package
             elif 'freedombox-setup_' in package:
                 custom_setup = package
+            elif 'freedombox_' in package:
+                custom_freedombox = package
+
+        if custom_freedombox:
+            library.install_custom_package(self.state, custom_freedombox)
 
         if custom_plinth:
             library.install_custom_package(self.state, custom_plinth)
