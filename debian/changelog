@@ -1,3 +1,14 @@
+freedom-maker (0.21) unstable; urgency=medium
+
+  [ Sunil Mohan Adapa ]
+  * raspberry2/3: Fix boot issue caused due to kernel7.img
+  * internal: Allow custom freedombox package to be provided
+
+  [ James Valleroy ]
+  * debian: Standards-Version is now 4.3.0
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 31 Dec 2018 18:45:17 -0500
+
 freedom-maker (0.20) unstable; urgency=medium
 
   [ James Valleroy ]
