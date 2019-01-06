@@ -226,6 +226,7 @@ class InternalBuilderBackend():
 
     def _install_freedombox_packages(self):
         """Install custom .deb packages."""
+        custom_freedombox = None
         custom_plinth = None
         custom_setup = None
         for package in (self.builder.arguments.custom_package or []):
