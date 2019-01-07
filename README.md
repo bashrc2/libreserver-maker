@@ -33,8 +33,6 @@ Freedom-maker supports building for the following targets:
 - *a20-olinuxino-lime2*: A20 OLinuXino Lime2's SD card
 - *a20-olinuxino-micro*: A20 OLinuXino MICRO's SD card
 - *banana-pro*: Banana Pro's SD card
-- *dreamplug*: DreamPlug's internal SD card
-- *raspberry*: RasbperryPi's SD card.
 - *raspberry2*: RasbperryPi 2's SD card.
 - *raspberry3*: RasbperryPi 3's SD card.
 - *raspberry3-b-plus*: RasbperryPi 3 Model B+'s SD card.

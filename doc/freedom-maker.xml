@@ -186,11 +186,11 @@
         <term> <option>targets</option></term>
         <listitem>
           <para>
-            Image targets to build. Choose one or more of freedommaker,
-            dreamplug, raspberry, raspberry2, raspberry3, beaglebone,
-            cubieboard2, cubietruck, a20-olinuxino-lime, a20-olinuxino-lime2,
-            a20-olinuxino-micro, i386, amd64, virtualbox-i386, virtualbox-amd64,
-            qemu-i386, qemu-amd64, pcduino3, banana-pro
+            Image targets to build. Choose one or more of raspberry2,
+            raspberry3, raspberry3-b-plus, beaglebone, cubieboard2, cubietruck,
+            a20-olinuxino-lime, a20-olinuxino-lime2, a20-olinuxino-micro, i386,
+            amd64, virtualbox-i386, virtualbox-amd64, qemu-i386, qemu-amd64,
+            pcduino3, banana-pro
           </para>
         </listitem>
       </varlistentry>
@@ -210,10 +210,10 @@
 
     <example>
       <title>Build all images</title>
-      <synopsis>$ python3 -m freedommaker dreamplug raspberry raspberry2
-      raspberry3 beaglebone cubieboard2 cubietruck a20-olinuxino-lime
-      a20-olinuxino-lime2 a20-olinuxino-micro i386 amd64 virtualbox-i386
-      virtualbox-amd64 qemu-i386 qemu-amd64 pcduino3 banana-pro</synopsis>
+      <synopsis>$ python3 -m freedommaker raspberry2 raspberry3 raspbery3-b-plus
+      beaglebone cubieboard2 cubietruck a20-olinuxino-lime a20-olinuxino-lime2
+      a20-olinuxino-micro i386 amd64 virtualbox-i386 virtualbox-amd64 qemu-i386
+      qemu-amd64 pcduino3 banana-pro</synopsis>
       <para>
         Build all the available FreedomBox images using freedom-maker.
       </para>

@@ -28,7 +28,6 @@ from . import banana_pro
 from . import beaglebone
 from . import cubieboard2
 from . import cubietruck
-from . import dreamplug
 from . import i386
 from . import pcduino3
 from . import qemu_amd64
@@ -36,7 +35,6 @@ from . import qemu_i386
 from . import raspberry_pi_2
 from . import raspberry_pi_3
 from . import raspberry_pi_3_b_plus
-from . import raspberry_pi
 from . import raspberry_pi_with_uboot
 from . import vagrant
 from . import virtualbox_amd64
