@@ -8,7 +8,7 @@ Uploaders:
 Section: utils
 Priority: optional
 Build-Depends:
- debhelper (>= 11),
+ debhelper (>= 12),
  dh-python,
  python3-all,
  python3-cliapp,
