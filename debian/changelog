@@ -1,3 +1,15 @@
+freedom-maker (0.22) unstable; urgency=medium
+
+  [ James Valleroy ]
+  * internal: Fix initialization of custom_freedombox
+  * debian: Update debhelper compat version to 12
+
+  [ Sunil Mohan Adapa ]
+  * Remove dreamplug and raspberry pi 1 targets
+  * internal: Remove explicit dependency on initramfs-tools
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 14 Jan 2019 17:11:26 -0500
+
 freedom-maker (0.21) unstable; urgency=medium
 
   [ Sunil Mohan Adapa ]
