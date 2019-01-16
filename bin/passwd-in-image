@@ -74,7 +74,7 @@ def check_requirements(image_type):
     """Check that the necessary requirements are available."""
     logger.info('Checking for necessary dependencies')
     if os.geteuid() != 0:
-        logger.error('Due to limitations of the tools invovled, you need to '
+        logger.error('Due to limitations of the tools involved, you need to '
                      'run this command as "root" user or using the "sudo" '
                      'command.')
         sys.exit(-1)
