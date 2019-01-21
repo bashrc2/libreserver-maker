@@ -280,10 +280,10 @@ def qemu_debootstrap(state, architecture, distribution, variant, components,
                      packages, mirror):
     """Debootstrap into a mounted directory."""
     target = state['mount_point']
-    logger.info('Qemu debootstraping into %s, architecture %s, '
-                'distribution %s, variant %s, components %s, build mirror %s',
-                target, architecture, distribution, variant, components,
-                mirror)
+    logger.info(
+        'Qemu debootstraping into %s, architecture %s, '
+        'distribution %s, variant %s, components %s, build mirror %s', target,
+        architecture, distribution, variant, components, mirror)
     try:
         run([
             'qemu-debootstrap', '--arch=' + architecture,
@@ -513,12 +513,9 @@ def fill_free_space_with_zeros(state):
 
 
 def compress(archive_file, image_file):
-    """Compress an image using xz/pxz."""
+    """Compress an image using xz."""
     logger.info('Compressing file %s to %s', image_file, archive_file)
-    command = ['xz', '--no-warn', '--best', '--force']
-    if shutil.which('pxz'):
-        command = ['pxz', '-9', '--force']
-
+    command = ['xz', '--no-warn', '--threads=0', '-9', '--force']
     run(command + [image_file])
 
 

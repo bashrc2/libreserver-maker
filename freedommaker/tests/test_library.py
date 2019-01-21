@@ -562,21 +562,15 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
             call(['rm', '-f', zeros_path])
         ])
 
-    @patch('shutil.which')
     @patch('freedommaker.library.run')
-    def test_compress(self, run, which):
+    def test_compress(self, run):
         """Test compressing an image."""
         archive_file = self.random_string()
         image_file = self.random_string()
 
-        which.return_value = False
         library.compress(archive_file, image_file)
         run.assert_called_with(
-            ['xz', '--no-warn', '--best', '--force', image_file])
-
-        which.return_value = True
-        library.compress(archive_file, image_file)
-        run.assert_called_with(['pxz', '-9', '--force', image_file])
+            ['xz', '--no-warn', '--threads=0', '-9', '--force', image_file])
 
     @patch('os.remove')
     @patch('freedommaker.library.run')

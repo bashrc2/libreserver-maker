@@ -33,12 +33,12 @@ Depends:
  parted,
  psmisc,
  python3-cliapp,
- pxz,
  qemu-user-static,
  qemu-utils,
  sshpass,
  sudo,
  u-boot-tools,
+ xz-utils (>= 5.2.2),
 Suggests:
  virtualbox
 Description: FreedomBox image builder
