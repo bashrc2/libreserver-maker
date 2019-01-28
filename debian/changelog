@@ -1,3 +1,16 @@
+freedom-maker (0.23) unstable; urgency=medium
+
+  [ Juan Carlos Romero ]
+  * vagrant-package: Fix typo in error message
+
+  [ Sunil Mohan Adapa ]
+  * passwd-in-image: Fix typo in error message
+
+  [ Joseph Nuthalapati ]
+  * library: Remove dependency - pxz (Closes: #919809)
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 28 Jan 2019 16:13:29 -0500
+
 freedom-maker (0.22) unstable; urgency=medium
 
   [ James Valleroy ]
