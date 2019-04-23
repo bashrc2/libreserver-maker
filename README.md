@@ -26,24 +26,26 @@ tweaks, see the *Build Images* section below.
 
 Freedom-maker supports building for the following targets:
 
-- *beaglebone*: BeagleBone Black's SD card
-- *cubieboard2*: Cubieboard2's SD card
-- *cubietruck*: Cubietruck's SD card
+
 - *a20-olinuxino-lime*: A20 OLinuXino Lime's SD card
 - *a20-olinuxino-lime2*: A20 OLinuXino Lime2's SD card
 - *a20-olinuxino-micro*: A20 OLinuXino MICRO's SD card
+- *amd64*: Disk image for any machine with amd64 architecture
 - *banana-pro*: Banana Pro's SD card
-- *raspberry2*: RasbperryPi 2's SD card.
-- *raspberry3*: RasbperryPi 3's SD card.
-- *raspberry3-b-plus*: RasbperryPi 3 Model B+'s SD card.
+- *beaglebone*: BeagleBone Black's SD card
+- *cubieboard2*: Cubieboard2's SD card
+- *cubietruck*: Cubietruck's SD card
 - *i386*: Disk image for any machine with i386 architecture
-- *amd64*: Disk image for any machine with amd64 architecture.
-- *virtualbox-i386*: 32-bit image for the VirtualBox virtualization tool
-- *virtualbox-amd64*: 64-bit image for the VirtualBox virtualization tool
-- *qemu-i386*: 32-bit image for the Qemu virtualization tool
-- *qemu-amd64*: 64-bit image for the Qemu virtualization tool
 - *pcduino3*: pcDuino3's SD card
+- *pine64-plus*: Pine64+ board's SD card
+- *qemu-amd64*: 64-bit image for the Qemu virtualization tool
+- *qemu-i386*: 32-bit image for the Qemu virtualization tool
+- *raspberry2*: RasbperryPi 2's SD card
+- *raspberry3*: RasbperryPi 3's SD card
+- *raspberry3-b-plus*: RasbperryPi 3 Model B+'s SD card
 - *test*: build virtualbox i386 image and run diagnostics tests on it
+- *virtualbox-amd64*: 64-bit image for the VirtualBox virtualization tool
+- *virtualbox-i386*: 32-bit image for the VirtualBox virtualization tool
 
 ## Install dependencies
 
