@@ -4,7 +4,7 @@ before_script:
   - export DEBIAN_FRONTEND=noninteractive
   - apt-get update
   - apt-mark hold fuse  # not installable in CI environment
-  - apt-get install -y build-essential python3:any binfmt-support btrfs-progs dmsetup dosfstools git kpartx parted psmisc python3-cliapp pxz qemu-user-static qemu-utils sshpass sudo u-boot-tools
+  - apt-get install -y build-essential python3:any binfmt-support btrfs-progs dmsetup dosfstools git kpartx parted psmisc python3-cliapp qemu-user-static qemu-utils sshpass sudo u-boot-tools
   - apt-get build-dep -y .
 
 stages:
