@@ -32,6 +32,7 @@ from . import i386
 from . import lamobo_r1
 from . import pcduino3
 from . import pine64_plus
+from . import pine64_lts
 from . import qemu_amd64
 from . import qemu_i386
 from . import raspberry_pi_2

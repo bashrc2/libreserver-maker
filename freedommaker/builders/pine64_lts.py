@@ -15,14 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Worker class to build Pine64+ image.
+Worker class to build Pine64 LTS image.
 """
 
 from .a64 import A64ImageBuilder
 
 
-class Pine64PlusImageBuilder(A64ImageBuilder):
-    """Image builder for Pine64+ target."""
-    machine = 'pine64-plus'
-    flash_kernel_name = 'Pine64+'
-    u_boot_target = 'pine64_plus'
+class Pine64LTSImageBuilder(A64ImageBuilder):
+    """Image builder for Pine64 LTS target."""
+    machine = 'pine64-lts'
+    flash_kernel_name = 'Pine64 LTS'
+    u_boot_target = 'pine64-lts'
