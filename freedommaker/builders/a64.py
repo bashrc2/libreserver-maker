@@ -34,7 +34,7 @@ class A64ImageBuilder(ARMImageBuilder):
     def __init__(self, *args, **kwargs):
         """Initialize builder object."""
         super().__init__(*args, **kwargs)
-        self.packages += ['atf-allwinner', 'device-tree-compiler']
+        self.packages += ['arm-trusted-firmware', 'device-tree-compiler']
 
     @classmethod
     def install_boot_loader(cls, state):
