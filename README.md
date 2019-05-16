@@ -36,6 +36,7 @@ Freedom-maker supports building for the following targets:
 - *cubieboard2*: Cubieboard2's SD card
 - *cubietruck*: Cubietruck's SD card
 - *i386*: Disk image for any machine with i386 architecture
+- *lamobo-r1*: Lamobo R1 aka BananaPi Router SD card
 - *pcduino3*: pcDuino3's SD card
 - *pine64-plus*: Pine64+ board's SD card
 - *qemu-amd64*: 64-bit image for the Qemu virtualization tool

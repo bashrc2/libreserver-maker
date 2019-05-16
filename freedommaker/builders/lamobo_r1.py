@@ -15,29 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Package containing all the builders.
+Worker class to build Lamobo R1 (BananaPI Router v1) image.
 """
 
-# pylint: disable=unused-import
-from . import a20_olinuxino_lime2
-from . import a20_olinuxino_lime
-from . import a20_olinuxino_micro
-from . import amd64
-from . import arm
-from . import banana_pro
-from . import beaglebone
-from . import cubieboard2
-from . import cubietruck
-from . import i386
-from . import lamobo_r1
-from . import pcduino3
-from . import pine64_plus
-from . import qemu_amd64
-from . import qemu_i386
-from . import raspberry_pi_2
-from . import raspberry_pi_3
-from . import raspberry_pi_3_b_plus
-from . import raspberry_pi_with_uboot
-from . import vagrant
-from . import virtualbox_amd64
-from . import virtualbox_i386
+from .a20 import A20ImageBuilder
+
+
+class LamoboR1ImageBuilder(A20ImageBuilder):
+    """Image builder for Lamobo R1 (BananaPI Router v1) targets."""
+    machine = 'lamobo-r1'
+    flash_kernel_name = 'Lamobo R1'
+    u_boot_path = 'usr/lib/u-boot/Lamobo_R1/u-boot-sunxi-with-spl.bin'
