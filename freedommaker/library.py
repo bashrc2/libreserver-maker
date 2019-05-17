@@ -235,7 +235,8 @@ def create_filesystem(device, filesystem_type):
     # update-grub using root=/dev/mapper/loop0p1 instead of root=UUID=<uuid>
     # when creating grub.cfg. This results in an unbootable image. Force udev
     # events as a workaround.
-    run(['udevadm', 'trigger', '--settle', device])
+    run(['udevadm', 'trigger', device])
+    run(['udevadm', 'settle'])
 
 
 def mount_filesystem(state,
