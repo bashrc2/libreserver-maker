@@ -291,7 +291,8 @@ modify x x
         library.create_filesystem('/dev/test/loop99p1', 'btrfs')
         self.assertEqual(run.call_args_list, [
             call(['mkfs', '-t', 'btrfs', '/dev/test/loop99p1']),
-            call(['udevadm', 'trigger', '--settle', '/dev/test/loop99p1'])
+            call(['udevadm', 'trigger', '/dev/test/loop99p1']),
+            call(['udevadm', 'settle'])
         ])
 
     @patch('freedommaker.library.run')
