@@ -43,6 +43,7 @@ class InternalBuilderBackend():
             self._loopback_setup()
             self._create_filesystems()
             self._mount_filesystems()
+            self._setup_extra_storage()
             self._debootstrap()
             self._set_hostname()
             self._lock_root_user()
@@ -78,9 +79,11 @@ class InternalBuilderBackend():
             return library.create_temp_image(self.state,
                                              self.builder.image_file)
 
+        size = utils.add_disk_sizes(self.builder.arguments.image_size,
+                                    self.builder.extra_storage_size)
+        size = utils.add_disk_sizes(size, '100M')  # Buffer
         return library.create_ram_directory_image(
-            self.state, self.builder.image_file,
-            self.builder.arguments.image_size)
+            self.state, self.builder.image_file, size)
 
     def _create_empty_image(self):
         """Create an empty disk image to create parititions in."""
@@ -139,6 +142,22 @@ class InternalBuilderBackend():
 
         if self.builder.firmware_filesystem_type:
             library.mount_filesystem(self.state, 'firmware', 'boot/firmware')
+
+    def _setup_extra_storage(self):
+        """Setup some extra storage for root filesystem.
+
+        btrfs runs out of space even when the data stored is not even half of
+        the available space. This is due to it needing re-balance operation. It
+        may not be possible to run the re-balance during a heavy operation such
+        as installing a package with lot of dependencies (freedombox). Adding
+        an additional disk is a good work around for that. The additional
+        device will be removed during cleanup and filesystem will be
+        re-balanced.
+
+        """
+        library.setup_extra_storage(self.state,
+                                    self.builder.root_filesystem_type,
+                                    self.builder.extra_storage_size)
 
     def _mount_additional_filesystems(self):
         """Mount extra filesystems: dev, devpts, sys and proc."""

@@ -277,6 +277,39 @@ def unmount_filesystem(device, mount_point, is_bind_mount, ignore_fail=False):
     run(['umount', mount_point], ignore_fail=ignore_fail)
 
 
+def setup_extra_storage(state, file_system_type, size):
+    """Add an extra storage device to a btrfs filesystem."""
+    if file_system_type != 'btrfs':
+        return
+
+    extra_storage_file = state['image_file'] + '.extra'
+    mount_point = state['mount_point']
+    logger.info('Adding extra storage to file system %s', mount_point)
+
+    run(['qemu-img', 'create', '-f', 'raw', extra_storage_file, size])
+    output = run(['losetup', '--show', '--find', extra_storage_file])
+    loop_device = output.decode().strip()
+    run(['btrfs', 'device', 'add', loop_device, mount_point])
+
+    schedule_cleanup(state, cleanup_extra_storage, state, loop_device,
+                     extra_storage_file)
+
+
+def cleanup_extra_storage(state, loop_device, extra_storage_file):
+    """Remove the extra storage added to a btrfs filesystem and balance it."""
+    mount_point = state['mount_point']
+    logger.info('Removing extra storage from file system %s', mount_point)
+
+    # Remove the extra storage device from btrfs filesystem
+    run(['btrfs', 'device', 'remove', loop_device, mount_point])
+    run(['losetup', '--detach', loop_device])
+    run(['rm', '-f', extra_storage_file])
+
+    # Re-balance the filesystem
+    run(['btrfs', 'balance', 'start', '-musage=20', mount_point])
+    run(['btrfs', 'balance', 'start', '-dusage=20', mount_point])
+
+
 def qemu_debootstrap(state, architecture, distribution, variant, components,
                      packages, mirror):
     """Debootstrap into a mounted directory."""

@@ -352,6 +352,48 @@ modify x x
             [call(['umount', self.state['mount_point']], ignore_fail=True)])
 
     @patch('freedommaker.library.run')
+    def test_setup_extra_storage(self, run):
+        """Test that setting up extra storage works."""
+        extra_storage_file = self.image + '.extra'
+        size = '100M'
+        mount_point = self.state['mount_point']
+        loop_device = self.random_string()
+        run.return_value = f'{loop_device}\n'.encode()
+
+        library.setup_extra_storage(self.state, 'ext4', '100M')
+        run.assert_not_called()
+
+        library.setup_extra_storage(self.state, 'btrfs', '100M')
+        run.assert_has_calls([
+            call(['qemu-img', 'create', '-f', 'raw', extra_storage_file,
+                  size]),
+            call(['losetup', '--show', '--find', extra_storage_file]),
+            call(['btrfs', 'device', 'add', loop_device, mount_point])
+        ])
+
+        self.assertEqual(self.state['cleanup'], [
+            [library.cleanup_extra_storage, (self.state, loop_device,
+                                             extra_storage_file), {}]
+        ])
+
+    @patch('freedommaker.library.run')
+    def test_cleanup_extra_storage(self, run):
+        """Test that extra storage will be cleaned properly."""
+        extra_storage_file = self.image + '.extra'
+        loop_device = self.random_string()
+        mount_point = self.state['mount_point']
+
+        library.cleanup_extra_storage(self.state, loop_device, extra_storage_file)
+
+        run.assert_has_calls([
+            call(['btrfs', 'device', 'remove', loop_device, mount_point]),
+            call(['losetup', '--detach', loop_device]),
+            call(['rm', '-f', extra_storage_file]),
+            call(['btrfs', 'balance', 'start', '-musage=20', mount_point]),
+            call(['btrfs', 'balance', 'start', '-dusage=20', mount_point])
+        ])
+
+    @patch('freedommaker.library.run')
     def test_qemu_debootstrap(self, run):
         """Test debootstrapping using qemu."""
         library.qemu_debootstrap(self.state, 'i386', 'stretch', 'minbase',

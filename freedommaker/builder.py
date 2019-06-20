@@ -53,6 +53,8 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     kernel_flavor = 'default'
     debootstrap_variant = None
 
+    extra_storage_size = '1000M'
+
     @classmethod
     def get_target_name(cls):
         """Return the command line name of target for this builder."""
