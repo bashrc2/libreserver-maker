@@ -25,7 +25,7 @@ import stat
 import string
 import tempfile
 import unittest
-from unittest.mock import call, patch, Mock
+from unittest.mock import Mock, call, patch
 
 from .. import library
 
@@ -139,12 +139,16 @@ class TestLibrary(unittest.TestCase):
         ])
         self.assertEqual(self.state['image_file'],
                          self.state['ram_directory'].name + '/' + self.image)
-        self.assertEqual(self.state['cleanup'], [[
-            library.remove_ram_directory, (self.state['ram_directory'], ), {}
-        ], [
-            library.copy_image,
-            (self.state, self.state['image_file'], self.image), {}
-        ]])
+        self.assertEqual(
+            self.state['cleanup'],
+            [[
+                library.remove_ram_directory,
+                (self.state['ram_directory'], ), {}
+            ],
+             [
+                 library.copy_image,
+                 (self.state, self.state['image_file'], self.image), {}
+             ]])
         self.state['ram_directory'].cleanup()
 
     @patch('freedommaker.library.run')
@@ -251,32 +255,35 @@ modify x x
         self.assertEqual(self.state['loop_device'], '/dev/loop99')
         self.assertEqual(
             self.state['cleanup'],
-            [[library.force_release_loop_device, ('/dev/loop99', ), {}], [
-                library.force_release_partition_loop,
-                ('/dev/mapper/loop99p1', ), {}
-            ], [
-                library.force_release_partition_loop,
-                ('/dev/mapper/loop99p2', ), {}
-            ], [
-                library.force_release_partition_loop,
-                ('/dev/mapper/loop99p3', ), {}
-            ], [library.loopback_teardown, (self.image, ), {}]])
+            [[library.force_release_loop_device, ('/dev/loop99', ), {}],
+             [
+                 library.force_release_partition_loop,
+                 ('/dev/mapper/loop99p1', ), {}
+             ],
+             [
+                 library.force_release_partition_loop,
+                 ('/dev/mapper/loop99p2', ), {}
+             ],
+             [
+                 library.force_release_partition_loop,
+                 ('/dev/mapper/loop99p3', ), {}
+             ], [library.loopback_teardown, (self.image, ), {}]])
 
     @staticmethod
     @patch('freedommaker.library.run')
     def test_force_release_partition_loop(run):
         """Test loop device is forcefully released."""
         library.force_release_partition_loop('/dev/test/loop99')
-        run.assert_called_with(
-            ['dmsetup', 'remove', '/dev/test/loop99'], ignore_fail=True)
+        run.assert_called_with(['dmsetup', 'remove', '/dev/test/loop99'],
+                               ignore_fail=True)
 
     @staticmethod
     @patch('freedommaker.library.run')
     def test_force_release_loop_device(run):
         """Test loop device is forcefully released."""
         library.force_release_partition_loop('/dev/test/loop99')
-        run.assert_called_with(
-            ['dmsetup', 'remove', '/dev/test/loop99'], ignore_fail=True)
+        run.assert_called_with(['dmsetup', 'remove', '/dev/test/loop99'],
+                               ignore_fail=True)
 
     @staticmethod
     @patch('freedommaker.library.run')
@@ -332,9 +339,8 @@ modify x x
         library.unmount_filesystem('/dev/', self.state['mount_point'], False,
                                    False)
         self.assertEqual(run.call_args_list, [
-            call(
-                ['fuser', '-mvk', self.state['mount_point']],
-                ignore_fail=True),
+            call(['fuser', '-mvk', self.state['mount_point']],
+                 ignore_fail=True),
             call(['umount', self.state['mount_point']], ignore_fail=False)
         ])
 
@@ -359,13 +365,15 @@ modify x x
 
         self.assertEqual(
             self.state['cleanup'],
-            [[library.qemu_remove_binary, (self.state, ), {}], [
-                library.unmount_filesystem,
-                (None, self.state['mount_point'] + '/etc/machine-id'), {
-                    'is_bind_mount': True,
-                    'ignore_fail': True
-                }
-            ]])
+            [[library.qemu_remove_binary, (self.state, ), {}],
+             [
+                 library.unmount_filesystem,
+                 (None, self.state['mount_point'] + '/etc/machine-id'),
+                 {
+                     'is_bind_mount': True,
+                     'ignore_fail': True
+                 }
+             ]])
 
     @patch('freedommaker.library.run')
     def test_qemu_remove_binary(self, run):
@@ -557,9 +565,8 @@ deb-src http://ftp.us.debian.org/debian unstable main contrib non-free
         zeros_path = self.state['mount_point'] + '/ZEROS'
         library.fill_free_space_with_zeros(self.state)
         self.assertEqual(run.call_args_list, [
-            call(
-                ['dd', 'if=/dev/zero', 'of=' + zeros_path, 'bs=1M'],
-                ignore_fail=True),
+            call(['dd', 'if=/dev/zero', 'of=' + zeros_path, 'bs=1M'],
+                 ignore_fail=True),
             call(['rm', '-f', zeros_path])
         ])
 

@@ -19,6 +19,7 @@ Tests for miscellaneous utility methods.
 """
 
 import unittest
+
 from freedommaker import utils
 
 
@@ -28,7 +29,9 @@ class TestUtils(unittest.TestCase):
     def test_add_disk_offsets(self):
         """Test disk offset addition."""
         self.assertEqual(utils.add_disk_offsets('1mib', '2mib'), '3mib')
-        self.assertRaises(NotImplementedError, utils.add_disk_offsets, '1gib', '1mib')
-        self.assertRaises(NotImplementedError, utils.add_disk_offsets, '1mib', '1gib')
+        self.assertRaises(NotImplementedError, utils.add_disk_offsets, '1gib',
+                          '1mib')
+        self.assertRaises(NotImplementedError, utils.add_disk_offsets, '1mib',
+                          '1gib')
         self.assertRaises(ValueError, utils.add_disk_offsets, 'xmib', '1mib')
         self.assertRaises(ValueError, utils.add_disk_offsets, 'xmib', 'xmib')
