@@ -28,9 +28,6 @@ from . import internal, library
 # is needed.
 BASE_PACKAGES = [
     'initramfs-tools',
-]
-
-NEXT_RELEASE_PACKAGES = [
     'firmware-ath9k-htc',
 ]
 
@@ -82,11 +79,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         """Initialize object."""
         self.arguments = arguments
         self.packages = BASE_PACKAGES
-        if self.arguments.distribution in [
-                'unstable', 'testing', 'sid', 'buster'
-        ]:
-            self.packages += NEXT_RELEASE_PACKAGES
-
         self.ram_directory = None
 
         self.builder_backends = {}
