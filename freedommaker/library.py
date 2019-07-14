@@ -472,15 +472,24 @@ deb-src {mirror} {distribution} {components}
     updates_template = '''
 deb {mirror} {distribution}-updates {components}
 deb-src {mirror} {distribution}-updates {components}
-
+'''
+    old_security_template = '''
 deb http://security.debian.org/debian-security/ {distribution}/updates {components}
 deb-src http://security.debian.org/debian-security/ {distribution}/updates {components}
+'''
+    security_template = '''
+deb http://security.debian.org/debian-security/ {distribution}-security {components}
+deb-src http://security.debian.org/debian-security/ {distribution}-security {components}
 '''
     file_path = path_in_mount(state, 'etc/apt/sources.list')
     with open(file_path, 'w') as file_handle:
         file_handle.write(basic_template.format(**values))
         if distribution not in ('sid', 'unstable'):
             file_handle.write(updates_template.format(**values))
+            if distribution in ('bullseye', 'testing'):
+                file_handle.write(security_template.format(**values))
+            else:  # stable/buster
+                file_handle.write(old_security_template.format(**values))
 
     run_in_chroot(state, ['apt-get', 'update'])
     run_in_chroot(state, ['apt-get', 'clean'])
