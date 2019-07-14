@@ -49,14 +49,6 @@ Freedom-maker supports building for the following targets:
 - *virtualbox-amd64*: 64-bit image for the VirtualBox virtualization tool
 - *virtualbox-i386*: 32-bit image for the VirtualBox virtualization tool
 
-## Install dependencies
-
-To build an image, first install all the required dependencies:
-
-```shell
-$ sudo apt build-dep .
-```
-
 ## Running Build
 
 1. Fetch the git source of freedom-maker:
@@ -66,7 +58,7 @@ $ sudo apt build-dep .
 
 2. Install the required dependencies:
     ```shell
-    $ sudo apt install parted btrfs-progs qemu-user-static
+    $ sudo apt install btrfs-progs debootstrap kpartx parted qemu-user-static sshpass
     $ cd freedom-maker
     $ sudo apt build-dep .
     ```
