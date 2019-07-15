@@ -1,3 +1,32 @@
+freedom-maker (0.24) unstable; urgency=medium
+
+  [ Sunil Mohan Adapa ]
+  * internal: Fix issue with using builder specific packages
+  * pine64+: Add new builder for Pine64+ board
+  * Update tests for the split udev command
+  * pine64-lts: Add new builder for Pine64 LTS board
+  * Replace atf-allwinner with arm-trusted-firmware
+  * Yapf and isort changes
+  * internal: Fix issue with premature disk fulls by btrfs
+  * all: Merge next release packages into basic packages
+
+  [ Joseph Nuthalapati ]
+  * ci: Remove dependency "pxz" from GitLab CI script
+  * Add Pine64+ to list of targets in README.md
+
+  [ Florian Boor ]
+  * Split udev command in order to improve compatibility
+  * Add support for building Lamobo R1 SD card images
+
+  [ James Valleroy ]
+  * vagrant: Add ncurses-term and byobu
+  * vagrant: Add packages needed for testing
+  * README: Add some missing dependencies
+  * library: Handle new name for security repository
+  * d/control: Bump standards version to 4.4.0
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 15 Jul 2019 19:49:17 -0400
+
 freedom-maker (0.23) unstable; urgency=medium
 
   [ Juan Carlos Romero ]
