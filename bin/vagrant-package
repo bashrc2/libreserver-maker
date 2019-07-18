@@ -167,7 +167,7 @@ def install_guest_additions():
 
 def install_dev_packages():
     """Install build deps and other useful packages for development."""
-    run_vm_command('sudo apt build-dep -y plinth freedombox-setup')
+    run_vm_command('sudo apt build-dep -y freedombox')
     run_vm_command('sudo apt install -y byobu ncurses-term parted '
                    'python3-dev python3-pip python3-pytest '
                    'python3-pytest-django sshpass')

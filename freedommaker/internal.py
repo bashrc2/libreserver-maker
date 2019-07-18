@@ -245,26 +245,14 @@ class InternalBuilderBackend():
     def _install_freedombox_packages(self):
         """Install custom .deb packages."""
         custom_freedombox = None
-        custom_plinth = None
-        custom_setup = None
         for package in (self.builder.arguments.custom_package or []):
-            if 'plinth_' in package:
-                custom_plinth = package
-            elif 'freedombox-setup_' in package:
-                custom_setup = package
-            elif 'freedombox_' in package:
+            if 'freedombox_' in package:
                 custom_freedombox = package
 
         if custom_freedombox:
             library.install_custom_package(self.state, custom_freedombox)
-
-        if custom_plinth:
-            library.install_custom_package(self.state, custom_plinth)
-
-        if custom_setup:
-            library.install_custom_package(self.state, custom_setup)
         else:
-            library.install_package(self.state, 'freedombox-setup')
+            library.install_package(self.state, 'freedombox')
 
     def _lock_root_user(self):
         """Lock the root user account."""
