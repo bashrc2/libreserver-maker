@@ -168,6 +168,11 @@ class InternalBuilderBackend():
             self.state, '/proc', 'proc', is_bind_mount=True)
         library.mount_filesystem(self.state, '/sys', 'sys', is_bind_mount=True)
 
+        # Kill all the processes on the / filesystem before attempting to
+        # unmount /dev/pts. Otherwise, unmounting /dev/pts will fail.
+        library.schedule_cleanup(self.state, library.process_cleanup,
+                                 self.state)
+
     def _get_packages(self):
         """Return the list of extra packages to install.
 

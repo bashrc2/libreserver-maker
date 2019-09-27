@@ -263,18 +263,23 @@ def mount_filesystem(state,
     run(['mount', device, mount_point] + options)
     state.setdefault('sub_mount_points', {})[label_or_path] = sub_mount_point
 
-    schedule_cleanup(state, unmount_filesystem, device, mount_point,
-                     is_bind_mount)
+    schedule_cleanup(state, unmount_filesystem, device, mount_point)
 
 
-def unmount_filesystem(device, mount_point, is_bind_mount, ignore_fail=False):
+def unmount_filesystem(device, mount_point, ignore_fail=False):
     """Unmount a filesystem."""
     logger.info('Unmounting device %s from mount point %s', device,
                 mount_point)
-    if not is_bind_mount:
-        run(['fuser', '-mvk', mount_point], ignore_fail=True)
-
     run(['umount', mount_point], ignore_fail=ignore_fail)
+
+
+def process_cleanup(state):
+    """Kill all processes using a given mount point."""
+    mount_point = state['mount_point']
+    logger.info('Killing all processes on the mount point %s', mount_point)
+    run(['fuser', '-mvk', mount_point], ignore_fail=True)
+    # XXX: Twice seems to work better?
+    run(['fuser', '-mvk', mount_point], ignore_fail=True)
 
 
 def setup_extra_storage(state, file_system_type, size):
@@ -340,10 +345,7 @@ def qemu_debootstrap(state, architecture, distribution, variant, components,
             'Unmounting filesystems that may have been left by debootstrap')
         for path in ('proc', 'sys', 'etc/machine-id'):
             unmount_filesystem(
-                None,
-                os.path.join(target, path),
-                is_bind_mount=True,
-                ignore_fail=True)
+                None, os.path.join(target, path), ignore_fail=True)
         raise
 
     schedule_cleanup(state, qemu_remove_binary, state)
@@ -354,7 +356,6 @@ def qemu_debootstrap(state, architecture, distribution, variant, components,
         unmount_filesystem,
         None,
         os.path.join(target, 'etc/machine-id'),
-        is_bind_mount=True,
         ignore_fail=True)
 
 

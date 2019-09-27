@@ -336,20 +336,21 @@ modify x x
     @patch('freedommaker.library.run')
     def test_unmount_filesystem(self, run):
         """Test unmounting a filesystem."""
-        library.unmount_filesystem('/dev/', self.state['mount_point'], False,
-                                   False)
+        library.unmount_filesystem('/dev/', self.state['mount_point'], False)
+        self.assertEqual(
+            run.call_args_list,
+            [call(['umount', self.state['mount_point']], ignore_fail=False)])
+
+    @patch('freedommaker.library.run')
+    def test_process_cleanup(self, run):
+        """Test cleaning up processes."""
+        library.process_cleanup(self.state)
         self.assertEqual(run.call_args_list, [
             call(['fuser', '-mvk', self.state['mount_point']],
                  ignore_fail=True),
-            call(['umount', self.state['mount_point']], ignore_fail=False)
+            call(['fuser', '-mvk', self.state['mount_point']],
+                 ignore_fail=True)
         ])
-
-        run.reset_mock()
-        library.unmount_filesystem('/dev/pts', self.state['mount_point'], True,
-                                   True)
-        self.assertEqual(
-            run.call_args_list,
-            [call(['umount', self.state['mount_point']], ignore_fail=True)])
 
     @patch('freedommaker.library.run')
     def test_setup_extra_storage(self, run):
@@ -453,7 +454,6 @@ modify x x
                  library.unmount_filesystem,
                  (None, self.state['mount_point'] + '/etc/machine-id'),
                  {
-                     'is_bind_mount': True,
                      'ignore_fail': True
                  }
              ]])
