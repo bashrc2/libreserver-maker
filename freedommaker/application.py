@@ -34,8 +34,6 @@ IMAGE_SIZE = '3800M'
 BUILD_MIRROR = 'http://deb.debian.org/debian'
 MIRROR = 'http://deb.debian.org/debian'
 DISTRIBUTION = 'unstable'
-DOWNLOAD_SOURCE = False
-INCLUDE_SOURCE = False
 BUILD_DIR = 'build'
 LOG_LEVEL = 'debug'
 HOSTNAME = 'freedombox'
@@ -101,12 +99,6 @@ class Application(object):
         parser.add_argument(
             '--distribution', default=DISTRIBUTION,
             help='Debian release to use in built image')
-        parser.add_argument(
-            '--download-source', action='store_true', default=DOWNLOAD_SOURCE,
-            help='Whether to download source packages')
-        parser.add_argument(
-            '--include-source', action='store_true', default=INCLUDE_SOURCE,
-            help='Whether to include source in build image')
         parser.add_argument(
             '--package', action='append',
             help='Install additional packages in the image')

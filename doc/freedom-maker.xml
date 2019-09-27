@@ -41,7 +41,6 @@
         <arg> <option>--build-mirror</option></arg>
         <arg> <option>--mirror</option></arg>
         <arg> <option>--distribution</option></arg>
-        <arg> <option>--include-source</option></arg>
         <arg> <option>--package</option></arg>
         <arg> <option>--custom-package</option></arg>
         <arg> <option>--build-dir</option></arg>
@@ -112,15 +111,6 @@
          <listitem>
            <para>
              Debian release to use in built image
-          </para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term> <option>--include-source</option></term>
-         <listitem>
-           <para>
-             Whether to include source in build image,
-             False by default
           </para>
         </listitem>
       </varlistentry>
