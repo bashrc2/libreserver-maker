@@ -300,14 +300,25 @@ def cleanup_extra_storage(state, loop_device, extra_storage_file):
     mount_point = state['mount_point']
     logger.info('Removing extra storage from file system %s', mount_point)
 
+    _btrfs_rebalance(mount_point)
+    run(['btrfs', 'balance', 'start', '-mconvert=dup', mount_point],
+        ignore_fail=True)
+
     # Remove the extra storage device from btrfs filesystem
     run(['btrfs', 'device', 'remove', loop_device, mount_point])
     run(['losetup', '--detach', loop_device])
     run(['rm', '-f', extra_storage_file])
 
-    # Re-balance the filesystem
-    run(['btrfs', 'balance', 'start', '-musage=20', mount_point])
-    run(['btrfs', 'balance', 'start', '-dusage=20', mount_point])
+    _btrfs_rebalance(mount_point)
+
+
+def _btrfs_rebalance(mount_point):
+    """Re-balance btrfs filesystem."""
+    for usage in range(0, 100, 20):
+        run(['btrfs', 'balance', 'start', f'-musage={usage}', mount_point],
+            ignore_fail=True)
+        run(['btrfs', 'balance', 'start', f'-dusage={usage}', mount_point],
+            ignore_fail=True)
 
 
 def qemu_debootstrap(state, architecture, distribution, variant, components,

@@ -371,10 +371,10 @@ modify x x
             call(['btrfs', 'device', 'add', loop_device, mount_point])
         ])
 
-        self.assertEqual(self.state['cleanup'], [
-            [library.cleanup_extra_storage, (self.state, loop_device,
-                                             extra_storage_file), {}]
-        ])
+        self.assertEqual(self.state['cleanup'], [[
+            library.cleanup_extra_storage,
+            (self.state, loop_device, extra_storage_file), {}
+        ]])
 
     @patch('freedommaker.library.run')
     def test_cleanup_extra_storage(self, run):
@@ -383,14 +383,55 @@ modify x x
         loop_device = self.random_string()
         mount_point = self.state['mount_point']
 
-        library.cleanup_extra_storage(self.state, loop_device, extra_storage_file)
+        library.cleanup_extra_storage(self.state, loop_device,
+                                      extra_storage_file)
 
         run.assert_has_calls([
+            call(['btrfs', 'balance', 'start', '-musage=0', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-dusage=0', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-musage=20', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-dusage=20', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-musage=40', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-dusage=40', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-musage=60', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-dusage=60', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-musage=80', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-dusage=80', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-mconvert=dup', mount_point],
+                 ignore_fail=True),
             call(['btrfs', 'device', 'remove', loop_device, mount_point]),
             call(['losetup', '--detach', loop_device]),
             call(['rm', '-f', extra_storage_file]),
-            call(['btrfs', 'balance', 'start', '-musage=20', mount_point]),
-            call(['btrfs', 'balance', 'start', '-dusage=20', mount_point])
+            call(['btrfs', 'balance', 'start', '-musage=0', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-dusage=0', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-musage=20', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-dusage=20', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-musage=40', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-dusage=40', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-musage=60', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-dusage=60', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-musage=80', mount_point],
+                 ignore_fail=True),
+            call(['btrfs', 'balance', 'start', '-dusage=80', mount_point],
+                 ignore_fail=True),
         ])
 
     @patch('freedommaker.library.run')
