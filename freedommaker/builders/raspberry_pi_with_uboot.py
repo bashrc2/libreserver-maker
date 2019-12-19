@@ -34,6 +34,10 @@ class RaspberryPiWithUBoot(ARMImageBuilder):
         if not self.uboot_variant:
             raise NotImplementedError
 
+        firmware_package = 'raspi-firmware'
+        if self.arguments.distribution in ['buster', 'stable']:
+            firmware_package = 'raspi3-firmware'
+
         script = '''
 set -e
 set -x
@@ -41,9 +45,9 @@ set -o pipefail
 
 apt-get install --no-install-recommends -y dpkg-dev
 cd /tmp
-apt-get source raspi3-firmware
-cp raspi3-firmware*/boot/* /boot/firmware
-rm -rf raspi3-firmware*
+apt-get source {firmware_package}
+cp {firmware_package}*/boot/* /boot/firmware
+rm -rf {firmware_package}*
 cd /
 
 # remove unneeded firmware files
@@ -54,5 +58,5 @@ rm -f /boot/firmware/start_*
 apt-get install -y u-boot-rpi
 cp /usr/lib/u-boot/{uboot_variant}/u-boot.bin /boot/firmware/kernel.img
 cp /usr/lib/u-boot/{uboot_variant}/u-boot.bin /boot/firmware/kernel7.img
-'''.format(uboot_variant=self.uboot_variant)
+'''.format(firmware_package=firmware_package, uboot_variant=self.uboot_variant)
         library.run_in_chroot(state, ['bash', '-c', script])
