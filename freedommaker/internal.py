@@ -279,8 +279,8 @@ class InternalBuilderBackend():
         And that FreedomBox is not installed using a Debian package.
 
         """
-        library.run_in_chroot(self.state,
-                              ['mkdir', '-p', '/var/lib/freedombox'])
+        library.run_in_chroot(
+            self.state, ['mkdir', '-p', '-m', '755', '/var/lib/freedombox'])
         library.run_in_chroot(
             self.state,
             ['touch', '/var/lib/freedombox/is-freedombox-disk-image'])
