@@ -1,3 +1,17 @@
+freedom-maker (0.26) unstable; urgency=medium
+
+  [ James Valleroy ]
+  * d/rules: Don't skip tests during build
+  * ci: Switch to salsa-ci pipeline
+  * ci: Move to debian/salsa-ci.yml
+  * raspberry: Use raspi-firmware package in testing and unstable
+  * d/control: Update standards version to 4.5.0
+
+  [ Veiko Aasa ]
+  * internal: Make directory /var/lib/freedombox readable by other users
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 10 Feb 2020 18:28:06 -0500
+
 freedom-maker (0.25) unstable; urgency=medium
 
   [ Sunil Mohan Adapa ]
