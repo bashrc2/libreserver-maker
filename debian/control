@@ -26,6 +26,7 @@ Depends:
  ${python3:Depends},
  binfmt-support,
  btrfs-progs,
+ debootstrap,
  dmsetup,
  dosfstools,
  fdisk | util-linux (<< 2.29.2-3~),
