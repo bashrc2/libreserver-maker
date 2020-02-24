@@ -40,6 +40,7 @@ Freedom-maker supports building for the following targets:
 - *pcduino3*: pcDuino3's SD card
 - *pine64-lts*: Pine64 LTS board's SD card
 - *pine64-plus*: Pine64+ board's SD card
+- *orange-pi-zero*: Orange Pi Zero's SD card
 - *qemu-amd64*: 64-bit image for the Qemu virtualization tool
 - *qemu-i386*: 32-bit image for the Qemu virtualization tool
 - *raspberry2*: RasbperryPi 2's SD card

@@ -30,6 +30,7 @@ from . import cubieboard2
 from . import cubietruck
 from . import i386
 from . import lamobo_r1
+from . import orange_pi_zero
 from . import pcduino3
 from . import pine64_plus
 from . import pine64_lts

@@ -180,7 +180,7 @@
             raspberry3, raspberry3-b-plus, beaglebone, cubieboard2, cubietruck,
             a20-olinuxino-lime, a20-olinuxino-lime2, a20-olinuxino-micro, i386,
             amd64, virtualbox-i386, virtualbox-amd64, qemu-i386, qemu-amd64,
-            pcduino3, banana-pro
+            pcduino3, banana-pro, orange-pi-zero
           </para>
         </listitem>
       </varlistentry>
@@ -203,7 +203,7 @@
       <synopsis>$ python3 -m freedommaker raspberry2 raspberry3 raspbery3-b-plus
       beaglebone cubieboard2 cubietruck a20-olinuxino-lime a20-olinuxino-lime2
       a20-olinuxino-micro i386 amd64 virtualbox-i386 virtualbox-amd64 qemu-i386
-      qemu-amd64 pcduino3 banana-pro</synopsis>
+      qemu-amd64 pcduino3 banana-pro orange-pi-zero</synopsis>
       <para>
         Build all the available FreedomBox images using freedom-maker.
       </para>
