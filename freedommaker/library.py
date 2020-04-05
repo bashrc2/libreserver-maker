@@ -35,7 +35,6 @@ logger = logging.getLogger(__name__)
 
 def run(*args, **kwargs):
     """Run a command."""
-
     def log_stdout(data):
         """Handle stdout data from executed command."""
         logger.debug('> %s', str(data.decode().strip()))
@@ -239,9 +238,7 @@ def create_filesystem(device, filesystem_type):
     run(['udevadm', 'settle'])
 
 
-def mount_filesystem(state,
-                     label_or_path,
-                     sub_mount_point,
+def mount_filesystem(state, label_or_path, sub_mount_point,
                      is_bind_mount=False):
     """Mount a device on a mount point."""
     if not sub_mount_point:
@@ -290,7 +287,6 @@ def setup_extra_storage(state, file_system_type, size):
     extra_storage_file = state['image_file'] + '.extra'
     mount_point = state['mount_point']
     logger.info('Adding extra storage to file system %s', mount_point)
-
     run(['qemu-img', 'create', '-f', 'raw', extra_storage_file, size])
     output = run(['losetup', '--show', '--find', extra_storage_file])
     loop_device = output.decode().strip()
@@ -344,19 +340,15 @@ def qemu_debootstrap(state, architecture, distribution, variant, components,
         logger.info(
             'Unmounting filesystems that may have been left by debootstrap')
         for path in ('proc', 'sys', 'etc/machine-id'):
-            unmount_filesystem(
-                None, os.path.join(target, path), ignore_fail=True)
+            unmount_filesystem(None, os.path.join(target, path),
+                               ignore_fail=True)
         raise
 
     schedule_cleanup(state, qemu_remove_binary, state)
 
     # During bootstrap, /etc/machine-id path might be bind mounted.
-    schedule_cleanup(
-        state,
-        unmount_filesystem,
-        None,
-        os.path.join(target, 'etc/machine-id'),
-        ignore_fail=True)
+    schedule_cleanup(state, unmount_filesystem, None,
+                     os.path.join(target, 'etc/machine-id'), ignore_fail=True)
 
 
 def qemu_remove_binary(state):
@@ -384,11 +376,23 @@ exit 101
     os.unlink(path)
 
 
-def install_package(state, package):
+def install_package(state, package, install_from_backports=False):
     """Install a package using apt."""
     logger.info('Installing package %s', package)
+
     with no_run_daemon_policy(state):
         run_in_chroot(state, ['apt-get', 'install', '-y', package])
+        if install_from_backports:
+            # TODO Install doc-en and doc-es packages too
+            run_in_chroot(state, ['apt-get', 'install', '-y', 'gdebi-core'])
+            run_in_chroot(
+                state,
+                ['apt-get', '-t', 'buster-backports', 'download', package])
+            run_in_chroot(state, ['sh', '-c', f'gdebi -n {package}*.deb'])
+            run_in_chroot(state, [
+                'find', '.', '-maxdepth', '1', '-iname', f'"{package}*.deb"',
+                '-delete'
+            ])
 
 
 def install_custom_package(state, package_path):
@@ -469,7 +473,7 @@ def install_grub(state):
     run_in_chroot(state, ['grub-install', device])
 
 
-def setup_apt(state, mirror, distribution, components):
+def setup_apt(state, mirror, distribution, components, enable_backports=False):
     """Setup apt sources and update the cache."""
     logger.info('Setting apt for mirror %s', mirror)
     values = {
@@ -493,11 +497,17 @@ deb-src http://security.debian.org/debian-security/ {distribution}/updates {comp
 deb http://security.debian.org/debian-security/ {distribution}-security {components}
 deb-src http://security.debian.org/debian-security/ {distribution}-security {components}
 '''
+    buster_backports_template = '''
+deb http://deb.debian.org/debian buster-backports main
+deb-src http://deb.debian.org/debian buster-backports main
+'''
     file_path = path_in_mount(state, 'etc/apt/sources.list')
     with open(file_path, 'w') as file_handle:
         file_handle.write(basic_template.format(**values))
         if distribution not in ('sid', 'unstable'):
             file_handle.write(updates_template.format(**values))
+            if enable_backports:
+                file_handle.write(buster_backports_template)
             if distribution in ('bullseye', 'testing'):
                 file_handle.write(security_template.format(**values))
             else:  # stable/buster
@@ -522,8 +532,8 @@ def setup_flash_kernel(state, machine_name, kernel_options,
     if kernel_options:
         stdin = 'flash-kernel flash-kernel/linux_cmdline string {}'.format(
             kernel_options)
-        run_in_chroot(
-            state, ['debconf-set-selections'], feed_stdin=stdin.encode())
+        run_in_chroot(state, ['debconf-set-selections'],
+                      feed_stdin=stdin.encode())
 
     run_in_chroot(state, ['apt-get', 'install', '-y', 'flash-kernel'])
 

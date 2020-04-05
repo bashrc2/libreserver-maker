@@ -27,7 +27,6 @@ logger = logging.getLogger(__name__)
 
 class InternalBuilderBackend():
     """Build an image using internal implementation."""
-
     def __init__(self, builder):
         """Initialize the builder."""
         self.builder = builder
@@ -82,8 +81,9 @@ class InternalBuilderBackend():
         size = utils.add_disk_sizes(self.builder.arguments.image_size,
                                     self.builder.extra_storage_size)
         size = utils.add_disk_sizes(size, '100M')  # Buffer
-        return library.create_ram_directory_image(
-            self.state, self.builder.image_file, size)
+        return library.create_ram_directory_image(self.state,
+                                                  self.builder.image_file,
+                                                  size)
 
     def _create_empty_image(self):
         """Create an empty disk image to create parititions in."""
@@ -113,8 +113,8 @@ class InternalBuilderBackend():
         library.create_partition(self.state, 'root', offset, '100%',
                                  self.builder.root_filesystem_type)
 
-        library.set_boot_flag(
-            self.state, partition_number=boot_partition_number)
+        library.set_boot_flag(self.state,
+                              partition_number=boot_partition_number)
 
     def _loopback_setup(self):
         """Perform mapping to loopback devices from partitions in image file."""
@@ -162,10 +162,10 @@ class InternalBuilderBackend():
     def _mount_additional_filesystems(self):
         """Mount extra filesystems: dev, devpts, sys and proc."""
         library.mount_filesystem(self.state, '/dev', 'dev', is_bind_mount=True)
-        library.mount_filesystem(
-            self.state, '/dev/pts', 'dev/pts', is_bind_mount=True)
-        library.mount_filesystem(
-            self.state, '/proc', 'proc', is_bind_mount=True)
+        library.mount_filesystem(self.state, '/dev/pts', 'dev/pts',
+                                 is_bind_mount=True)
+        library.mount_filesystem(self.state, '/proc', 'proc',
+                                 is_bind_mount=True)
         library.mount_filesystem(self.state, '/sys', 'sys', is_bind_mount=True)
 
         # Kill all the processes on the / filesystem before attempting to
@@ -257,7 +257,9 @@ class InternalBuilderBackend():
         if custom_freedombox:
             library.install_custom_package(self.state, custom_freedombox)
         else:
-            library.install_package(self.state, 'freedombox')
+            library.install_package(
+                self.state, 'freedombox',
+                install_from_backports=self.builder.arguments.enable_backports)
 
     def _lock_root_user(self):
         """Lock the root user account."""
@@ -287,18 +289,15 @@ class InternalBuilderBackend():
 
     def _remove_ssh_keys(self):
         """Remove SSH keys so that images don't contain known keys."""
-        library.run_in_chroot(
-            self.state, ['sh', '-c', 'rm -f /etc/ssh/ssh_host_*'],
-            ignore_fail=True)
+        library.run_in_chroot(self.state,
+                              ['sh', '-c', 'rm -f /etc/ssh/ssh_host_*'],
+                              ignore_fail=True)
 
     def _create_fstab(self):
         """Create fstab with entries for each paritition."""
-        library.add_fstab_entry(
-            self.state,
-            'root',
-            self.builder.root_filesystem_type,
-            1,
-            append=False)
+        library.add_fstab_entry(self.state, 'root',
+                                self.builder.root_filesystem_type, 1,
+                                append=False)
         if self.builder.boot_filesystem_type:
             library.add_fstab_entry(self.state, 'boot',
                                     self.builder.boot_filesystem_type, 2)
@@ -326,9 +325,10 @@ class InternalBuilderBackend():
 
     def _setup_build_apt(self):
         """Setup apt to use as the build mirror."""
-        library.setup_apt(self.state, self.builder.arguments.build_mirror,
-                          self.builder.arguments.distribution,
-                          self._get_components())
+        library.setup_apt(
+            self.state, self.builder.arguments.build_mirror,
+            self.builder.arguments.distribution, self._get_components(),
+            enable_backports=self.builder.arguments.enable_backports)
 
     def _setup_final_apt(self):
         """Setup apt to use the image mirror."""
