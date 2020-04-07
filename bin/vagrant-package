@@ -208,6 +208,11 @@ def run_vm_command(command):
     ],
                                stdin=echo.stdout)
     process.communicate()
+    if process.returncode:
+        logger.error('Command run in VM failed: ' + command)
+        stop_vm()
+        delete_vm()
+        sys.exit(-1)
 
 
 if __name__ == '__main__':
