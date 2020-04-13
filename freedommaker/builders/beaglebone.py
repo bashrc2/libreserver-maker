@@ -34,12 +34,11 @@ class BeagleBoneImageBuilder(ARMImageBuilder):
     @staticmethod
     def install_boot_loader(state):
         """Install the boot loader onto the image."""
-        library.install_boot_loader_part(
-            state,
-            'usr/lib/u-boot/am335x_boneblack/MLO',
-            seek='1',
-            size='128k',
-            count='1')
+        library.install_boot_loader_part(state,
+                                         'usr/lib/u-boot/am335x_boneblack/MLO',
+                                         seek='1',
+                                         size='128k',
+                                         count='1')
         library.install_boot_loader_part(
             state,
             'usr/lib/u-boot/am335x_boneblack/u-boot.img',

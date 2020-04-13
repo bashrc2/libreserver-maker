@@ -46,5 +46,6 @@ class A64ImageBuilder(ARMImageBuilder):
         env = os.environ.copy()
         env['TARGET'] = u_boot_target_path
 
-        library.run_in_chroot(
-            state, ['u-boot-install-sunxi64', state['loop_device']], env=env)
+        library.run_in_chroot(state,
+                              ['u-boot-install-sunxi64', state['loop_device']],
+                              env=env)

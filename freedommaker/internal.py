@@ -162,9 +162,13 @@ class InternalBuilderBackend():
     def _mount_additional_filesystems(self):
         """Mount extra filesystems: dev, devpts, sys and proc."""
         library.mount_filesystem(self.state, '/dev', 'dev', is_bind_mount=True)
-        library.mount_filesystem(self.state, '/dev/pts', 'dev/pts',
+        library.mount_filesystem(self.state,
+                                 '/dev/pts',
+                                 'dev/pts',
                                  is_bind_mount=True)
-        library.mount_filesystem(self.state, '/proc', 'proc',
+        library.mount_filesystem(self.state,
+                                 '/proc',
+                                 'proc',
                                  is_bind_mount=True)
         library.mount_filesystem(self.state, '/sys', 'sys', is_bind_mount=True)
 
@@ -263,9 +267,10 @@ class InternalBuilderBackend():
                     'freedombox-doc-en', 'freedombox-doc-es'
                 ]
             for package in freedombox_packages:
-                library.install_package(
-                    self.state, package, install_from_backports=self.builder.
-                    arguments.enable_backports)
+                library.install_package(self.state,
+                                        package,
+                                        install_from_backports=self.builder.
+                                        arguments.enable_backports)
 
     def _lock_root_user(self):
         """Lock the root user account."""
@@ -301,8 +306,10 @@ class InternalBuilderBackend():
 
     def _create_fstab(self):
         """Create fstab with entries for each paritition."""
-        library.add_fstab_entry(self.state, 'root',
-                                self.builder.root_filesystem_type, 1,
+        library.add_fstab_entry(self.state,
+                                'root',
+                                self.builder.root_filesystem_type,
+                                1,
                                 append=False)
         if self.builder.boot_filesystem_type:
             library.add_fstab_entry(self.state, 'boot',
@@ -332,8 +339,10 @@ class InternalBuilderBackend():
     def _setup_build_apt(self):
         """Setup apt to use as the build mirror."""
         library.setup_apt(
-            self.state, self.builder.arguments.build_mirror,
-            self.builder.arguments.distribution, self._get_components(),
+            self.state,
+            self.builder.arguments.build_mirror,
+            self.builder.arguments.distribution,
+            self._get_components(),
             enable_backports=self.builder.arguments.enable_backports)
 
     def _setup_final_apt(self):

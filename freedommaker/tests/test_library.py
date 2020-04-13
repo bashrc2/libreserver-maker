@@ -318,7 +318,9 @@ modify x x
             self.state['mount_point'] + '/boot/firmware'
         ])
 
-        library.mount_filesystem(self.state, '/dev/pts', 'dev/pts',
+        library.mount_filesystem(self.state,
+                                 '/dev/pts',
+                                 'dev/pts',
                                  is_bind_mount=True)
         run.assert_called_with([
             'mount', '/dev/pts', self.state['mount_point'] + '/dev/pts', '-o',
@@ -481,7 +483,8 @@ modify x x
         library.install_package(self.state, 'nmap')
         run.assert_called_with(self.state,
                                ['apt-get', 'install', '-y', 'nmap'])
-        library.install_package(self.state, 'freedombox',
+        library.install_package(self.state,
+                                'freedombox',
                                 install_from_backports=True)
         run.assert_called_with(self.state, [
             'find', '.', '-maxdepth', '1', '-iname', '"freedombox*.deb"',
@@ -546,7 +549,10 @@ ff02::2 ip6-allrouters
         get_uuid.return_value = 'root-uuid'
         with self.assert_file_change(fstab_path, 'initial-trash',
                                      expected_content):
-            library.add_fstab_entry(self.state, 'root', 'btrfs', 1,
+            library.add_fstab_entry(self.state,
+                                    'root',
+                                    'btrfs',
+                                    1,
                                     append=False)
 
         expected_content += 'UUID=boot-uuid /boot ext4 errors=remount-ro 0 2\n'

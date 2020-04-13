@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
 """
 Tool to build FreedomBox images for various targets.
 """
@@ -28,6 +27,7 @@ __all__ = [
     'Application',
     'main',
 ]
+
 
 def main():
     Application().run()

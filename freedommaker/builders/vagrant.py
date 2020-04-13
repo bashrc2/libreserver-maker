@@ -48,8 +48,4 @@ class VagrantImageBuilder(VirtualBoxAmd64ImageBuilder):
     @staticmethod
     def vagrant_package(vm_file, vagrant_file):
         """Create a vagrant package from VM file."""
-        library.run(
-            ['bin/vagrant-package', '--output', vagrant_file, vm_file])
-
-
-
+        library.run(['bin/vagrant-package', '--output', vagrant_file, vm_file])

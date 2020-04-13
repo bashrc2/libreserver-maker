@@ -84,46 +84,64 @@ class Application(object):
         parser = argparse.ArgumentParser(
             description='FreedomMaker - Script to build FreedomBox images',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        parser.add_argument('--build-stamp', default=build_stamp,
+        parser.add_argument('--build-stamp',
+                            default=build_stamp,
                             help='Build stamp to use on image file names')
-        parser.add_argument('--image-size', default=IMAGE_SIZE,
+        parser.add_argument('--image-size',
+                            default=IMAGE_SIZE,
                             help='Size of the image to build')
-        parser.add_argument('--build-mirror', default=BUILD_MIRROR,
+        parser.add_argument('--build-mirror',
+                            default=BUILD_MIRROR,
                             help='Debian mirror to use for building')
-        parser.add_argument('--mirror', default=MIRROR,
+        parser.add_argument('--mirror',
+                            default=MIRROR,
                             help='Debian mirror to use in built image')
-        parser.add_argument('--distribution', default=DISTRIBUTION,
+        parser.add_argument('--distribution',
+                            default=DISTRIBUTION,
                             help='Debian release to use in built image')
-        parser.add_argument('--package', action='append',
+        parser.add_argument('--package',
+                            action='append',
                             help='Install additional packages in the image')
         parser.add_argument(
-            '--custom-package', action='append',
+            '--custom-package',
+            action='append',
             help='Install package from DEB file into the image')
         parser.add_argument(
-            '--enable-backports', action='store_true', help=
+            '--enable-backports',
+            action='store_true',
+            help=
             'Enable backports in the image and install freedombox package from backports'
         )
         parser.add_argument(
-            '--build-dir', default=BUILD_DIR,
+            '--build-dir',
+            default=BUILD_DIR,
             help='Directory to build images and create log file')
-        parser.add_argument(
-            '--log-level', default=LOG_LEVEL, help='Log level',
-            choices=('critical', 'error', 'warn', 'info', 'debug'))
-        parser.add_argument('--hostname', default=HOSTNAME,
+        parser.add_argument('--log-level',
+                            default=LOG_LEVEL,
+                            help='Log level',
+                            choices=('critical', 'error', 'warn', 'info',
+                                     'debug'))
+        parser.add_argument('--hostname',
+                            default=HOSTNAME,
                             help='Hostname to set inside the built images')
         parser.add_argument(
-            '--sign', action='store_true',
+            '--sign',
+            action='store_true',
             help='Sign the images with default GPG key after building')
         parser.add_argument(
-            '--force', action='store_true',
+            '--force',
+            action='store_true',
             help='Force rebuild of images even when required image exists')
         parser.add_argument(
-            '--build-in-ram', action='store_true',
+            '--build-in-ram',
+            action='store_true',
             help='Build the image in RAM so that it is faster, requires '
             'free RAM about the size of disk image')
-        parser.add_argument('--skip-compression', action='store_true',
+        parser.add_argument('--skip-compression',
+                            action='store_true',
                             help='Do not compress the generated image')
-        parser.add_argument('targets', nargs='+',
+        parser.add_argument('targets',
+                            nargs='+',
                             help='Image targets to build')
 
         self.arguments = parser.parse_args()

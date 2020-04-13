@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
 """
 Utility for setting passwords inside disk/VM images.
 
@@ -44,8 +43,7 @@ def main():
         'image',
         help='Disk image file (.img or .vdi) inside which user manipulation '
         'is sought')
-    parser.add_argument('user',
-                        help='User account to change password for')
+    parser.add_argument('user', help='User account to change password for')
     parser.add_argument('--password', help='New password for user')
 
     arguments = parser.parse_args()
@@ -160,9 +158,11 @@ def map_vm_disk_image(disk_image):
     output = subprocess.check_output(['fdisk', '-o', 'Device', '-l', device])
     root_device = output.decode().split('\n')[-2]
 
-    return {'root_device': root_device,
-            'image_type': 'vm',
-            'mapped_device': device}
+    return {
+        'root_device': root_device,
+        'image_type': 'vm',
+        'mapped_device': device
+    }
 
 
 def map_raw_disk_image(disk_image):
@@ -178,9 +178,11 @@ def map_raw_disk_image(disk_image):
             devices.append(line.split(' ')[2])
 
     root_device = '/dev/mapper/' + devices[-1]
-    return {'root_device': root_device,
-            'image_type': 'raw',
-            'mapped_image': disk_image}
+    return {
+        'root_device': root_device,
+        'image_type': 'raw',
+        'mapped_image': disk_image
+    }
 
 
 def mount_disk_image(root_device):
@@ -208,8 +210,9 @@ def change_password(root_path, user, password):
     # XXX: Providing crypt method is not recommended.  However, without crypt
     # method, the passwd encryption happens using PAM and that does not seem to
     # be working in a chroot.
-    subprocess.check_output(['chpasswd', '--root', root_path, '--crypt-method',
-                             'SHA512'], input=chpasswd_input.encode())
+    subprocess.check_output(
+        ['chpasswd', '--root', root_path, '--crypt-method', 'SHA512'],
+        input=chpasswd_input.encode())
 
 
 def unmount_disk_image(mount_info):

@@ -238,7 +238,9 @@ def create_filesystem(device, filesystem_type):
     run(['udevadm', 'settle'])
 
 
-def mount_filesystem(state, label_or_path, sub_mount_point,
+def mount_filesystem(state,
+                     label_or_path,
+                     sub_mount_point,
                      is_bind_mount=False):
     """Mount a device on a mount point."""
     if not sub_mount_point:
@@ -340,15 +342,19 @@ def qemu_debootstrap(state, architecture, distribution, variant, components,
         logger.info(
             'Unmounting filesystems that may have been left by debootstrap')
         for path in ('proc', 'sys', 'etc/machine-id'):
-            unmount_filesystem(None, os.path.join(target, path),
+            unmount_filesystem(None,
+                               os.path.join(target, path),
                                ignore_fail=True)
         raise
 
     schedule_cleanup(state, qemu_remove_binary, state)
 
     # During bootstrap, /etc/machine-id path might be bind mounted.
-    schedule_cleanup(state, unmount_filesystem, None,
-                     os.path.join(target, 'etc/machine-id'), ignore_fail=True)
+    schedule_cleanup(state,
+                     unmount_filesystem,
+                     None,
+                     os.path.join(target, 'etc/machine-id'),
+                     ignore_fail=True)
 
 
 def qemu_remove_binary(state):

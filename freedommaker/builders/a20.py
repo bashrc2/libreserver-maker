@@ -34,5 +34,7 @@ class A20ImageBuilder(ARMImageBuilder):
         if not self.u_boot_path:
             raise NotImplementedError
 
-        library.install_boot_loader_part(
-            state, self.u_boot_path, seek='8', size='1k')
+        library.install_boot_loader_part(state,
+                                         self.u_boot_path,
+                                         seek='8',
+                                         size='1k')
