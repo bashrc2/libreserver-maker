@@ -25,4 +25,5 @@ class PCDuino3ImageBuilder(A20ImageBuilder):
     """Image builder for PCDuino3 target."""
     machine = 'pcduino3'
     flash_kernel_name = 'LinkSprite pcDuino3'
-    u_boot_path = 'usr/lib/u-boot/Linksprite_pcDuino3/u-boot-sunxi-with-spl.bin'
+    u_boot_path = \
+        'usr/lib/u-boot/Linksprite_pcDuino3/u-boot-sunxi-with-spl.bin'

@@ -40,7 +40,8 @@ setuptools.setup(
         'Environment :: Console',
         'Intended Audience :: End Users/Desktop',
         'License :: DFSG approved',
-        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+        'License :: OSI Approved :: '
+        'GNU General Public License v3 or later (GPLv3+)',
         'Natural Language :: English',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',

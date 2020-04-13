@@ -24,8 +24,8 @@ import os
 from . import internal, library
 
 # initramfs-tools is a dependency for the kernel-image package. However, when
-# kernel is not installed, as in case of Raspberry Pi image, explicit dependency
-# is needed.
+# kernel is not installed, as in case of Raspberry Pi image, explicit
+# dependency is needed.
 BASE_PACKAGES = [
     'initramfs-tools',
     'firmware-ath9k-htc',
@@ -60,7 +60,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     @classmethod
     def get_builder_class(cls, target):
         """Return an builder class given target name."""
-        from . import builders  # pylint: disable=unused-variable
+        from . import builders  # noqa: F401, pylint: disable=unused-variable
 
         for subclass in cls.get_subclasses():
             if subclass.get_target_name() == target:

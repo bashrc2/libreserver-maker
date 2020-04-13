@@ -325,7 +325,7 @@ class InternalBuilderBackend():
             library.install_grub(self.state)
 
         if hasattr(self.builder, 'flash_kernel_name') and \
-                   self.builder.flash_kernel_name:
+           self.builder.flash_kernel_name:
             options = getattr(self.builder, 'flash_kernel_options', None)
             library.setup_flash_kernel(self.state,
                                        self.builder.flash_kernel_name, options,

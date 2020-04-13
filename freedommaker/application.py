@@ -73,7 +73,7 @@ class Application(object):
             try:
                 builder.build()
                 logger.info('Target complete - %s', target)
-            except:
+            except:  # noqa: E722
                 logger.error('Target failed - %s', target)
                 raise
 
@@ -106,12 +106,10 @@ class Application(object):
             '--custom-package',
             action='append',
             help='Install package from DEB file into the image')
-        parser.add_argument(
-            '--enable-backports',
-            action='store_true',
-            help=
-            'Enable backports in the image and install freedombox package from backports'
-        )
+        parser.add_argument('--enable-backports',
+                            action='store_true',
+                            help='Enable backports in the image and '
+                            'install freedombox package from backports')
         parser.add_argument(
             '--build-dir',
             default=BUILD_DIR,
