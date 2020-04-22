@@ -257,9 +257,15 @@ class InternalBuilderBackend():
         if custom_freedombox:
             library.install_custom_package(self.state, custom_freedombox)
         else:
-            library.install_package(
-                self.state, 'freedombox',
-                install_from_backports=self.builder.arguments.enable_backports)
+            freedombox_packages = ['freedombox']
+            if self.builder.arguments.enable_backports:
+                freedombox_packages += [
+                    'freedombox-doc-en', 'freedombox-doc-es'
+                ]
+            for package in freedombox_packages:
+                library.install_package(
+                    self.state, package, install_from_backports=self.builder.
+                    arguments.enable_backports)
 
     def _lock_root_user(self):
         """Lock the root user account."""
