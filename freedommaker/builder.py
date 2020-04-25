@@ -28,7 +28,6 @@ from . import internal, library
 # dependency is needed.
 BASE_PACKAGES = [
     'initramfs-tools',
-    'firmware-ath9k-htc',
 ]
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
