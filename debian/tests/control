@@ -1,11 +1,14 @@
 Test-Command: set -e ; for py in $(py3versions -r 2>/dev/null) ; do cd "$ADTTMP" ; echo "Testing with $py:" ; $py -c "import freedommaker; print(freedommaker)" ; done
-Depends: python3-all, freedom-maker
+Depends: python3-all, @
 
 Test-Command: set -e ; freedom-maker --help
-Depends: python3-pkg-resources, freedom-maker
+Depends: python3-pkg-resources, @
 
 Test-Command: set -e ; passwd-in-image --help
-Depends: freedom-maker
+Depends: @
 
 Test-Command: set -e ; vagrant-package --help
-Depends: freedom-maker
+Depends: @
+
+Test-Command: py.test-3 -p no:cacheprovider /usr/lib/python3/dist-packages/freedommaker/
+Depends: python3-pytest, @
