@@ -50,7 +50,6 @@ class Application(object):
     def run(self):
         """Parse the command line args and execute the command."""
         self.parse_arguments()
-        self.check_for_incompatible_arguments()
 
         self.setup_logging()
         logger.info('Freedom Maker version - %s', freedommaker.__version__)
@@ -108,8 +107,11 @@ class Application(object):
             help='Install package from DEB file into the image')
         parser.add_argument('--enable-backports',
                             action='store_true',
-                            help='Enable backports in the image and '
-                            'install freedombox package from backports')
+                            help='Deprecated: Backports are now enabled for '
+                            'stable images by default')
+        parser.add_argument('--disable-backports',
+                            action='store_true',
+                            help='Disable backports in the image')
         parser.add_argument(
             '--build-dir',
             default=BUILD_DIR,
@@ -143,21 +145,6 @@ class Application(object):
                             help='Image targets to build')
 
         self.arguments = parser.parse_args()
-
-    def check_for_incompatible_arguments(self):
-        """Check if any of the provided arguments are incompatible
-        with each other.
-        """
-        if self.arguments:
-            if self.arguments.enable_backports and \
-               self.arguments.distribution not in ['stable', 'buster']:
-                logger.error("Backports can be enabled in stable images only.")
-                logger.error("Incompatible arguments detected. Exiting.")
-                sys.exit(1)
-        else:
-            logger.warning(
-                "Cannot check compatibility of arguments. List of arguments is empty."
-            )
 
     def setup_logging(self):
         """Setup logging."""

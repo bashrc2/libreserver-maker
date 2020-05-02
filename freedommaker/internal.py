@@ -251,6 +251,11 @@ class InternalBuilderBackend():
         """Set hostname in debootstrapped file system."""
         library.set_hostname(self.state, self.builder.arguments.hostname)
 
+    def _should_use_backports(self):
+        """Return whether backports is in use."""
+        stable = self.builder.arguments.distribution in ['stable', 'buster']
+        return stable and not self.builder.arguments.disable_backports
+
     def _install_freedombox_packages(self):
         """Install custom .deb packages."""
         custom_freedombox = None
@@ -262,15 +267,15 @@ class InternalBuilderBackend():
             library.install_custom_package(self.state, custom_freedombox)
         else:
             freedombox_packages = ['freedombox']
-            if self.builder.arguments.enable_backports:
+            use_backports = self._should_use_backports()
+            if use_backports:
                 freedombox_packages += [
                     'freedombox-doc-en', 'freedombox-doc-es'
                 ]
             for package in freedombox_packages:
                 library.install_package(self.state,
                                         package,
-                                        install_from_backports=self.builder.
-                                        arguments.enable_backports)
+                                        install_from_backports=use_backports)
 
     def _lock_root_user(self):
         """Lock the root user account."""
@@ -338,12 +343,13 @@ class InternalBuilderBackend():
 
     def _setup_build_apt(self):
         """Setup apt to use as the build mirror."""
+        use_backports = self._should_use_backports()
         library.setup_apt(
             self.state,
             self.builder.arguments.build_mirror,
             self.builder.arguments.distribution,
             self._get_components(),
-            enable_backports=self.builder.arguments.enable_backports)
+            enable_backports=use_backports)
 
     def _setup_final_apt(self):
         """Setup apt to use the image mirror."""
