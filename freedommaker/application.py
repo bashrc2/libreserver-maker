@@ -150,7 +150,7 @@ class Application(object):
         """
         if self.arguments:
             if self.arguments.enable_backports and \
-               self.arguments.distribution != 'stable':
+               self.arguments.distribution not in ['stable', 'buster']:
                 logger.error("Backports can be enabled in stable images only.")
                 logger.error("Incompatible arguments detected. Exiting.")
                 sys.exit(1)
