@@ -1,3 +1,24 @@
+freedom-maker (0.27) unstable; urgency=medium
+
+  [ James Valleroy ]
+  * builders: Add orange-pi-zero target
+  * debian: Add deboostrap as dependency
+  * Run yapf
+  * Fix some flake8 issues
+  * vagrant: Fail build when VM command has error
+  * builder: Remove firmware-ath9k-htc from BASE_PACKAGES
+  * d/tests/control: Add unit tests
+  * application: Allow backports for buster, as well as stable
+  * backports: Add --disable-backports option to replace --enable-backports
+  * d/control: Switch to debhelper compat version 13
+
+  [ Joseph Nuthalapati ]
+  * Enable backports and install latest freedombox.deb
+  * application: Check for incompatible arguments
+  * Install documentation packages from backports
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Mon, 04 May 2020 08:41:20 -0400
+
 freedom-maker (0.26) unstable; urgency=medium
 
   [ James Valleroy ]
