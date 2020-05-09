@@ -46,6 +46,10 @@ def main():
         description='Convert VirtualBox disk image into Vagrant box')
     parser.add_argument('image', help='Disk image file (.vdi) to be converted')
     parser.add_argument(
+        '--distribution',
+        default='unstable',
+        help='Debian release used in built image')
+    parser.add_argument(
         '--output',
         default='package.box',
         help='Path of the output vagrant box file (default: package.box)')
@@ -62,8 +66,16 @@ def main():
     create_vagrant_user()
     set_ssh_key()
     setup_sudo()
-    install_guest_additions()
-    install_dev_packages()
+    if arguments.distribution in ['unstable', 'sid']:
+        # XXX: Only unstable will have VirtualBox's shared folder
+        # support and time synchronization service.
+        install_guest_additions()
+
+    if arguments.distribution not in ['stable', 'buster']:
+        # XXX: Stable will not have packages required to build
+        # freedombox package. This requires latest debhelper version,
+        # which can be installed from backports.
+        install_dev_packages()
 
     stop_vm()
     package_vm(arguments)

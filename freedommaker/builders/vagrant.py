@@ -45,7 +45,8 @@ class VagrantImageBuilder(VirtualBoxAmd64ImageBuilder):
         os.remove(self.image_file)
         self.vagrant_package(vm_file, vagrant_file)
 
-    @staticmethod
-    def vagrant_package(vm_file, vagrant_file):
+    def vagrant_package(self, vm_file, vagrant_file):
         """Create a vagrant package from VM file."""
-        library.run(['bin/vagrant-package', '--output', vagrant_file, vm_file])
+        library.run(['bin/vagrant-package',
+                     '--distribution', self.arguments.distribution,
+                     '--output', vagrant_file, vm_file])
