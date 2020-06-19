@@ -45,10 +45,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='Convert VirtualBox disk image into Vagrant box')
     parser.add_argument('image', help='Disk image file (.vdi) to be converted')
-    parser.add_argument(
-        '--distribution',
-        default='unstable',
-        help='Debian release used in built image')
+    parser.add_argument('--distribution',
+                        default='unstable',
+                        help='Debian release used in built image')
     parser.add_argument(
         '--output',
         default='package.box',
@@ -59,6 +58,10 @@ def main():
     check_requirements()
 
     set_fbx_user_password(arguments)
+
+    # In case an old VM exists, try to clean up first.
+    stop_vm(ignore_errors=True)
+    delete_vm(ignore_errors=True)
 
     setup_vm(arguments)
     start_vm()
