@@ -190,9 +190,9 @@ def install_dev_packages():
                    'python3-pytest-django sshpass')
 
 
-def stop_vm():
+def stop_vm(ignore_errors=False):
     """Shutdown the VM."""
-    run_vm_command('sudo shutdown now')
+    run_vm_command('sudo shutdown now', ignore_errors)
     time.sleep(30)
 
 
@@ -204,13 +204,15 @@ def package_vm(arguments):
                    check=True)
 
 
-def delete_vm():
+def delete_vm(ignore_errors=False):
     """Delete the VM."""
-    subprocess.run(['VBoxManage', 'modifyvm', vm_name, '--hda', 'none'])
-    subprocess.run(['VBoxManage', 'unregistervm', vm_name, '--delete'])
+    subprocess.run(['VBoxManage', 'modifyvm', vm_name, '--hda', 'none'],
+                   ignore_errors)
+    subprocess.run(['VBoxManage', 'unregistervm', vm_name, '--delete'],
+                   ignore_errors)
 
 
-def run_vm_command(command):
+def run_vm_command(command, ignore_errors=False):
     """Send a command to the VM through SSH."""
     echo = subprocess.Popen(['echo', password], stdout=subprocess.PIPE)
     process = subprocess.Popen([
@@ -220,10 +222,10 @@ def run_vm_command(command):
     ],
                                stdin=echo.stdout)
     process.communicate()
-    if process.returncode:
+    if not ignore_errors and process.returncode:
         logger.error('Command run in VM failed: ' + command)
-        stop_vm()
-        delete_vm()
+        stop_vm(ignore_errors=True)
+        delete_vm(ignore_errors=True)
         sys.exit(-1)
 
 
