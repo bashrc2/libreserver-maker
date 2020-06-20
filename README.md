@@ -59,7 +59,7 @@ Freedom-maker supports building for the following targets:
 
 2. Install the required dependencies:
     ```shell
-    $ sudo apt install btrfs-progs debootstrap kpartx parted qemu-user-static sshpass
+    $ sudo apt install btrfs-progs debootstrap kpartx parted qemu-user-static qemu-utils sshpass
     $ cd freedom-maker
     $ sudo apt build-dep .
     ```
