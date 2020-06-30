@@ -1,3 +1,15 @@
+freedom-maker (0.28) unstable; urgency=medium
+
+  [ James Valleroy ]
+  * vagrant: Skip missing packages on stable and testing
+  * vagrant: Avoid possible recursion in run_vm_command
+  * vagrant: Try to clean up old VM
+
+  [ Joseph Nuthalapati ]
+  * Add qemu-utils as a dependency
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Tue, 30 Jun 2020 09:58:31 -0400
+
 freedom-maker (0.27) unstable; urgency=medium
 
   [ James Valleroy ]
