@@ -97,6 +97,12 @@ class InternalBuilderBackend():
         boot_partition_number = 1
 
         offset = '1mib'
+        if self.builder.efi_filesystem_type:
+            end = utils.add_disk_offsets(offset, self.builder.efi_size)
+            library.create_partition(self.state, 'efi', offset, end,
+                                     self.builder.efi_filesystem_type)
+            offset = utils.add_disk_offsets(end, '1mib')
+
         if self.builder.firmware_filesystem_type:
             end = utils.add_disk_offsets(offset, self.builder.firmware_size)
             library.create_partition(self.state, 'firmware', offset, end,
@@ -126,6 +132,10 @@ class InternalBuilderBackend():
             library.create_filesystem(self.state['devices']['firmware'],
                                       self.builder.firmware_filesystem_type)
 
+        if self.builder.efi_filesystem_type:
+            library.create_filesystem(self.state['devices']['efi'],
+                                      self.builder.efi_filesystem_type)
+
         if self.builder.boot_filesystem_type:
             library.create_filesystem(self.state['devices']['boot'],
                                       self.builder.boot_filesystem_type)
@@ -139,6 +149,9 @@ class InternalBuilderBackend():
 
         if self.builder.boot_filesystem_type:
             library.mount_filesystem(self.state, 'boot', 'boot')
+
+        if self.builder.efi_filesystem_type:
+            library.mount_filesystem(self.state, 'efi', 'boot/efi')
 
         if self.builder.firmware_filesystem_type:
             library.mount_filesystem(self.state, 'firmware', 'boot/firmware')
@@ -221,6 +234,7 @@ class InternalBuilderBackend():
         if 'btrfs' in [
                 self.builder.root_filesystem_type,
                 self.builder.boot_filesystem_type,
+                self.builder.efi_filesystem_type,
                 self.builder.firmware_filesystem_type
         ]:
             packages += ['btrfs-progs']
@@ -320,6 +334,10 @@ class InternalBuilderBackend():
             library.add_fstab_entry(self.state, 'boot',
                                     self.builder.boot_filesystem_type, 2)
 
+        if self.builder.efi_filesystem_type:
+            library.add_fstab_entry(self.state, 'efi',
+                                    self.builder.efi_filesystem_type, 2)
+
         if self.builder.firmware_filesystem_type:
             library.add_fstab_entry(self.state, 'firmware',
                                     self.builder.firmware_filesystem_type, 2)
@@ -344,12 +362,11 @@ class InternalBuilderBackend():
     def _setup_build_apt(self):
         """Setup apt to use as the build mirror."""
         use_backports = self._should_use_backports()
-        library.setup_apt(
-            self.state,
-            self.builder.arguments.build_mirror,
-            self.builder.arguments.distribution,
-            self._get_components(),
-            enable_backports=use_backports)
+        library.setup_apt(self.state,
+                          self.builder.arguments.build_mirror,
+                          self.builder.arguments.distribution,
+                          self._get_components(),
+                          enable_backports=use_backports)
 
     def _setup_final_apt(self):
         """Setup apt to use the image mirror."""
