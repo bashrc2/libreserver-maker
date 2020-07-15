@@ -16,6 +16,8 @@
 #
 """
 Package containing all the builders.
+
+isort:skip_file
 """
 
 # pylint: disable=unused-import
@@ -24,6 +26,7 @@ from . import a20_olinuxino_lime
 from . import a20_olinuxino_micro
 from . import amd64
 from . import arm
+from . import arm64
 from . import banana_pro
 from . import beaglebone
 from . import cubieboard2
