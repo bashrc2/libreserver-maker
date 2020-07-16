@@ -92,8 +92,9 @@ class InternalBuilderBackend():
     def _create_partitions(self):
         """Create partition table and partitions in the image."""
         # Don't install MBR on the image file, it is not needed as we use
-        # either grub or u-boot.
-        library.create_partition_table(self.state, 'msdos')
+        # either grub, u-boot or UEFI.
+        library.create_partition_table(self.state,
+                                       self.builder.partition_table_type)
         boot_partition_number = 1
 
         offset = '1mib'

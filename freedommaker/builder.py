@@ -40,6 +40,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     free = True
 
     builder_backend = 'internal'
+    partition_table_type = 'msdos'
     root_filesystem_type = 'btrfs'
     boot_filesystem_type = None
     boot_size = None
