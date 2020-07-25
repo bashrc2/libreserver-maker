@@ -27,6 +27,7 @@ from . import a20_olinuxino_micro
 from . import amd64
 from . import arm
 from . import arm64
+from . import armhf
 from . import banana_pro
 from . import beaglebone
 from . import cubieboard2
