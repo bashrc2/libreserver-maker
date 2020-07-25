@@ -570,6 +570,15 @@ ff02::2 ip6-allrouters
             call(self.state, ['grub-install', '/dev/test/loop99'])
         ])
 
+        run.reset_mock()
+        library.install_grub(self.state, target='arm-efi')
+        print(run.call_args_list)
+        self.assertEqual(run.call_args_list, [
+            call(self.state, ['update-grub']),
+            call(self.state,
+                 ['grub-install', '/dev/test/loop99', '--target=arm-efi'])
+        ])
+
     @patch('freedommaker.library.run_in_chroot')
     def test_setup_apt(self, run):
         """Test setting up apt."""
