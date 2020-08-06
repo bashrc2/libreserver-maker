@@ -56,7 +56,7 @@ class ARMEFIImageBuilder(ImageBuilder):
     @classmethod
     def install_boot_loader(cls, state):
         """Install the DTB files and boot manager."""
-        library.install_grub(state, target=cls.grub_target)
+        library.install_grub(state, target=cls.grub_target, is_efi=True)
 
         # In typical UEFI systems, EFI boot manager is available and all the OS
         # list themselves as boot manager configuration in NVRAM. In many SBCs,

@@ -557,11 +557,20 @@ ff02::2 ip6-allrouters
 
         run.reset_mock()
         library.install_grub(self.state, target='arm-efi')
-        print(run.call_args_list)
         self.assertEqual(run.call_args_list, [
             call(self.state, ['update-grub']),
             call(self.state,
                  ['grub-install', '/dev/test/loop99', '--target=arm-efi'])
+        ])
+
+        run.reset_mock()
+        library.install_grub(self.state, target='arm-efi', is_efi=True)
+        self.assertEqual(run.call_args_list, [
+            call(self.state, ['update-grub']),
+            call(self.state, [
+                'grub-install', '/dev/test/loop99', '--target=arm-efi',
+                '--no-nvram'
+            ])
         ])
 
     @patch('freedommaker.library.run_in_chroot')

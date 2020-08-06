@@ -456,13 +456,14 @@ def add_fstab_entry(state, label, filesystem_type, pass_number, append=True):
         file_handle.write(line)
 
 
-def install_grub(state, target=None):
+def install_grub(state, target=None, is_efi=False):
     """Install grub boot loader on the loop back device."""
     device = state['loop_device']
     logger.info('Installing grub boot loader on device %s', device)
     run_in_chroot(state, ['update-grub'])
-    target_args = [f'--target={target}'] if target else []
-    run_in_chroot(state, ['grub-install', device] + target_args)
+    args = [f'--target={target}'] if target else []
+    args += ['--no-nvram'] if is_efi else []
+    run_in_chroot(state, ['grub-install', device] + args)
 
 
 def setup_apt(state, mirror, distribution, components, enable_backports=False):
