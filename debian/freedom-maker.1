@@ -2,12 +2,12 @@
 .\"     Title: freedom-maker
 .\"    Author: [see the "Author" section]
 .\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
-.\"      Date: 06/15/2017
+.\"      Date: 08/07/2020
 .\"    Manual: FreedomBox Manual
 .\"    Source: 0.8
 .\"  Language: English
 .\"
-.TH "FREEDOM\-MAKER" "1" "06/15/2017" "0\&.8" "FreedomBox Manual"
+.TH "FREEDOM\-MAKER" "1" "08/07/2020" "0\&.8" "FreedomBox Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,7 +31,7 @@
 freedom-maker \- image builder for FreedomBox
 .SH "SYNOPSIS"
 .HP \w'\fBfreedom\-maker\fR\ 'u
-\fBfreedom\-maker\fR [\fB\-\-build\-stamp\fR] [\fB\-\-image\-size\fR] [\fB\-\-build\-mirror\fR] [\fB\-\-mirror\fR] [\fB\-\-distribution\fR] [\fB\-\-include\-source\fR] [\fB\-\-package\fR] [\fB\-\-custom\-package\fR] [\fB\-\-build\-dir\fR] [\fB\-\-log\-level\*(Aq\fR] [\fB\-\-hostname\fR] [\fB\-\-sign\fR] [\fB\-\-force\fR] [\fBtargets\fR] [\fB\-h,\ \fR\fB\-\-help\fR]
+\fBfreedom\-maker\fR [\fB\-\-build\-stamp\fR] [\fB\-\-image\-size\fR] [\fB\-\-build\-mirror\fR] [\fB\-\-mirror\fR] [\fB\-\-distribution\fR] [\fB\-\-package\fR] [\fB\-\-custom\-package\fR] [\fB\-\-build\-dir\fR] [\fB\-\-log\-level\fR] [\fB\-\-hostname\fR] [\fB\-\-sign\fR] [\fB\-\-force\fR] [\fBtargets\fR] [\fB\-h,\ \fR\fB\-\-help\fR]
 .SH "DESCRIPTION"
 .PP
 FreedomBox is a community project to develop, design and promote personal servers running free software for private, personal communications\&. It is a networking appliance designed to allow interfacing with the rest of the Internet under conditions of protected privacy and data security\&. It hosts applications such as blog, wiki, website, social network, email, web proxy and a Tor relay on a device that can replace a wireless router so that data stays with the users\&.
@@ -62,11 +62,6 @@ Debian mirror to use in built image
 \fB\-\-distribution\fR
 .RS 4
 Debian release to use in built image
-.RE
-.PP
-\fB\-\-include\-source\fR
-.RS 4
-Whether to include source in build image, False by default
 .RE
 .PP
 \fB\-\-package\fR
@@ -106,7 +101,7 @@ Force rebuild of images even when required image exists
 .PP
 \fBtargets\fR
 .RS 4
-Image targets to build\&. Choose one or more of freedommaker, dreamplug, raspberry, raspberry2, beaglebone, cubieboard2, cubietruck, a20\-olinuxino\-lime, a20\-olinuxino\-lime2, a20\-olinuxino\-micro, i386, amd64, virtualbox\-i386, virtualbox\-amd64, qemu\-i386, qemu\-amd64, pcDuino3
+Image targets to build\&. Choose one or more of raspberry2, raspberry3, raspberry3\-b\-plus, beaglebone, cubieboard2, cubietruck, a20\-olinuxino\-lime, a20\-olinuxino\-lime2, a20\-olinuxino\-micro, i386, amd64, arm64, armhf, virtualbox\-i386, virtualbox\-amd64, qemu\-i386, qemu\-amd64, pcduino3, banana\-pro, orange\-pi\-zero
 .RE
 .SH "EXAMPLES"
 .PP
@@ -130,10 +125,11 @@ Build a FreedomBox image for the BeagleBone Single Board Computer\&.
 .RS 4
 .\}
 .nf
-$ python3 \-m freedommaker dreamplug raspberry raspberry2
-      beaglebone cubieboard2 cubietruck a20\-olinuxino\-lime a20\-olinuxino\-lime2 
-      a20\-olinuxino\-micro i386 amd64 virtualbox\-i386 virtualbox\-amd64 
-      qemu\-i386 qemu\-amd64 pcDuino3
+$ python3 \-m freedommaker raspberry2 raspberry3 raspbery3\-b\-plus
+      beaglebone cubieboard2 cubietruck a20\-olinuxino\-lime a20\-olinuxino\-lime2
+      a20\-olinuxino\-micro i386 amd64 arm64 armhf virtualbox\-i386
+      virtualbox\-amd64 qemu\-i386 qemu\-amd64 pcduino3 banana\-pro
+      orange\-pi\-zero
 .fi
 .if n \{\
 .RE
