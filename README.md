@@ -31,6 +31,8 @@ Freedom-maker supports building for the following targets:
 - *a20-olinuxino-lime2*: A20 OLinuXino Lime2's SD card
 - *a20-olinuxino-micro*: A20 OLinuXino MICRO's SD card
 - *amd64*: Disk image for any machine with amd64 architecture
+- *arm64*: Disk image for any machine with arm64/aarch64 architecture
+- *armhf*: Disk image for any machine with arm32 architecture
 - *banana-pro*: Banana Pro's SD card
 - *beaglebone*: BeagleBone Black's SD card
 - *cubieboard2*: Cubieboard2's SD card
