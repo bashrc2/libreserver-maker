@@ -21,6 +21,9 @@ class InternalBuilderBackend():
         """Create a disk image."""
         # enable systemd resolved?
         try:
+            if self.builder.arguments.with_build_dep:
+                # Add 400MB for build dependencies
+                self.builder.arguments.image_size = '4200M'
             self._get_temp_image_file()
             self._create_empty_image()
             self._create_partitions()
@@ -37,6 +40,8 @@ class InternalBuilderBackend():
             self._mount_additional_filesystems()
             self._setup_build_apt()
             self._install_freedombox_packages()
+            if self.builder.arguments.with_build_dep:
+                self._install_build_dependencies()
             self._remove_ssh_keys()
             self._install_boot_loader()
             self._setup_final_apt()
@@ -276,6 +281,28 @@ class InternalBuilderBackend():
                 library.install_package(self.state,
                                         package,
                                         install_from_backports=use_backports)
+
+    def _install_build_dependencies(self):
+        library.install_package(self.state, 'git')
+        library.run_in_chroot(self.state, [
+            'git', 'clone', '--depth=1',
+            'https://salsa.debian.org/freedombox-team/freedombox.git',
+            '/tmp/freedombox'
+        ])
+        if self.builder.arguments.distribution not in ['stable', 'buster']:
+            library.run_in_chroot(self.state, [
+                'apt-get', 'build-dep', '--no-install-recommends', '--yes',
+                '/tmp/freedombox/'
+            ])
+
+        # In case new dependencies conflict with old dependencies
+        library.run_in_chroot(self.state, ['apt-mark', 'hold', 'freedombox'])
+        script = '''apt-get install --no-upgrade --yes \
+  $(/tmp/freedombox/run --develop --list-dependencies)'''
+        library.run_in_chroot(self.state, ['bash', '-c', script])
+        library.run_in_chroot(self.state, ['apt-mark', 'unhold', 'freedombox'])
+
+        library.install_package(self.state, 'ncurses-term')
 
     def _lock_root_user(self):
         """Lock the root user account."""

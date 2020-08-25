@@ -9,7 +9,6 @@ import datetime
 import logging
 import logging.config
 import os
-import sys
 
 import freedommaker
 
@@ -125,8 +124,9 @@ class Application(object):
         parser.add_argument('--skip-compression',
                             action='store_true',
                             help='Do not compress the generated image')
-        parser.add_argument('targets',
-                            nargs='+',
+        parser.add_argument('--with-build-dep', action='store_true',
+                            help='Include build dependencies in the image')
+        parser.add_argument('targets', nargs='+',
                             help='Image targets to build')
 
         self.arguments = parser.parse_args()
