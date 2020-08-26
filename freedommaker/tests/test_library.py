@@ -468,12 +468,23 @@ modify x x
         library.install_package(self.state, 'nmap')
         run.assert_called_with(self.state,
                                ['apt-get', 'install', '-y', 'nmap'])
+        run.reset_mock()
+
         library.install_package(self.state,
                                 'freedombox',
                                 install_from_backports=True)
-        run.assert_called_with(self.state, [
-            'find', '.', '-maxdepth', '1', '-iname', '"freedombox*.deb"',
-            '-delete'
+        self.assertEqual(run.call_args_list, [
+            call(self.state, ['apt-get', 'install', '-y', 'freedombox']),
+            call(self.state, ['apt-get', 'install', '-y', 'gdebi-core']),
+            call(self.state, [
+                'apt-get', '-t', 'buster-backports', 'download', 'freedombox'
+            ]),
+            call(self.state, ['sh', '-c', 'gdebi -n freedombox*.deb']),
+            call(self.state, [
+                'find', '.', '-maxdepth', '1', '-iname', '"freedombox*.deb"',
+                '-delete'
+            ]),
+            call(self.state, ['apt', 'autoremove', '-y'])
         ])
 
     @patch('freedommaker.library.install_package')

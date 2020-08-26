@@ -384,6 +384,7 @@ def install_package(state, package, install_from_backports=False):
                 'find', '.', '-maxdepth', '1', '-iname', f'"{package}*.deb"',
                 '-delete'
             ])
+            run_in_chroot(state, ['apt', 'autoremove', '-y'])
 
 
 def install_custom_package(state, package_path):
