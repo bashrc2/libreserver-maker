@@ -281,6 +281,7 @@ class InternalBuilderBackend():
             'https://salsa.debian.org/freedombox-team/freedombox.git',
             '/tmp/freedombox'
         ])
+
         if self.builder.arguments.distribution not in ['stable', 'buster']:
             library.run_in_chroot(self.state, [
                 'apt-get', 'build-dep', '--no-install-recommends', '--yes',
@@ -295,6 +296,9 @@ class InternalBuilderBackend():
         library.run_in_chroot(self.state, ['apt-mark', 'unhold', 'freedombox'])
 
         library.install_package(self.state, 'ncurses-term')
+
+        # clean up
+        library.run_in_chroot(self.state, ['rm', '-rf', '/tmp/freedombox'])
 
     def _lock_root_user(self):
         """Lock the root user account."""
