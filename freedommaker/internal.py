@@ -21,9 +21,6 @@ class InternalBuilderBackend():
         """Create a disk image."""
         # enable systemd resolved?
         try:
-            if self.builder.arguments.with_build_dep:
-                # Add 400MB for build dependencies
-                self.builder.arguments.image_size = '4200M'
             self._get_temp_image_file()
             self._create_empty_image()
             self._create_partitions()
