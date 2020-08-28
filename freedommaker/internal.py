@@ -282,11 +282,10 @@ class InternalBuilderBackend():
             '/tmp/freedombox'
         ])
 
-        if self.builder.arguments.distribution not in ['stable', 'buster']:
-            library.run_in_chroot(self.state, [
-                'apt-get', 'build-dep', '--no-install-recommends', '--yes',
-                '/tmp/freedombox/'
-            ])
+        library.run_in_chroot(self.state, [
+            'apt-get', 'build-dep', '--no-install-recommends', '--yes',
+            '/tmp/freedombox/'
+        ])
 
         # In case new dependencies conflict with old dependencies
         library.run_in_chroot(self.state, ['apt-mark', 'hold', 'freedombox'])
