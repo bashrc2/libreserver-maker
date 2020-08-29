@@ -1,4 +1,4 @@
-Test-Command: set -e ; for py in $(py3versions -r 2>/dev/null) ; do cd "$ADTTMP" ; echo "Testing with $py:" ; $py -c "import freedommaker; print(freedommaker)" ; done
+Test-Command: set -e ; for py in $(py3versions -r 2>/dev/null) ; do cd "$AUTOPKGTEST_TMP" ; echo "Testing with $py:" ; $py -c "import freedommaker; print(freedommaker)" ; done
 Depends: python3-all, @
 
 Test-Command: set -e ; freedom-maker --help
