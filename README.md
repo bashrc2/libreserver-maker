@@ -1,19 +1,18 @@
-# Freedom-Maker: The FreedomBox image builder
+# Freedom-Maker: The Freedombone image builder
 
-These scripts build FreedomBox-images for various supported hardware
+These scripts build Freedombone-images for various supported hardware
 that can then be copied to SD card, USB stick or Hard Disk drive to
-boot into FreedomBox.
+boot into Freedombone.
 
-These scripts are meant for developers of FreedomBox to build images
+These scripts are meant for developers of Freedombone to build images
 during releases and for advanced users who intend to build their own
 images. Regular users who wish to turn their devices into
-FreedomBoxes should instead download the pre-built images.
+Freedombones should instead download the pre-built images.
 
-Get a pre-built image via https://freedombox.org/download/.  There
-are images available for all supported target devices.  You also find
-the setup instructions on the [Wiki](https://wiki.debian.org/FreedomBox/).
+Get a pre-built image via https://freedombone.net/download/.  There
+are images available for all supported target devices.
 
-If you wish to create your own FreedomBox image, perhaps with some
+If you wish to create your own Freedombone image, perhaps with some
 tweaks, see the *Build Images* section below.
 
 # Create Images
@@ -52,13 +51,13 @@ Freedom-maker supports building for the following targets:
 
 1. Fetch the git source of freedom-maker:
     ```
-    $ git clone https://salsa.debian.org/freedombox-team/freedom-maker.git
+    $ git clone https://code.freedombone.net/bashrc/freedombone-maker.git
     ```
 
 2. Install the required dependencies:
     ```shell
     $ sudo apt install btrfs-progs debootstrap kpartx parted qemu-user-static qemu-utils sshpass
-    $ cd freedom-maker
+    $ cd freedombone-maker
     $ sudo apt build-dep .
     ```
 
@@ -123,7 +122,7 @@ for this task. Otherwise follow the steps:
 
    For example, if your SD card is /dev/sdg use the following command:
     ```
-    $ xzcat build/freedombox-unstable_2018-08-06_beaglebone-armhf.img.xz | dd bs=4M of=/dev/sdg conv=fsync status=progress
+    $ xzcat build/freedombone-unstable_2018-08-06_beaglebone-armhf.img.xz | dd bs=4M of=/dev/sdg conv=fsync status=progress
     ```
 
    The above command is an example for the beaglebone image built on
@@ -141,4 +140,4 @@ for this task. Otherwise follow the steps:
 3. Use the image by inserting the SD card or USB disk into the target
    device and booting from it.  Also see hardware specific
    instructions on how to prepare your device at
-   https://wiki.debian.org/FreedomBox/Hardware
+   https://freedombone.net
