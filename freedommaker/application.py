@@ -20,7 +20,7 @@ MIRROR = 'http://deb.debian.org/debian'
 DISTRIBUTION = 'unstable'
 BUILD_DIR = 'build'
 LOG_LEVEL = 'debug'
-HOSTNAME = 'freedombox'
+HOSTNAME = 'freedombone'
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
