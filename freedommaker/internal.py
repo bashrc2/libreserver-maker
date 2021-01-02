@@ -148,7 +148,7 @@ class InternalBuilderBackend():
         btrfs runs out of space even when the data stored is not even half of
         the available space. This is due to it needing re-balance operation. It
         may not be possible to run the re-balance during a heavy operation such
-        as installing a package with lot of dependencies (freedombox). Adding
+        as installing a package with lot of dependencies. Adding
         an additional disk is a good work around for that. The additional
         device will be removed during cleanup and filesystem will be
         re-balanced.
