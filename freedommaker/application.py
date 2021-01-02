@@ -17,7 +17,7 @@ from .builder import ImageBuilder
 IMAGE_SIZE = '3800M'
 BUILD_MIRROR = 'http://deb.debian.org/debian'
 MIRROR = 'http://deb.debian.org/debian'
-DISTRIBUTION = 'unstable'
+DISTRIBUTION = 'bullseye'
 BUILD_DIR = 'build'
 LOG_LEVEL = 'debug'
 HOSTNAME = 'freedombone'
