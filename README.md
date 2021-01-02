@@ -1,7 +1,3 @@
-[![pipeline status](https://salsa.debian.org/freedombox-team/freedom-maker/badges/master/pipeline.svg)](https://salsa.debian.org/freedombox-team/freedom-maker/commits/master)
-[![Debian Unstable](https://badges.debian.net/badges/debian/unstable/freedom-maker/version.svg)](https://packages.debian.org/unstable/freedom-maker)
-[![Debian Testing](https://badges.debian.net/badges/debian/testing/freedom-maker/version.svg)](https://packages.debian.org/testing/freedom-maker)
-
 # Freedom-Maker: The FreedomBox image builder
 
 These scripts build FreedomBox-images for various supported hardware
