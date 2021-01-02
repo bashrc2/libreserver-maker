@@ -32,13 +32,11 @@ class InternalBuilderBackend():
             self._set_hostname()
             self._lock_root_user()
             self._create_sudo_user()
-            self._set_freedombox_disk_image_flag()
+            self._set_freedombone_disk_image_flag()
             self._create_fstab()
             self._mount_additional_filesystems()
             self._setup_build_apt()
-            self._install_freedombox_packages()
-            if self.builder.arguments.with_build_dep:
-                self._install_build_dependencies()
+            self._install_freedombone_packages()
             self._remove_ssh_keys()
             self._install_boot_loader()
             self._setup_final_apt()
@@ -254,50 +252,21 @@ class InternalBuilderBackend():
         stable = self.builder.arguments.distribution in ['stable', 'buster']
         return stable and not self.builder.arguments.disable_backports
 
-    def _install_freedombox_packages(self):
-        """Install custom .deb packages."""
-        custom_freedombox = None
-        for package in (self.builder.arguments.custom_package or []):
-            if 'freedombox_' in package:
-                custom_freedombox = package
-
-        if custom_freedombox:
-            library.install_custom_package(self.state, custom_freedombox)
-        else:
-            freedombox_packages = ['freedombox']
-            use_backports = self._should_use_backports()
-            if use_backports:
-                freedombox_packages += [
-                    'freedombox-doc-en', 'freedombox-doc-es'
-                ]
-            for package in freedombox_packages:
-                library.install_package(self.state, package,
-                                        install_from_backports=use_backports)
-
-    def _install_build_dependencies(self):
+    def _install_freedombone_packages(self):
+        """Setup freedombone repo."""
         library.install_package(self.state, 'git')
+        library.install_package(self.state, 'build-essential')
+        library.install_package(self.state, 'dialog')
+
         library.run_in_chroot(self.state, [
             'git', 'clone', '--depth=1',
-            'https://salsa.debian.org/freedombox-team/freedombox.git',
-            '/tmp/freedombox'
+            'https://gitlab.com/bashrc2/freedombone.git',
+            '/root/freedombone'
         ])
 
-        library.run_in_chroot(self.state, [
-            'apt-get', 'build-dep', '--no-install-recommends', '--yes',
-            '/tmp/freedombox/'
-        ])
-
-        # In case new dependencies conflict with old dependencies
-        library.run_in_chroot(self.state, ['apt-mark', 'hold', 'freedombox'])
-        script = '''apt-get install --no-upgrade --yes \
-  $(/tmp/freedombox/run --develop --list-dependencies)'''
+        script = '''cd /root/freedombone; git checkout bullseye; \
+make install'''
         library.run_in_chroot(self.state, ['bash', '-c', script])
-        library.run_in_chroot(self.state, ['apt-mark', 'unhold', 'freedombox'])
-
-        library.install_package(self.state, 'ncurses-term')
-
-        # clean up
-        library.run_in_chroot(self.state, ['rm', '-rf', '/tmp/freedombox'])
 
     def _lock_root_user(self):
         """Lock the root user account."""
@@ -313,17 +282,17 @@ class InternalBuilderBackend():
             ['adduser', '--gecos', username, '--disabled-password', username])
         library.run_in_chroot(self.state, ['adduser', username, 'sudo'])
 
-    def _set_freedombox_disk_image_flag(self):
-        """Set a flag to indicate that this is a FreedomBox image.
+    def _set_freedombone_disk_image_flag(self):
+        """Set a flag to indicate that this is a Freedombone image.
 
-        And that FreedomBox is not installed using a Debian package.
+        And that Freedombone is not installed using a Debian package.
 
         """
         library.run_in_chroot(
-            self.state, ['mkdir', '-p', '-m', '755', '/var/lib/freedombox'])
+            self.state, ['mkdir', '-p', '-m', '755', '/var/lib/freedombone'])
         library.run_in_chroot(
             self.state,
-            ['touch', '/var/lib/freedombox/is-freedombox-disk-image'])
+            ['touch', '/var/lib/freedombone/is-freedombone-disk-image'])
 
     def _remove_ssh_keys(self):
         """Remove SSH keys so that images don't contain known keys."""
