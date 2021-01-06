@@ -275,7 +275,7 @@ make install'''
 
     def _create_sudo_user(self):
         """Create a user in the image with sudo permissions."""
-        username = 'fbx'
+        username = 'admin'
         logger.info('Creating a new sudo user %s', username)
         library.run_in_chroot(
             self.state,
