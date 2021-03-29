@@ -280,6 +280,7 @@ make install'''
 
     def _create_sudo_user(self):
         """Create a user in the image with sudo permissions."""
+        library.install_package(self.state, 'sudo')
         username = 'admin'
         logger.info('Creating a new sudo user %s', username)
         library.run_in_chroot(
