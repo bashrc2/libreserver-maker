@@ -257,6 +257,7 @@ class InternalBuilderBackend():
         library.install_package(self.state, 'git')
         library.install_package(self.state, 'build-essential')
         library.install_package(self.state, 'dialog')
+        library.install_package(self.state, 'openssh')
 
         library.run_in_chroot(self.state, [
             'git', 'clone', '--depth=1',
@@ -267,6 +268,7 @@ class InternalBuilderBackend():
         script = '''cd /root/freedombone; git checkout bullseye; \
 make install'''
         library.run_in_chroot(self.state, ['bash', '-c', script])
+        library.run_in_chroot(self.state, ['echo "Run sudo freedombone menuconfig or sudo freedombone menuconfig to bein installation." >> /home/admin/.bashrc"'])
 
     def _lock_root_user(self):
         """Lock the root user account."""
@@ -280,6 +282,8 @@ make install'''
         library.run_in_chroot(
             self.state,
             ['adduser', '--gecos', username, '--disabled-password', username])
+        library.run_in_chroot(self.state,
+                              ['chpasswd <<<"' + username + ':freedombone"'])
         library.run_in_chroot(self.state, ['adduser', username, 'sudo'])
 
     def _set_freedombone_disk_image_flag(self):
