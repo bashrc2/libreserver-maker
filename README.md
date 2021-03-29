@@ -122,7 +122,7 @@ for this task. Otherwise follow the steps:
 
    For example, if your SD card is /dev/sdg use the following command:
     ```
-    $ xzcat build/freedombone-unstable_2018-08-06_beaglebone-armhf.img.xz | dd bs=4M of=/dev/sdg conv=fsync status=progress
+    $ xzcat build/freedombone-bullseye-free_2021-08-06_all-amd64.img.xz | dd bs=4M of=/dev/sdg conv=fsync status=progress
     ```
 
    The above command is an example for the beaglebone image built on
