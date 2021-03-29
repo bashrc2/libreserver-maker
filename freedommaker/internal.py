@@ -282,9 +282,10 @@ make install'''
         library.run_in_chroot(
             self.state,
             ['adduser', '--gecos', username, '--disabled-password', username])
-        library.run_in_chroot(self.state,
-                              ['chpasswd <<<"' + username + ':freedombone"'])
+
         library.run_in_chroot(self.state, ['adduser', username, 'sudo'])
+        script = 'chpasswd <<<"' + username + ':freedombone"'
+        library.run_in_chroot(self.state, ['bash', '-c', script])
 
     def _set_freedombone_disk_image_flag(self):
         """Set a flag to indicate that this is a Freedombone image.
