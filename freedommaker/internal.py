@@ -257,7 +257,7 @@ class InternalBuilderBackend():
         library.install_package(self.state, 'git')
         library.install_package(self.state, 'build-essential')
         library.install_package(self.state, 'dialog')
-        library.install_package(self.state, 'openssh')
+        library.install_package(self.state, 'openssh-server')
 
         library.run_in_chroot(self.state, [
             'git', 'clone', '--depth=1',
