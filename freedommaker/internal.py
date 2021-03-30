@@ -30,7 +30,7 @@ class InternalBuilderBackend():
             self._setup_extra_storage()
             self._debootstrap()
             self._set_hostname()
-            self._lock_root_user()
+            # self._lock_root_user()
             self._create_sudo_user()
             self._set_freedombone_disk_image_flag()
             self._create_fstab()
