@@ -278,8 +278,9 @@ make install'''
 
     def _enable_eth0(self):
         """Enable eth0 interface."""
-        library.run_in_chroot(self.state, ['ln', '-sf', '/dev/null',
-                                           '/etc/systemd/network/99-default.link'])
+        library.run_in_chroot(self.state,
+                              ['ln', '-sf', '/dev/null',
+                               '/etc/systemd/network/99-default.link'])
         library.update_initramfs(self.state)
 
     def _lock_root_user(self):
