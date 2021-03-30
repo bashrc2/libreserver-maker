@@ -260,12 +260,12 @@ class InternalBuilderBackend():
         library.install_package(self.state, 'openssh-server')
 
         library.run_in_chroot(self.state, [
-            'git', 'clone', '--depth=1',
+            'git', 'clone', '--depth=1', '--branch', 'bullseye'
             'https://gitlab.com/bashrc2/freedombone.git',
             '/root/freedombone'
         ])
 
-        script = '''cd /root/freedombone; git checkout bullseye; \
+        script = '''cd /root/freedombone;
 make install'''
         library.run_in_chroot(self.state, ['bash', '-c', script])
         script = 'echo "echo ' + "'Run sudo freedombone menuconfig or " + \
