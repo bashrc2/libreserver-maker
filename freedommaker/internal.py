@@ -231,7 +231,7 @@ class InternalBuilderBackend():
         """Return the apt components to use."""
         components = ['main']
         if not self.builder.free:
-            components += ['contrib', 'non-free']
+            components += ['contrib']
 
         return components
 
