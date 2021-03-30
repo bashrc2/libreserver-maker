@@ -40,6 +40,7 @@ class InternalBuilderBackend():
             self._remove_ssh_keys()
             self._install_boot_loader()
             self._setup_final_apt()
+            self._enable_eth0()
             self._fill_free_space_with_zeros()
         except (Exception, KeyboardInterrupt) as exception:
             logger.exception('Exception during build - %s', exception)
@@ -274,9 +275,12 @@ make install'''
             "  sudo freedombone menuconfig-onion\n\nto begin installation.\n'" + \
             '" >> /home/admin/.bashrc'
         library.run_in_chroot(self.state, ['bash', '-c', script])
+
+    def _enable_eth0(self):
+        """Enable eth0 interface."""
         library.run_in_chroot(self.state, ['ln', '-sf', '/dev/null',
                                            '/etc/systemd/network/99-default.link'])
-        library.run_in_chroot(self.state, ['update-initramfs', '-u'])
+        library.update_initramfs(self.state)
 
     def _lock_root_user(self):
         """Lock the root user account."""
