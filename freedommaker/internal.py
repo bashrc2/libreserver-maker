@@ -319,6 +319,17 @@ make install'''
                               ['sh', '-c', 'rm -f /etc/ssh/ssh_host_*'],
                               ignore_fail=True)
 
+    def _generate_ssh_keys_on_first_boot(self):
+        """Generates SSH keys on first boot."""
+        script = 'echo -e "#!/bin/bash\n' + \
+            'if [ ! -f /etc/ssh/ssh_host_ed25519_key.pub ]; then\n' + \
+            '  dpkg-reconfigure openssh-server\nfi"' + \
+            ' > /usr/bin/generate_ssh_keys'
+        library.run_in_chroot(self.state, ['bash', '-c', script])
+        script = 'echo "*/1            * *   *   *   ' + \
+            'root /usr/bin/generate_ssh_keys" >> /etc/crontab'
+        library.run_in_chroot(self.state, ['bash', '-c', script])
+
     def _create_fstab(self):
         """Create fstab with entries for each paritition."""
         library.add_fstab_entry(self.state, 'root',
