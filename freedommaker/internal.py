@@ -259,6 +259,7 @@ class InternalBuilderBackend():
         library.install_package(self.state, 'git')
         library.install_package(self.state, 'build-essential')
         library.install_package(self.state, 'dialog')
+        library.install_package(self.state, 'man')
         library.install_package(self.state, 'openssh-server')
 
         library.run_in_chroot(self.state, [
@@ -285,7 +286,7 @@ make install'''
         library.update_initramfs(self.state)
         script = 'echo -e ' + \
             "'auto eth0\nallow-hotplug eth0\niface eth0 inet dhcp'" + \
-            ' >> /etc/network/interfaces.d/dynamic'
+            ' > /etc/network/interfaces.d/dynamic'
         library.run_in_chroot(self.state, ['bash', '-c', script])
 
     def _lock_root_user(self):
