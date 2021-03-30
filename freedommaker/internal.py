@@ -283,6 +283,10 @@ make install'''
                               ['ln', '-sf', '/dev/null',
                                '/etc/systemd/network/99-default.link'])
         library.update_initramfs(self.state)
+        script = 'echo -e ' + \
+            "'auto eth0\nallow-hotplug eth0\niface eth0 inet dhcp'" + \
+            ' >> /etc/network/interfaces.d/dynamic'
+        library.run_in_chroot(self.state, ['bash', '-c', script])
 
     def _lock_root_user(self):
         """Lock the root user account."""
