@@ -26,7 +26,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
 
     builder_backend = 'internal'
     partition_table_type = 'msdos'
-    root_filesystem_type = 'btrfs'
+    root_filesystem_type = 'ext4'
     boot_filesystem_type = None
     boot_size = None
     boot_offset = None
