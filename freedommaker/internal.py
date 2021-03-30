@@ -260,7 +260,8 @@ class InternalBuilderBackend():
         library.install_package(self.state, 'openssh-server')
 
         library.run_in_chroot(self.state, [
-            'git', 'clone', '--depth=1', '--branch', 'bullseye'
+            'git', 'clone', '--depth=1', '--branch', 'bullseye',
+            '--single-branch',
             'https://gitlab.com/bashrc2/freedombone.git',
             '/root/freedombone'
         ])
