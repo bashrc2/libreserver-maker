@@ -254,6 +254,23 @@ class InternalBuilderBackend():
         stable = self.builder.arguments.distribution in ['stable', 'buster']
         return stable and not self.builder.arguments.disable_backports
 
+    def _install_webserver(self):
+        """Setup webserver."""
+        library.install_package(self.state, 'nginx')
+        script = 'echo -e ' + \
+            "'<html><head><title>Freedombone</title>" + \
+            "</head><body bgcolor=\"linen\" text=\"black\">" + \
+            "<div style=\"font-size: 100px; text-align: center;\">" + \
+            "Freedombone</div>" + \
+            "<div style=\"font-size: 42px; text-align: center;\">" + \
+            "Please wait</div>" + \
+            "<div style=\"font-size: 64px; " + \
+            "text-align: center; font-variant: " + \
+            "small-caps;\"><p role=\"alert\">Generating ssh keys</p></div>" + \
+            "</body></html>'" + \
+            ' > /var/www/html/index.nginx-debian.html'
+        library.run_in_chroot(self.state, ['bash', '-c', script])
+
     def _install_freedombone_packages(self):
         """Setup freedombone repo."""
         library.install_package(self.state, 'git')
