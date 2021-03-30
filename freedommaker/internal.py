@@ -263,10 +263,10 @@ class InternalBuilderBackend():
             "<div style=\"font-size: 100px; text-align: center;\">" + \
             "Freedombone</div>" + \
             "<div style=\"font-size: 42px; text-align: center;\">" + \
-            "Please wait</div>" + \
+            "Initial setup</div>" + \
             "<div style=\"font-size: 64px; " + \
             "text-align: center; font-variant: " + \
-            "small-caps;\"><p role=\"alert\">Generating ssh keys</p></div>" + \
+            "small-caps;\"><p role=\"alert\">Please wait</p></div>" + \
             "</body></html>'" + \
             ' > /var/www/html/index.nginx-debian.html'
         library.run_in_chroot(self.state, ['bash', '-c', script])
