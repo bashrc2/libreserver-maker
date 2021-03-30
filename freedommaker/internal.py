@@ -38,6 +38,7 @@ class InternalBuilderBackend():
             self._setup_build_apt()
             self._install_freedombone_packages()
             self._remove_ssh_keys()
+            self._generate_ssh_keys_on_first_boot()
             self._install_boot_loader()
             self._setup_final_apt()
             self._enable_eth0()
