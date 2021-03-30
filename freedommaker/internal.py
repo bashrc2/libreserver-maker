@@ -270,10 +270,12 @@ class InternalBuilderBackend():
 make install'''
         library.run_in_chroot(self.state, ['bash', '-c', script])
         script = 'echo "echo -e ' + \
-            "'\nRun\n  sudo freedombone menuconfig\nor\n" + \
-            "  sudo freedombone menuconfig-onion\nto begin installation.'" + \
+            "'\nRun:\n\n  sudo freedombone menuconfig\n\nor\n\n" + \
+            "  sudo freedombone menuconfig-onion\n\nto begin installation.\n'" + \
             '" >> /home/admin/.bashrc'
         library.run_in_chroot(self.state, ['bash', '-c', script])
+        library.run_in_chroot(self.state, ['ln', '-sf', '/dev/null', '/etc/systemd/network/99-default.link'])
+        library.run_in_chroot(self.state, ['update-initramfs', '-u'])
 
     def _lock_root_user(self):
         """Lock the root user account."""
