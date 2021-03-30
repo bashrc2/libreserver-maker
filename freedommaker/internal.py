@@ -269,8 +269,9 @@ class InternalBuilderBackend():
         script = '''cd /root/freedombone;
 make install'''
         library.run_in_chroot(self.state, ['bash', '-c', script])
-        script = 'echo "echo ' + "'Run sudo freedombone menuconfig or " + \
-            "sudo freedombone menuconfig-onion to begin installation.'" + \
+        script = 'echo "echo -e ' + \
+            "'\nRun\n  sudo freedombone menuconfig\nor\n" + \
+            "  sudo freedombone menuconfig-onion\nto begin installation.'" + \
             '" >> /home/admin/.bashrc'
         library.run_in_chroot(self.state, ['bash', '-c', script])
 
