@@ -38,7 +38,7 @@ class InternalBuilderBackend():
             self._setup_build_apt()
             self._install_freedombone_packages()
             self._remove_ssh_keys()
-            self._generate_ssh_keys_on_first_boot()
+            self._generate_keys_on_first_boot()
             self._install_boot_loader()
             self._setup_final_apt()
             self._enable_eth0()
@@ -279,11 +279,10 @@ class InternalBuilderBackend():
         library.install_package(self.state, 'man')
         library.install_package(self.state, 'openssh-server')
 
+        freedombone_repo = 'https://gitlab.com/bashrc2/freedombone.git'
         library.run_in_chroot(self.state, [
             'git', 'clone', '--depth=1', '--branch', 'bullseye',
-            '--single-branch',
-            'https://gitlab.com/bashrc2/freedombone.git',
-            '/root/freedombone'
+            '--single-branch', freedombone_repo, '/root/freedombone'
         ])
 
         script = '''cd /root/freedombone;
@@ -342,15 +341,15 @@ make install'''
                               ['sh', '-c', 'rm -f /etc/ssh/ssh_host_*'],
                               ignore_fail=True)
 
-    def _generate_ssh_keys_on_first_boot(self):
-        """Generates SSH keys on first boot."""
+    def _generate_keys_on_first_boot(self):
+        """Generates keys on first boot."""
         script = 'echo -e "#!/bin/bash\n' + \
             'if [ ! -f /etc/ssh/ssh_host_ed25519_key.pub ]; then\n' + \
             '  dpkg-reconfigure openssh-server\nfi"' + \
-            ' > /usr/bin/generate_ssh_keys'
+            ' > /usr/bin/firstboot_generate_keys'
         library.run_script_in_chroot(self.state, script)
         library.add_cron_in_chroot(self.state, 1,
-                                   '/usr/bin/generate_ssh_keys')
+                                   '/usr/bin/firstboot_generate_keys')
 
     def _create_fstab(self):
         """Create fstab with entries for each paritition."""
