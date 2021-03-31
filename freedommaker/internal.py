@@ -351,6 +351,9 @@ make install'''
             '  dpkg-reconfigure openssh-server\nfi"' + \
             ' > /usr/bin/firstboot_generate_keys'
         library.run_script_in_chroot(self.state, script)
+        library.run_in_chroot(self.state,
+                              ['chmod', '+x',
+                               '/usr/bin/firstboot_generate_keys'])
         script = '/usr/bin/bash -c /usr/bin/firstboot_generate_keys'
         library.add_cron_in_chroot(self.state, 1, script)
 
