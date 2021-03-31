@@ -14,7 +14,7 @@ import freedommaker
 
 from .builder import ImageBuilder
 
-IMAGE_SIZE = '3800M'
+IMAGE_SIZE = '7800M'
 BUILD_MIRROR = 'http://deb.debian.org/debian'
 MIRROR = 'http://deb.debian.org/debian'
 DISTRIBUTION = 'bullseye'
