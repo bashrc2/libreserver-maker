@@ -47,6 +47,19 @@ def run_in_chroot(state, *args, **kwargs):
     return run(*args, **kwargs)
 
 
+def run_script_in_chroot(state, script):
+    """Run a script inside chroot of mount point."""
+    run_in_chroot(state, ['bash', '-c', script])
+
+
+def add_cron_in_chroot(state, mins, commandStr):
+    """Add a cron entry inside chroot"""
+    script = 'echo "*/' + str(mins) + \
+        '            * *   *   *   ' + \
+        'root ' + commandStr + '" >> /etc/crontab'
+    run_script_in_chroot(state, script)
+
+
 def path_in_mount(state, path):
     """Return the path inside the mount point of image.
 

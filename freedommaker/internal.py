@@ -269,7 +269,7 @@ class InternalBuilderBackend():
             "small-caps;\"><p role=\"alert\">Please wait</p></div>" + \
             "</body></html>'" + \
             ' > /var/www/html/index.nginx-debian.html'
-        library.run_in_chroot(self.state, ['bash', '-c', script])
+        library.run_script_in_chroot(self.state, script)
 
     def _install_freedombone_packages(self):
         """Setup freedombone repo."""
@@ -288,12 +288,12 @@ class InternalBuilderBackend():
 
         script = '''cd /root/freedombone;
 make install'''
-        library.run_in_chroot(self.state, ['bash', '-c', script])
+        library.run_script_in_chroot(self.state, script)
         script = 'echo "echo -e ' + \
             "'\nRun:\n\n  sudo freedombone menuconfig\n\nor\n\n" + \
             "  sudo freedombone menuconfig-onion\n\nto begin installation.\n'" + \
             '" >> /home/admin/.bashrc'
-        library.run_in_chroot(self.state, ['bash', '-c', script])
+        library.run_script_in_chroot(self.state, script)
 
     def _enable_eth0(self):
         """Enable eth0 interface."""
@@ -304,7 +304,7 @@ make install'''
         script = 'echo -e ' + \
             "'auto eth0\nallow-hotplug eth0\niface eth0 inet dhcp'" + \
             ' > /etc/network/interfaces.d/dynamic'
-        library.run_in_chroot(self.state, ['bash', '-c', script])
+        library.run_script_in_chroot(self.state, script)
 
     def _lock_root_user(self):
         """Lock the root user account."""
@@ -322,7 +322,7 @@ make install'''
 
         library.run_in_chroot(self.state, ['adduser', username, 'sudo'])
         script = 'chpasswd <<<"' + username + ':freedombone"'
-        library.run_in_chroot(self.state, ['bash', '-c', script])
+        library.run_script_in_chroot(self.state, script)
 
     def _set_freedombone_disk_image_flag(self):
         """Set a flag to indicate that this is a Freedombone image.
@@ -348,10 +348,9 @@ make install'''
             'if [ ! -f /etc/ssh/ssh_host_ed25519_key.pub ]; then\n' + \
             '  dpkg-reconfigure openssh-server\nfi"' + \
             ' > /usr/bin/generate_ssh_keys'
-        library.run_in_chroot(self.state, ['bash', '-c', script])
-        script = 'echo "*/1            * *   *   *   ' + \
-            'root /usr/bin/generate_ssh_keys" >> /etc/crontab'
-        library.run_in_chroot(self.state, ['bash', '-c', script])
+        library.run_script_in_chroot(self.state, script)
+        library.add_cron_in_chroot(self.state, 1,
+                                   '/usr/bin/generate_ssh_keys')
 
     def _create_fstab(self):
         """Create fstab with entries for each paritition."""
