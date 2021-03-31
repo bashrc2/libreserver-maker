@@ -263,12 +263,13 @@ class InternalBuilderBackend():
             "</head><body bgcolor=\"linen\" text=\"black\">" + \
             "<div style=\"font-size: 100px; text-align: center;\">" + \
             "Freedombone</div>" + \
-            "<div style=\"font-size: 42px; text-align: center;\">" + \
-            "Initial setup</div>" + \
-            "<div style=\"font-size: 64px; " + \
+            "<div style=\"font-size: 38px; text-align: center;\">" + \
+            "To begin installation login with:</div>" + \
+            "<div style=\"font-size: 38px; " + \
             "text-align: center; font-variant: " + \
-            "small-caps;\"><p role=\"alert\">Please wait</p></div>" + \
-            "</body></html>'" + \
+            "small-caps;\"><p role=\"alert\">" + \
+            "ssh admin@192.168.x.y" + \
+            "</p></div></body></html>'" + \
             ' > /var/www/html/index.nginx-debian.html'
         library.run_script_in_chroot(self.state, script)
 
@@ -290,8 +291,11 @@ class InternalBuilderBackend():
 make install'''
         library.run_script_in_chroot(self.state, script)
         script = 'echo "echo -e ' + \
-            "'\nRun:\n\n  sudo freedombone menuconfig\n\nor\n\n" + \
-            "  sudo freedombone menuconfig-onion\n\nto begin installation.\n'" + \
+            "'\n==Freedombone Installation==\n\n" + \
+            "Run:\n\n  sudo freedombone menuconfig\n\nor\n\n" + \
+            "  sudo freedombone menuconfig-onion\n\n" + \
+            "to begin installation.\n\n" + \
+            "For more info:\n\n  man freedombone\n'" + \
             '" >> /home/admin/.bashrc'
         library.run_script_in_chroot(self.state, script)
 
