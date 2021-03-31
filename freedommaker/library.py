@@ -55,8 +55,8 @@ def run_script_in_chroot(state, script):
 def add_cron_in_chroot(state, mins, commandStr):
     """Add a cron entry inside chroot"""
     script = 'echo "*/' + str(mins) + \
-        '            * *   *   *   ' + \
-        'root ' + commandStr + '" >> /etc/crontab'
+        ' *   * * *   ' + \
+        'root    ' + commandStr + '" >> /etc/crontab'
     run_script_in_chroot(state, script)
 
 
