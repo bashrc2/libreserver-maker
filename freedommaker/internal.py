@@ -322,6 +322,8 @@ make install'''
         library.run_in_chroot(self.state, ['adduser', username, 'sudo'])
         script = 'chpasswd <<<"' + username + ':freedombone"'
         library.run_script_in_chroot(self.state, script)
+        # password should be changed on first login
+        library.run_in_chroot(self.state, ['chage', '-d0', 'admin'])
 
     def _set_freedombone_disk_image_flag(self):
         """Set a flag to indicate that this is a Freedombone image.
