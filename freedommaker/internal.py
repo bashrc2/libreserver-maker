@@ -42,6 +42,7 @@ class InternalBuilderBackend():
             self._install_boot_loader()
             self._setup_final_apt()
             self._enable_eth0()
+            self._install_webserver()
             self._fill_free_space_with_zeros()
         except (Exception, KeyboardInterrupt) as exception:
             logger.exception('Exception during build - %s', exception)
