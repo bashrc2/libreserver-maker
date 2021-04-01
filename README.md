@@ -67,7 +67,7 @@ Freedom-maker supports building for the following targets:
     to run "parted".
 
     ```
-    $ sudo python3 -m freedommaker a20-olinuxino-lime2
+    $ sudo python3 -m freedommaker amd64
     ```
     Take a break from your computer - this takes some time. :)
     
