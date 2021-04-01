@@ -267,8 +267,16 @@ class InternalBuilderBackend():
             "To begin installation login with:</div>" + \
             "<div style=\"font-size: 38px; " + \
             "text-align: center;\"><p role=\"alert\">" + \
-            "ssh admin@192.168.x.y" + \
-            "</p></div></body></html>'" + \
+            "<b>ssh admin@192.168.x.y</b>" + \
+            "</p></div>" + \
+            "<div style=\"font-size: 38px; text-align: center;\">" + \
+            "<p>The initial password is <b>freedombone</b>. " + \
+            "After changing your password ssh back in again " + \
+            "with your chosen password.</p>" + \
+            "<p>When the install is complete <i>ssh access " + \
+            "will not be available</i> unless you turn it on " + \
+            "via the settings screen.</p>" + \
+            "</div></body></html>'" + \
             ' > /var/www/html/index.nginx-debian.html'
         library.run_script_in_chroot(self.state, script)
 
