@@ -406,6 +406,7 @@ def install_custom_package(state, package_path):
     sub_destination = os.path.join('tmp', os.path.basename(package_path))
     destination_path = path_in_mount(state, sub_destination)
     shutil.copyfile(package_path, destination_path)
+    install_package(state, 'xz-utils')
     install_package(state, 'gdebi-core')
     package_path = os.path.join('/tmp', os.path.basename(package_path))
     with no_run_daemon_policy(state):
