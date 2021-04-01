@@ -1,4 +1,4 @@
-# Freedom-Maker: The Freedombone image builder
+# Freedombone-Maker: The Freedombone image builder
 
 These scripts build Freedombone-images for various supported hardware
 that can then be copied to SD card, USB stick or Hard Disk drive to
@@ -19,7 +19,7 @@ tweaks, see the *Build Images* section below.
 
 ## Supported Targets
 
-Freedom-maker supports building for the following targets:
+Freedombone-maker supports building for the following targets:
 
 
 - *a20-olinuxino-lime*: A20 OLinuXino Lime's SD card
@@ -49,7 +49,7 @@ Freedom-maker supports building for the following targets:
 
 ## Running Build
 
-1. Fetch the git source of freedom-maker:
+1. Fetch the git source of freedombone-maker:
     ```
     $ git clone https://code.freedombone.net/bashrc/freedombone-maker.git
     ```
