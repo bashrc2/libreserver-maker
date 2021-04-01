@@ -266,8 +266,7 @@ class InternalBuilderBackend():
             "<div style=\"font-size: 38px; text-align: center;\">" + \
             "To begin installation login with:</div>" + \
             "<div style=\"font-size: 38px; " + \
-            "text-align: center; font-variant: " + \
-            "small-caps;\"><p role=\"alert\">" + \
+            "text-align: center;\"><p role=\"alert\">" + \
             "ssh admin@192.168.x.y" + \
             "</p></div></body></html>'" + \
             ' > /var/www/html/index.nginx-debian.html'
