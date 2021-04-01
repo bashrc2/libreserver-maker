@@ -290,7 +290,7 @@ class InternalBuilderBackend():
         script = '''cd /root/freedombone;
 make install'''
         library.run_script_in_chroot(self.state, script)
-        script = 'echo "echo -e ' + \
+        script = 'echo -e "echo -e ' + \
             "'\n==Freedombone Installation==\n\n" + \
             "Run:\n\n  sudo freedombone menuconfig\n\nor\n\n" + \
             "  sudo freedombone menuconfig-onion\n\n" + \
