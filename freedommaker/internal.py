@@ -297,13 +297,13 @@ class InternalBuilderBackend():
         script = '''cd /root/freedombone;
 make install'''
         library.run_script_in_chroot(self.state, script)
-        script = 'echo -e "echo -e ' + \
+        script = 'echo -e "# start firstboot\necho -e ' + \
             "'\n==Freedombone Installation==\n\n" + \
             "Run:\n\n  sudo freedombone menuconfig\n\nor\n\n" + \
             "  sudo freedombone menuconfig-onion\n\n" + \
             "to begin installation.\n\n" + \
             "For more info:\n\n  man freedombone\n'" + \
-            '" >> /home/admin/.bashrc'
+            '\n# end firstboot" >> /home/admin/.bashrc'
         library.run_script_in_chroot(self.state, script)
 
     def _enable_eth0(self):
