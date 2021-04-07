@@ -51,7 +51,7 @@ Freedombone-maker supports building for the following targets:
 
 1. Fetch the git source of freedombone-maker:
     ```
-    $ git clone https://code.freedombone.net/bashrc/freedombone-maker.git
+    $ git clone https://gitlab.com/bashrc2/freedombone-maker
     ```
 
 2. Install the required dependencies:

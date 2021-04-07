@@ -258,6 +258,7 @@ class InternalBuilderBackend():
     def _install_webserver(self):
         """Setup webserver."""
         library.install_package(self.state, 'nginx')
+        # echo -e '<html><head><title>Freedombone</title></head><body bgcolor="linen" text="black"><div style="font-size: 100px; text-align: center;">Freedombone</div><div style="font-size: 38px; text-align: center;">To begin installation login with:</div><div style="font-size: 38px; text-align: center;"><p role="alert"><b>ssh admin@192.168.x.y</b></p></div><div style="font-size: 38px; text-align: center;"><p>The initial password is <b>freedombone</b>. After changing your password ssh back in again with your chosen password.</p><p>When the install is complete <i>ssh access will not be available</i> unless you turn it on via the settings screen.</p></div></body></html>' > /var/www/html/index.nginx-debian.html
         script = 'echo -e ' + \
             "'<html><head><title>Freedombone</title>" + \
             "</head><body bgcolor=\"linen\" text=\"black\">" + \
@@ -297,6 +298,7 @@ class InternalBuilderBackend():
         script = '''cd /root/freedombone;
 make install'''
         library.run_script_in_chroot(self.state, script)
+        # echo -e "# start firstboot\necho -e '\n==Freedombone Installation==\n\nRun:\n\n  sudo freedombone menuconfig\n\nor\n\n  sudo freedombone menuconfig-onion\n\nto begin installation.\n\nFor more info:\n\n  man freedombone\n'\n# end firstboot" >> /home/admin/.bashrc
         script = 'echo -e "# start firstboot\necho -e ' + \
             "'\n==Freedombone Installation==\n\n" + \
             "Run:\n\n  sudo freedombone menuconfig\n\nor\n\n" + \
@@ -312,6 +314,7 @@ make install'''
                               ['ln', '-sf', '/dev/null',
                                '/etc/systemd/network/99-default.link'])
         library.update_initramfs(self.state)
+        # echo -e 'auto eth0\nallow-hotplug eth0\niface eth0 inet dhcp' > /etc/network/interfaces.d/dynamic
         script = 'echo -e ' + \
             "'auto eth0\nallow-hotplug eth0\niface eth0 inet dhcp'" + \
             ' > /etc/network/interfaces.d/dynamic'
@@ -357,6 +360,9 @@ make install'''
 
     def _generate_keys_on_first_boot(self):
         """Generates keys on first boot."""
+        # echo -e '#!/bin/bash\nif [ ! -f /etc/ssh/ssh_host_ed25519_key.pub ]; then\n  dpkg-reconfigure openssh-server\nfi' > /usr/bin/firstboot_generate_keys
+        # chmod +x /usr/bin/firstboot_generate_keys
+        # echo '*/1 *	* * *	root	/usr/bin/firstboot_generate_keys' >> /etc/crontab
         script = 'echo -e "#!/bin/bash\n' + \
             'if [ ! -f /etc/ssh/ssh_host_ed25519_key.pub ]; then\n' + \
             '  dpkg-reconfigure openssh-server\nfi"' + \
