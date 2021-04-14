@@ -92,7 +92,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         """Return the base file name of the final image."""
         free_tag = 'free' if self.free else 'nonfree'
 
-        return 'freedombone-{distribution}-{free_tag}_{build_stamp}' \
+        return 'libreserver-{distribution}-{free_tag}_{build_stamp}' \
             '_{machine}-{architecture}'.format(
                 distribution=self.arguments.distribution, free_tag=free_tag,
                 build_stamp=self.arguments.build_stamp, machine=self.machine,

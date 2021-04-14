@@ -20,7 +20,7 @@ MIRROR = 'http://deb.debian.org/debian'
 DISTRIBUTION = 'bullseye'
 BUILD_DIR = 'build'
 LOG_LEVEL = 'debug'
-HOSTNAME = 'freedombone'
+HOSTNAME = 'libreserver'
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 

@@ -48,7 +48,7 @@ class TestVirtualBox(unittest.TestCase):
             'virtualbox-i386': 'all-i386.vdi',
         }
 
-        file_name = 'freedombone-unstable-free_{build_stamp}_{extra}.xz' \
+        file_name = 'libreserver-unstable-free_{build_stamp}_{extra}.xz' \
             .format(build_stamp=self.build_stamp, extra=extra_map[target])
 
         return os.path.join(self.output_dir, file_name)

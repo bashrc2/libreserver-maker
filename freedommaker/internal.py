@@ -32,11 +32,11 @@ class InternalBuilderBackend():
             self._set_hostname()
             # self._lock_root_user()
             self._create_sudo_user()
-            self._set_freedombone_disk_image_flag()
+            self._set_libreserver_disk_image_flag()
             self._create_fstab()
             self._mount_additional_filesystems()
             self._setup_build_apt()
-            self._install_freedombone_packages()
+            self._install_libreserver_packages()
             self._remove_ssh_keys()
             self._generate_keys_on_first_boot()
             self._install_boot_loader()
@@ -258,12 +258,12 @@ class InternalBuilderBackend():
     def _install_webserver(self):
         """Setup webserver."""
         library.install_package(self.state, 'nginx')
-        # echo -e '<html><head><title>Freedombone</title></head><body bgcolor="linen" text="black"><div style="font-size: 100px; text-align: center;">Freedombone</div><div style="font-size: 38px; text-align: center;">To begin installation login with:</div><div style="font-size: 38px; text-align: center;"><p role="alert"><b>ssh admin@192.168.x.y</b></p></div><div style="font-size: 38px; text-align: center;"><p>The initial password is <b>freedombone</b>. After changing your password ssh back in again with your chosen password.</p><p>When the install is complete <i>ssh access will not be available</i> unless you turn it on via the settings screen.</p></div></body></html>' > /var/www/html/index.nginx-debian.html
+        # echo -e '<html><head><title>LibreServer</title></head><body bgcolor="linen" text="black"><div style="font-size: 100px; text-align: center;">LibreServer</div><div style="font-size: 38px; text-align: center;">To begin installation login with:</div><div style="font-size: 38px; text-align: center;"><p role="alert"><b>ssh admin@192.168.x.y</b></p></div><div style="font-size: 38px; text-align: center;"><p>The initial password is <b>libreserver</b>. After changing your password ssh back in again with your chosen password.</p><p>When the install is complete <i>ssh access will not be available</i> unless you turn it on via the settings screen.</p></div></body></html>' > /var/www/html/index.nginx-debian.html
         script = 'echo -e ' + \
-            "'<html><head><title>Freedombone</title>" + \
+            "'<html><head><title>LibreServer</title>" + \
             "</head><body bgcolor=\"linen\" text=\"black\">" + \
             "<div style=\"font-size: 100px; text-align: center;\">" + \
-            "Freedombone</div>" + \
+            "LibreServer</div>" + \
             "<div style=\"font-size: 38px; text-align: center;\">" + \
             "To begin installation login with:</div>" + \
             "<div style=\"font-size: 38px; " + \
@@ -271,7 +271,7 @@ class InternalBuilderBackend():
             "<b>ssh admin@192.168.x.y</b>" + \
             "</p></div>" + \
             "<div style=\"font-size: 38px; text-align: center;\">" + \
-            "<p>The initial password is <b>freedombone</b>. " + \
+            "<p>The initial password is <b>libreserver</b>. " + \
             "After changing your password ssh back in again " + \
             "with your chosen password.</p>" + \
             "<p>When the install is complete <i>ssh access " + \
@@ -281,30 +281,30 @@ class InternalBuilderBackend():
             ' > /var/www/html/index.nginx-debian.html'
         library.run_script_in_chroot(self.state, script)
 
-    def _install_freedombone_packages(self):
-        """Setup freedombone repo."""
+    def _install_libreserver_packages(self):
+        """Setup libreserver repo."""
         library.install_package(self.state, 'git')
         library.install_package(self.state, 'build-essential')
         library.install_package(self.state, 'dialog')
         library.install_package(self.state, 'man')
         library.install_package(self.state, 'openssh-server')
 
-        freedombone_repo = 'https://gitlab.com/bashrc2/freedombone.git'
+        libreserver_repo = 'https://gitlab.com/bashrc2/libreserver.git'
         library.run_in_chroot(self.state, [
             'git', 'clone', '--depth=1', '--branch', 'bullseye',
-            '--single-branch', freedombone_repo, '/root/freedombone'
+            '--single-branch', libreserver_repo, '/root/libreserver'
         ])
 
-        script = '''cd /root/freedombone;
+        script = '''cd /root/libreserver;
 make install'''
         library.run_script_in_chroot(self.state, script)
-        # echo -e "# start firstboot\necho -e '\n==Freedombone Installation==\n\nRun:\n\n  sudo freedombone menuconfig\n\nor\n\n  sudo freedombone menuconfig-onion\n\nto begin installation.\n\nFor more info:\n\n  man freedombone\n'\n# end firstboot" >> /home/admin/.bashrc
+        # echo -e "# start firstboot\necho -e '\n==LibreServer Installation==\n\nRun:\n\n  sudo libreserver menuconfig\n\nor\n\n  sudo libreserver menuconfig-onion\n\nto begin installation.\n\nFor more info:\n\n  man libreserver\n'\n# end firstboot" >> /home/admin/.bashrc
         script = 'echo -e "# start firstboot\necho -e ' + \
-            "'\n==Freedombone Installation==\n\n" + \
-            "Run:\n\n  sudo freedombone menuconfig\n\nor\n\n" + \
-            "  sudo freedombone menuconfig-onion\n\n" + \
+            "'\n==LibreServer Installation==\n\n" + \
+            "Run:\n\n  sudo libreserver menuconfig\n\nor\n\n" + \
+            "  sudo libreserver menuconfig-onion\n\n" + \
             "to begin installation.\n\n" + \
-            "For more info:\n\n  man freedombone\n'" + \
+            "For more info:\n\n  man libreserver\n'" + \
             '\n# end firstboot" >> /home/admin/.bashrc'
         library.run_script_in_chroot(self.state, script)
 
@@ -335,22 +335,22 @@ make install'''
             ['adduser', '--gecos', username, '--disabled-password', username])
 
         library.run_in_chroot(self.state, ['adduser', username, 'sudo'])
-        script = 'chpasswd <<<"' + username + ':freedombone"'
+        script = 'chpasswd <<<"' + username + ':libreserver"'
         library.run_script_in_chroot(self.state, script)
         # password should be changed on first login
         library.run_in_chroot(self.state, ['chage', '-d0', 'admin'])
 
-    def _set_freedombone_disk_image_flag(self):
-        """Set a flag to indicate that this is a Freedombone image.
+    def _set_libreserver_disk_image_flag(self):
+        """Set a flag to indicate that this is a LibreServer image.
 
-        And that Freedombone is not installed using a Debian package.
+        And that LibreServer is not installed using a Debian package.
 
         """
         library.run_in_chroot(
-            self.state, ['mkdir', '-p', '-m', '755', '/var/lib/freedombone'])
+            self.state, ['mkdir', '-p', '-m', '755', '/var/lib/libreserver'])
         library.run_in_chroot(
             self.state,
-            ['touch', '/var/lib/freedombone/is-freedombone-disk-image'])
+            ['touch', '/var/lib/libreserver/is-libreserver-disk-image'])
 
     def _remove_ssh_keys(self):
         """Remove SSH keys so that images don't contain known keys."""

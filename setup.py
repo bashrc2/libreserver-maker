@@ -11,10 +11,10 @@ from freedommaker import __version__
 setuptools.setup(
     name='freedom-maker',
     version=__version__,
-    description='The Freedombone image builder',
+    description='The LibreServer image builder',
     author='FreedomBox Authors',
-    author_email='bob@freedombone.net',
-    url='http://freedombone.net',
+    author_email='bob@libreserver.org',
+    url='https://libreserver.org',
     packages=setuptools.find_packages(),
     scripts=['bin/passwd-in-image', 'bin/vagrant-package'],
     entry_points={'console_scripts': ['freedom-maker = freedommaker:main']},

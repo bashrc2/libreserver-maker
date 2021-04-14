@@ -1,25 +1,25 @@
-# Freedombone-Maker: The Freedombone image builder
+# LibreServer-Maker: The image builder
 
-These scripts build Freedombone-images for various supported hardware
+These scripts build LibreServer images for various supported hardware
 that can then be copied to SD card, USB stick or Hard Disk drive to
-boot into Freedombone.
+boot into LibreServer.
 
-These scripts are meant for developers of Freedombone to build images
+These scripts are meant for developers of LibreServer to build images
 during releases and for advanced users who intend to build their own
 images. Regular users who wish to turn their devices into
-Freedombones should instead download the pre-built images.
+LibreServers should instead download the pre-built images.
 
-Get a pre-built image via https://freedombone.net/download/.  There
+Get a pre-built image via https://libreserver.org/download/.  There
 are images available for all supported target devices.
 
-If you wish to create your own Freedombone image, perhaps with some
+If you wish to create your own LibreServer image, perhaps with some
 tweaks, see the *Build Images* section below.
 
 # Create Images
 
 ## Supported Targets
 
-Freedombone-maker supports building for the following targets:
+libreserver-maker supports building for the following targets:
 
 
 - *a20-olinuxino-lime*: A20 OLinuXino Lime's SD card
@@ -49,15 +49,15 @@ Freedombone-maker supports building for the following targets:
 
 ## Running Build
 
-1. Fetch the git source of freedombone-maker:
+1. Fetch the git source of libreserver-maker:
     ```
-    $ git clone https://gitlab.com/bashrc2/freedombone-maker
+    $ git clone https://gitlab.com/bashrc2/libreserver-maker
     ```
 
 2. Install the required dependencies:
     ```shell
     $ sudo apt install btrfs-progs debootstrap kpartx parted qemu-user-static qemu-utils sshpass
-    $ cd freedombone-maker
+    $ cd libreserver-maker
     $ sudo apt build-dep .
     ```
 
@@ -122,7 +122,7 @@ for this task. Otherwise follow the steps:
 
    For example, if your SD card is /dev/sdg use the following command:
     ```
-    $ xzcat build/freedombone-bullseye-*-amd64.img.xz | sudo dd bs=4M of=/dev/sdg conv=fsync status=progress
+    $ xzcat build/libreserver-bullseye-*-amd64.img.xz | sudo dd bs=4M of=/dev/sdg conv=fsync status=progress
     ```
 
    The above command is an example for the beaglebone image built on
@@ -140,4 +140,4 @@ for this task. Otherwise follow the steps:
 3. Use the image by inserting the SD card or USB disk into the target
    device and booting from it.  Also see hardware specific
    instructions on how to prepare your device at
-   https://freedombone.net
+   https://libreserver.org
