@@ -1,3 +1,5 @@
+<img src="https://gitlab.com/bashrc2/libreserver/-/raw/bullseye/img/logo.png?raw=true" width="70%"/>
+
 # LibreServer-Maker: The image builder
 
 These scripts build LibreServer images for various supported hardware
