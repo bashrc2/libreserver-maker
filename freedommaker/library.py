@@ -439,7 +439,7 @@ def set_hostname(state, hostname):
 
 def get_fstab_options(filesystem_type):
     """Return options to use for a filesystem type."""
-    flags = ['errors=remount-ro'] if not filesystem_type == 'btrfs' else []
+    flags = ['errors=remount-ro'] if not filesystem_type == 'btrfs' else ['compress=zstd:1']
     return ','.join(flags) or 'defaults'
 
 
