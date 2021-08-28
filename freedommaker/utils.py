@@ -9,13 +9,17 @@ import re
 def add_disk_offsets(offset1, offset2):
     """Add two disk offsets as understood by parted utility.
 
-    Currently only adding offsets in mib is supported.
-    """
-    if not offset1.endswith('mib') or not offset2.endswith('mib'):
-        raise NotImplementedError('Adding anything but offsets in mib')
+    Currently only adding offsets in MiB is supported. For parted 'mib' is
+    different from 'MiB'. When specifying the ending sector of a partition,
+    'mib' means that specified sector included like [start, end] and 'MiB'
+    means that specified sector is not included like [start, end).
 
-    result = int(offset1.rstrip('mib')) + int(offset2.rstrip('mib'))
-    return '{}mib'.format(result)
+    """
+    if not offset1.endswith('MiB') or not offset2.endswith('MiB'):
+        raise NotImplementedError('Adding anything but offsets in MiB')
+
+    result = int(offset1.rstrip('MiB')) + int(offset2.rstrip('MiB'))
+    return '{}MiB'.format(result)
 
 
 def parse_disk_size(input_size):

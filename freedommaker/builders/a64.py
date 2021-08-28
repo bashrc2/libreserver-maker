@@ -13,7 +13,6 @@ class A64ImageBuilder(ARMImageBuilder):
     """Image builder for all Allwinner A64 board targets."""
     architecture = 'arm64'
     kernel_flavor = 'arm64'
-    boot_offset = '1mib'
     u_boot_target = None
 
     def __init__(self, *args, **kwargs):

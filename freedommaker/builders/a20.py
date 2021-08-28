@@ -11,7 +11,6 @@ class A20ImageBuilder(ARMImageBuilder):
     """Base image builder for all Allwinner A20 board based targets."""
     architecture = 'armhf'
     kernel_flavor = 'armmp-lpae'
-    boot_offset = '1mib'
     u_boot_path = None
 
     def install_boot_loader(self, state):

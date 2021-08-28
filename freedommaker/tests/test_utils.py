@@ -12,13 +12,16 @@ class TestUtils(unittest.TestCase):
     """Test for miscellaneous utility methods."""
     def test_add_disk_offsets(self):
         """Test disk offset addition."""
-        self.assertEqual(utils.add_disk_offsets('1mib', '2mib'), '3mib')
-        self.assertRaises(NotImplementedError, utils.add_disk_offsets, '1gib',
-                          '1mib')
+        self.assertEqual(utils.add_disk_offsets('1MiB', '2MiB'), '3MiB')
+        # mib is not allowed as unit. Only MiB.        
         self.assertRaises(NotImplementedError, utils.add_disk_offsets, '1mib',
-                          '1gib')
-        self.assertRaises(ValueError, utils.add_disk_offsets, 'xmib', '1mib')
-        self.assertRaises(ValueError, utils.add_disk_offsets, 'xmib', 'xmib')
+                         '1mib')
+        self.assertRaises(NotImplementedError, utils.add_disk_offsets, '1GiB',
+                          '1MiB')
+        self.assertRaises(NotImplementedError, utils.add_disk_offsets, '1MiB',
+                          '1GiB')
+        self.assertRaises(ValueError, utils.add_disk_offsets, 'xMiB', '1MiB')
+        self.assertRaises(ValueError, utils.add_disk_offsets, 'xMiB', 'xMiB')
 
     def test_parse_disk_size(self):
         """Test parsing disk sizes."""

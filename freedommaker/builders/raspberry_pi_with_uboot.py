@@ -12,7 +12,8 @@ class RaspberryPiWithUBoot(ARMImageBuilder):
     free = False
     uboot_variant = None
     firmware_filesystem_type = 'vfat'
-    firmware_size = '60mib'
+    firmware_size = '64MiB'
+
 
     def install_boot_loader(self, state):
         """Install the boot loader onto the image."""

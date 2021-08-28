@@ -11,7 +11,6 @@ class RaspberryPi3ImageBuilder(RaspberryPiWithUBoot):
     architecture = 'armhf'
     machine = 'raspberry3'
     free = False
-    boot_offset = '64mib'
     kernel_flavor = 'armmp'
     flash_kernel_name = 'Raspberry Pi 3 Model B'
     uboot_variant = 'rpi_3_32b'

@@ -12,7 +12,6 @@ class BeagleBoneImageBuilder(ARMImageBuilder):
     architecture = 'armhf'
     machine = 'beaglebone'
     kernel_flavor = 'armmp'
-    boot_offset = '2mib'
     flash_kernel_name = 'TI AM335x BeagleBone Black'
     flash_kernel_options = 'console=ttyO0'
 

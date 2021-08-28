@@ -10,7 +10,7 @@ class ARMImageBuilder(ImageBuilder):
     """Base image builder for all ARM targets."""
     boot_loader = 'u-boot'
     boot_filesystem_type = 'ext2'
-    boot_size = '128mib'
+    boot_size = '128MiB'
 
     @classmethod
     def get_target_name(cls):

@@ -43,7 +43,7 @@ class ARMEFIImageBuilder(ImageBuilder):
     efi_architecture = None
     partition_table_type = 'gpt'
     efi_filesystem_type = 'vfat'
-    efi_size = '256mib'
+    efi_size = '256MiB'
     boot_loader = None
     grub_target = None
 
