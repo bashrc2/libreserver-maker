@@ -40,7 +40,7 @@ Depends:
  sshpass,
  sudo,
  u-boot-tools,
- xz-utils (>= 5.2.2),
+ xz-utils,
 Suggests:
  virtualbox
 Description: FreedomBox image builder
