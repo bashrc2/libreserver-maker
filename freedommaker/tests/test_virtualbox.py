@@ -53,9 +53,9 @@ class TestVirtualBox(unittest.TestCase):
 
         return os.path.join(self.output_dir, file_name)
 
-    def _run(self, *args):
+    def def _run(self, *args, ignore_errors=False):
         """Execute a command."""
-        subprocess.check_call(*args)
+        subprocess.run(*args, check=not ignore_errors)
 
     @unittest.skipUnless(
         os.environ.get('FM_RUN_VM_TESTS') == 'true', 'Not requested')
@@ -116,6 +116,9 @@ class TestVirtualBox(unittest.TestCase):
                                        stdin=echo.stdout)
             process.communicate()
         finally:
-            self._run(['VBoxManage', 'controlvm', vm_name, 'poweroff'])
-            self._run(['VBoxManage', 'modifyvm', vm_name, '--hda', 'none'])
-            self._run(['VBoxManage', 'unregistervm', vm_name])
+            self._run(['VBoxManage', 'controlvm', vm_name, 'poweroff'],
+                      ignore_errors=True)
+            self._run(['VBoxManage', 'modifyvm', vm_name, '--hda', 'none'],
+                      ignore_errors=True)
+            self._run(['VBoxManage', 'unregistervm', vm_name, '--delete'],
+                      ignore_errors=True)
