@@ -21,9 +21,6 @@ class RaspberryPiWithUBoot(ARMImageBuilder):
             raise NotImplementedError
 
         firmware_package = 'raspi-firmware'
-        if self.arguments.distribution in ['buster', 'stable']:
-            firmware_package = 'raspi3-firmware'
-
         script = '''
 set -e
 set -x
