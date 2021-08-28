@@ -77,6 +77,10 @@ class Application(object):
                             help='Debian mirror to use in built image')
         parser.add_argument('--distribution', default=DISTRIBUTION,
                             help='Debian release to use in built image')
+        parser.add_argument('--add-release-component', action='append',
+                            dest='release_component',
+                            help='Add an extra Debian release component '
+                                 '(other than main)')
         parser.add_argument('--package', action='append',
                             help='Install additional packages in the image')
         parser.add_argument(

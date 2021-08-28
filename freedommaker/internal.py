@@ -236,6 +236,11 @@ class InternalBuilderBackend():
         if not self.builder.free:
             components += ['contrib']
 
+        if self.builder.arguments.release_component:
+            for component in self.builder.arguments.release_component:
+                if component not in components:
+                    components.append(component)
+
         return components
 
     def _debootstrap(self):
@@ -362,7 +367,7 @@ make install'''
         """Generates keys on first boot."""
         # echo -e '#!/bin/bash\nif [ ! -f /etc/ssh/ssh_host_ed25519_key.pub ]; then\n  dpkg-reconfigure openssh-server\nfi' > /usr/bin/firstboot_generate_keys
         # chmod +x /usr/bin/firstboot_generate_keys
-        # echo '*/1 *	* * *	root	/usr/bin/firstboot_generate_keys' >> /etc/crontab
+        # echo '*/1 *   * * *   root    /usr/bin/firstboot_generate_keys' >> /etc/crontab
         script = 'echo -e "#!/bin/bash\n' + \
             'if [ ! -f /etc/ssh/ssh_host_ed25519_key.pub ]; then\n' + \
             '  dpkg-reconfigure openssh-server\nfi"' + \
