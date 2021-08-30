@@ -85,7 +85,7 @@ class InternalBuilderBackend():
                                        self.builder.partition_table_type)
         boot_partition_number = 1
 
-        offset = '4Mib'
+        offset = '4MiB'
         if self.builder.efi_filesystem_type:
             end = utils.add_disk_offsets(offset, self.builder.efi_size)
             library.create_partition(self.state, 'efi', offset, end,
@@ -100,6 +100,7 @@ class InternalBuilderBackend():
             boot_partition_number += 1
 
         if self.builder.boot_filesystem_type:
+            print('builder.boot_filesystem_type ' + str(offset) + ' ' + str(self.builder.boot_size))
             end = utils.add_disk_offsets(offset, self.builder.boot_size)
             library.create_partition(self.state, 'boot', offset, end,
                                      self.builder.boot_filesystem_type)
